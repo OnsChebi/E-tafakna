@@ -1,5 +1,4 @@
-// app/layout.tsx (root layout)
-"use client";
+"use client";//directive to use hooks an other features
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./sideBar";
