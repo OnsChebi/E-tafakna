@@ -78,7 +78,7 @@ const Sidebar = ({ isOpen, isMobile, onClose }: SidebarProps) => {
                   "hover:bg-gray-100 dark:hover:bg-gray-800",
                   "active:scale-95 group"
                 )}
-                onClick={() => isMobile && onClose()} // Close menu on mobile clicks
+                onClick={() => isMobile && onClose()} 
               >
                 <Image
                   src={item.icon}

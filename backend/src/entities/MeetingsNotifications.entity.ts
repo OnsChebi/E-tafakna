@@ -1,8 +1,8 @@
 import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Expert } from "./Expert.entity";
 
-@Entity()
-export class Notification{
+@Entity("MeetingsNotification")
+export class MeetingsNotification{
     @PrimaryGeneratedColumn()
     id!: number
     @Column()
@@ -14,6 +14,6 @@ export class Notification{
     @CreateDateColumn()
     createdAt!:Date;
 
-    @ManyToOne(() => Expert, (expert) => expert.notifications)
+    @ManyToOne(() => Expert, (expert) => expert.meetingsNotifications)
     expert!: Expert;
 }

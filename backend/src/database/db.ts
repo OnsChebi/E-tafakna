@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { User } from "../entities/User.entity";
 import { Expert } from "../entities/Expert.entity";
 import { Meeting } from "../entities/Meeting.entity";
-import { Notification } from "../entities/Notifications.entity";
+import { MeetingsNotification } from "../entities/MeetingsNotifications.entity";
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ export const AppDataSource=new DataSource({
     username:process.env.DB_USERNAME || "root",
     password:process.env.DB_PASSWORD,
     database:process.env.DB_NAME ,
-    entities:[User,Expert,Meeting,Notification],
+    entities:[User,Expert,Meeting,MeetingsNotification],
     synchronize:true,});
 
     AppDataSource.initialize()

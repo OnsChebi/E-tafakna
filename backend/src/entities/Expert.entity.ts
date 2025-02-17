@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Notification } from "./Notifications.entity";
 import { Meeting } from "./Meeting.entity";
+import { MeetingsNotification } from "./MeetingsNotifications.entity";
+import { Folder } from "./Folder.entity";
 @Entity("Experts")
 export class Expert {
     @PrimaryGeneratedColumn()
@@ -9,8 +10,10 @@ export class Expert {
     name!: string
     @Column({unique:true})
     email!:string
-    @OneToMany(() => Notification, (notification) => notification.expert)
-    notifications!: Notification[];
+    @OneToMany(() => MeetingsNotification, (MeetingsNotification) => MeetingsNotification.expert)
+    meetingsNotifications!: MeetingsNotification[];
     @OneToOne(()=>Meeting, (meeting)=>meeting.expert)
     meetings!:Meeting[];
+    @OneToMany(()=>Folder,(folder)=>folder.expert)
+    folders!:Folder[];
 }
