@@ -46,7 +46,7 @@ const ReminderCard = () => {
       {/* Header */}
       <div className="flex justify-center gap-2 ">
       <h2 className="text-xl font-semibold dark:text-white mb-2">Reminders</h2>
-      <Bell className="h-8 w-5"></Bell> 
+      <Bell className="h-8 w-5 dark:text-white"></Bell> 
       </div>
 
       {/* List of Meetings */}

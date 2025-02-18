@@ -1,39 +1,24 @@
+// components/NoteEditor.tsx (updated)
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button"; // shadcn UI button component
-import { Textarea } from "@/components/ui/textarea"; // shadcn UI textarea component
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
 
 type NoteEditorProps = {
-  folderId: string;
-  onAddNote: (folderId: string, content: string) => void;
+  onAddNote: () => void;
 };
 
-export default function NoteEditor({ folderId, onAddNote }: NoteEditorProps) {
-  const [content, setContent] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (content.trim()) {
-      onAddNote(folderId, content);
-      setContent("");
-    }
-  };
-
+export default function NoteEditor({ onAddNote }: NoteEditorProps) {
   return (
-    <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-      <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-100">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+      <Button 
+        onClick={onAddNote}
+        className="w-full gap-2 bg-[#1366e8] text-white hover:bg-[#1158c7]"
+      >
+        <PlusIcon className="h-4 w-4" />
         Add New Note
-      </h2>
-      <Textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="Type your note here..."
-        className="mb-4"
-      />
-      <Button type="submit" className="w-full">
-        Add Note
       </Button>
-    </form>
+    </div>
   );
 }

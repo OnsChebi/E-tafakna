@@ -34,14 +34,14 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6">
       {/* Tabs for Recent and Upcoming Meetings */}
       <div className="flex gap-4 border-b dark:border-gray-700 mb-4">
         <button
           onClick={() => setActiveTab("recent")}
           className={`pb-2 px-4 ${
             activeTab === "recent"
-              ? "border-b-2 border-blue-500 text-blue-500"
+              ? "border-b-2 border-blue-500 text-blue-500 dark:border-white dark:text-white"
               : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
           }`}
         >
@@ -51,7 +51,7 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
           onClick={() => setActiveTab("upcoming")}
           className={`pb-2 px-4 ${
             activeTab === "upcoming"
-              ? "border-b-2 border-blue-500 text-blue-500"
+              ? "border-b-2 border-blue-500 text-blue-500 dark:border-white dark:text-white"
               : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
           }`}
         >
@@ -65,7 +65,7 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left text-gray-500 dark:text-gray-400">
+              <tr className="text-left text-gray-500 dark:text-gray-200">
                 <th className="pb-3 ">Client Name</th>
                 <th className="pb-3">Meeting Date & Time</th>
               </tr>
@@ -73,10 +73,10 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
             <tbody>
               {recentMeetings.map((meeting) => (
                 <tr key={meeting.id} className="border-b dark:border-gray-700">
-                  <td className="py-3 ">{meeting.client}</td>
+                  <td className="py-3 dark:text-white ">{meeting.client}</td>
                   <td className="py-3">
                     <div className="flex flex-col ">
-                      <span>{new Date(meeting.date).toLocaleDateString()}</span>
+                      <span className="dark:text-white">{new Date(meeting.date).toLocaleDateString()}</span>
                       <span className="text-sm text-gray-500 dark:text-gray-400">
                         {meeting.time}
                       </span>
@@ -92,7 +92,7 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left text-gray-500 dark:text-gray-400">
+              <tr className="text-left text-gray-500 dark:text-gray-200">
                 <th className="pb-3">Client Name</th>
                 <th className="pb-3">Meeting Date & Time</th>
                 <th className="pb-3">Actions</th>
@@ -101,10 +101,10 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
             <tbody>
               {upcomingMeetings.map((meeting) => (
                 <tr key={meeting.id} className="border-b dark:border-gray-700">
-                  <td className="py-3">{meeting.client}</td>
+                  <td className="py-3 dark:text-white">{meeting.client}</td>
                   <td className="py-3">
                     <div className="flex flex-col">
-                      <span>{new Date(meeting.date).toLocaleDateString()}</span>
+                      <span className="dark:text-white">{new Date(meeting.date).toLocaleDateString()}</span>
                       <span className="text-sm text-gray-500 dark:text-gray-400">
                         {meeting.time}
                       </span>
@@ -113,7 +113,7 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
                   <td className="py-3">
                     <button
                       onClick={() => handleReschedule(meeting)}
-                      className="px-3 py-1 bg-blue-100 text-blue-600 rounded-md hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400"
+                      className="px-3 py-1  bg-[#1366e8] text-white hover:bg-gray-300 dark:hover:bg-[#1158c7] rounded-lg shadow-md transition-colors "
                     >
                       Reschedule
                     </button>

@@ -6,7 +6,7 @@ import ReminderCard from "../components/ReminderCard";
 
 export default function MeetsDashboard() {
   return (
-    <main className="p-4 min-h-screen bg-gray-200 dark:bg-gray-100">
+    <main className="p-4 min-h-screen bg-gray-200 dark:bg-gray-700">
       {/* First Row - Responsive Layout */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {/* Meetings Today - Takes 2/4 on medium screens */}
@@ -27,7 +27,7 @@ export default function MeetsDashboard() {
               Calendar Content
             </div>
           </div>
-          <button className="w-full h-12 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-md transition-colors">
+          <button className="w-full h-12 bg-[#1366e8] text-white hover:bg-gray-300 dark:hover:bg-[#1158c7] rounded-lg shadow-md transition-colors">
             Create Meet
           </button>
         </div>

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import FolderList from "../components/FolderList";
 import NoteList from "../components/NoteList";
-import NoteEditor from "../components/NoteEditor";
+import { NoteModal } from "../components/NoteModal";
 
 export type Note = {
   id: string;
@@ -41,6 +41,9 @@ export default function NotepadPage() {
 
   const [search, setSearch] = useState("");
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [showNoteModal, setShowNoteModal] = useState(false);
+  const [modalEditing, setModalEditing] = useState(false);
 
   const filteredFolders = useMemo(() => {
     return folders.filter(
@@ -77,16 +80,50 @@ export default function NotepadPage() {
     setSelectedFolder(folder);
   };
 
-  const handleAddNote = (folderId: string, newNoteContent: string) => {
+  const handleSaveNote = (content: string) => {
+    if (!selectedFolder) return;
+
     setFolders(prevFolders =>
       prevFolders.map(folder => {
-        if (folder.id === folderId) {
-          const newNote: Note = {
-            id: Math.random().toString(),
-            content: newNoteContent,
-            createdAt: new Date().toISOString(),
+        if (folder.id === selectedFolder.id) {
+          if (selectedNote) {
+            // Update existing note
+            const updatedNotes = folder.notes.map(note =>
+              note.id === selectedNote.id ? { 
+                ...note, 
+                content,
+                createdAt: new Date().toISOString() // Update edit timestamp
+              } : note
+            );
+            return { ...folder, notes: updatedNotes };
+          } else {
+            // Create new note
+            const newNote: Note = {
+              id: Math.random().toString(),
+              content,
+              createdAt: new Date().toISOString(),
+            };
+            return { ...folder, notes: [...folder.notes, newNote] };
+          }
+        }
+        return folder;
+      })
+    );
+
+    setSelectedNote(null);
+    setShowNoteModal(false);
+  };
+
+  const handleDeleteNote = (noteId: string) => {
+    if (!selectedFolder) return;
+
+    setFolders(prevFolders =>
+      prevFolders.map(folder => {
+        if (folder.id === selectedFolder.id) {
+          return {
+            ...folder,
+            notes: folder.notes.filter(note => note.id !== noteId)
           };
-          return { ...folder, notes: [...folder.notes, newNote] };
         }
         return folder;
       })
@@ -114,10 +151,34 @@ export default function NotepadPage() {
         <div className="md:col-span-3 flex flex-col gap-4">
           {selectedFolder ? (
             <>
-              <NoteList folder={selectedFolder} />
-              <NoteEditor 
-                folderId={selectedFolder.id} 
-                onAddNote={handleAddNote}
+              <NoteList
+                folder={selectedFolder}
+                onEditNote={(noteId) => {
+                  const note = selectedFolder.notes.find(n => n.id === noteId);
+                  if (note) {
+                    setSelectedNote(note);
+                    setModalEditing(true);
+                    setShowNoteModal(true);
+                  }
+                }}
+                onDeleteNote={(noteId) => {
+                  if (confirm("Are you sure you want to delete this note?")) {
+                    handleDeleteNote(noteId);
+                  }
+                }}
+                onAddNote={() => {
+                  setSelectedNote(null);
+                  setModalEditing(true);
+                  setShowNoteModal(true);
+                }}
+                onViewNote={(noteId) => {
+                  const note = selectedFolder.notes.find(n => n.id === noteId);
+                  if (note) {
+                    setSelectedNote(note);
+                    setModalEditing(false);
+                    setShowNoteModal(true);
+                  }
+                }}
               />
             </>
           ) : (
@@ -127,6 +188,17 @@ export default function NotepadPage() {
           )}
         </div>
       </div>
+
+      <NoteModal
+        isOpen={showNoteModal}
+        onClose={() => {
+          setShowNoteModal(false);
+          setSelectedNote(null);
+        }}
+        content={selectedNote?.content || ""}
+        onSave={handleSaveNote}
+        isEditing={modalEditing}
+      />
     </div>
   );
 }
