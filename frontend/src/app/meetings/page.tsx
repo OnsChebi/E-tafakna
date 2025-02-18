@@ -6,7 +6,7 @@ import ReminderCard from "../components/ReminderCard";
 
 export default function MeetsDashboard() {
   return (
-    <main className="p-4 min-h-screen bg-gray-50 dark:bg-gray-900">
+    <main className="p-4 min-h-screen bg-gray-200 dark:bg-gray-100">
       {/* First Row - Responsive Layout */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {/* Meetings Today - Takes 2/4 on medium screens */}

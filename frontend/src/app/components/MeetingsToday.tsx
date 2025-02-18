@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Video, Users, Clock, ArrowRight } from 'lucide-react';
-import { Button } from '@/app/components/ui/button';
+import { Button } from '@/components/ui/button';
 
 type Meeting = {
   id: string;

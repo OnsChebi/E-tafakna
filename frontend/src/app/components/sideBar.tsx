@@ -1,4 +1,3 @@
-// sideBar.tsx
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,14 +9,15 @@ const menuItems = [
     title: "Menu",
     items: [
       { icon: "/video.svg", label: "Meetings", href: "/meetings" },
-      { icon: "/stat.svg", label: "Statistics", href: "/stat" },
+      { icon: "/stat.svg", label: "Statistics", href: "/statistics" },
       { icon: "/user.svg", label: "Profile", href: "/profile" },
+      { icon: "/note.svg", label: "Notepad", href: "/notepad" },
       { icon: "/log-out.svg", label: "Logout", href: "/logout" },
     ],
   },
 ];
 
-// Define component props
+
 interface SidebarProps {
   isOpen: boolean;
   isMobile: boolean;

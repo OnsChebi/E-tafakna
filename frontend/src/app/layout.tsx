@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
-import "./globals.css"; // Ensure Tailwind is imported
-import MeetsDashboard from "./pages/MeetsDashboard";
+import "./globals.css"; 
 import Layout from "./components/Layout";
 
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "",
   description: "A modern dashboard with Next.js, Tailwind CSS, and ShadCN",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-gray-100 dark:bg-gray-900">
-        <Layout>{<MeetsDashboard></MeetsDashboard>}</Layout>
-        
+      <body className=" dark:bg-gray-900">
+      <Layout>{children}</Layout>
       </body>
     </html>
   );

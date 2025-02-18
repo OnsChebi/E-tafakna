@@ -2,7 +2,7 @@
 
 import { Menu, Sun, Moon, X } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface NavbarProps {
   isOpen: boolean;
@@ -23,10 +23,9 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen, darkMode, setDarkMod
           className="lg:hidden"
           aria-label="Toggle sidebar"
         >
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6 dark:text-white" />}
         </Button>
         {/* Dashboard Title */}
-        <span className="text-lg font-semibold dark:text-white">Dashboard</span>
       </div>
 
       {/* Right Side: User Info and Theme Toggle */}
