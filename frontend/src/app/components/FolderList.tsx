@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { FolderIcon, EditIcon, TrashIcon, PlusIcon, CheckIcon, XIcon } from "lucide-react";
 import { Folder } from "../notepad/page";
 
+
+
 type FolderListProps = {
   folders: Folder[];
   search: string;
@@ -28,21 +30,24 @@ export default function FolderList({
   onDeleteFolder,
 }: FolderListProps) {
   const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
-  const [editedName, setEditedName] = useState("");
-  const [isAddingNewFolder, setIsAddingNewFolder] = useState(false);
+  const [editedName, setEditedName] = useState("");//store folder's name that is being edited
+  const [isAddingNewFolder, setIsAddingNewFolder] = useState(false);//visibilité du form
   const [newFolderName, setNewFolderName] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);//store error in case folder's name is duplicated
 
+
+  //to set ID and name in state (to start edit)
   const handleEditStart = (folder: Folder) => {
     setEditingFolderId(folder.id);
     setEditedName(folder.name);
     setError(null); // Clear any previous errors
   };
 
+//update folder's name
   const handleEditSave = () => {
     if (editingFolderId && editedName.trim()) {
       const isNameUnique = !folders.some(
-        (folder) => folder.name === editedName.trim() && folder.id !== editingFolderId
+        (folder) => folder.name.toLowerCase() === editedName.trim().toLowerCase() && folder.id !== editingFolderId
       );
       if (!isNameUnique) {
         setError("Folder name must be unique.");
@@ -58,10 +63,11 @@ export default function FolderList({
   const handleAddFolder = () => {
     if (newFolderName.trim()) {
       const isNameUnique = !folders.some(
-        (folder) => folder.name === newFolderName.trim()
+        (folder) => folder.name.toLowerCase() === newFolderName.trim().toLowerCase()
       );
       if (!isNameUnique) {
-        setError("Folder name must be unique.");
+        setError("Folder already exists");
+        setNewFolderName("");
         return;
       }
       onCreateFolder(newFolderName.trim());
@@ -78,8 +84,7 @@ export default function FolderList({
   };
 
   return (
-    <div className="space-y-4 p-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
-      {/* Title and Add Button */}
+    <div className="space-y-4 p-4 ">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-800 dark:text-gray-100">
           <FolderIcon className="h-5 w-5" />
@@ -98,9 +103,9 @@ export default function FolderList({
       {/* Add New Folder Section */}
       <div className="mb-4">
         {isAddingNewFolder ? (
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col gap-2">
             <Input
-              placeholder="New folder name"
+              placeholder="Add new folder name..."
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
               className="flex-grow w-full max-w-2xl dark:text-gray-100 dark:bg-gray-700 "
@@ -115,7 +120,6 @@ export default function FolderList({
                 Save
               </Button>
               <Button
-                variant="ghost"
                 size="sm"
                 onClick={() => setIsAddingNewFolder(false)}
                 className="bg-gray-500 hover:bg-[#5a5a5a] text-white hover:text-white"
@@ -133,18 +137,19 @@ export default function FolderList({
             onClick={() => setIsAddingNewFolder(true)}
           >
             <PlusIcon className="h-4 w-4" />
-            Add New Folder
+            New Folder
           </Button>
         )}
         {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
       </div>
 
       {/* Folder list */}
-      <ul className="space-y-2">
+      <ul className="space-y-2 md:max-h-[50vh] max-h-[30vh] overflow-y-auto">
         {folders.map((folder) => (
           <li key={folder.id} className="flex gap-2 items-center">
             {editingFolderId === folder.id ? (
-              <div className="flex flex-col sm:flex-row gap-2 w-full">
+              <div className="flex flex-col  gap-2 w-full">
+                {/*change folder's name */}
                 <Input
                   value={editedName}
                   onChange={(e) => setEditedName(e.target.value)}
@@ -160,7 +165,7 @@ export default function FolderList({
                     Save
                   </Button>
                   <Button
-                    variant="ghost"
+                    
                     size="sm"
                     onClick={() => setEditingFolderId(null)}
                     className="bg-gray-500 hover:bg-[#5a5a5a] text-white hover:text-white"
@@ -185,21 +190,20 @@ export default function FolderList({
                   <div className="flex items-center gap-3">
                     <FolderIcon className="h-5 w-5 dark:text-gray-200 flex-shrink-0" />
                     <div>
-                      <p className="font-bold dark:text-gray-200 truncate">{folder.name}</p>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 truncate">
+                      <p className="font-bold dark:text-gray-200 whitespace-normal break-words">{folder.name}</p>
+                      {/* <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-normal break-words">
                         {folder.clientName}
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 </Button>
                 <div className="flex items-center gap-1">
                   <Button
-                    variant="ghost"
                     size="sm"
-                    className="h-8 w-8 hover:bg-[#1366e8] hover:text-white dark:hover:bg-[#1158c7]"
+                    className="h-8 w-8 hover:bg-[#1366e8] bg-transparent dark:hover:bg-[#1158c7]"
                     onClick={() => handleEditStart(folder)}
                   >
-                    <EditIcon className="h-5 w-5 dark:text-white" />
+                    <EditIcon className="h-5 w-5 dark:text-white text-black" />
                   </Button>
                   <Button
                     variant="ghost"

@@ -39,15 +39,9 @@ export default function NoteList({
       {folder.notes.length > 0 ? (
         <ul className="space-y-4 flex-1 overflow-y-auto max-h-[60vh]">
           {folder.notes.map((note) => (
-            <li 
-              key={note.id} 
-              className="border-b pb-2 group hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2 transition-colors"
-            >
+            <li key={note.id} className="border-b pb-2 group hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2 transition-colors">
               <div className="flex justify-between items-start">
-                <div 
-                  className="flex-1 cursor-pointer"
-                  onClick={() => onViewNote(note.id)}
-                >
+                <div className="flex-1 cursor-pointer" onClick={() => onViewNote(note.id)}>
                   <p className="text-gray-700 dark:text-gray-100 whitespace-pre-wrap line-clamp-3">
                     {note.content}
                   </p>

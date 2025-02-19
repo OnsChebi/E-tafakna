@@ -83,28 +83,22 @@ export default function NotepadPage() {
   const handleSaveNote = (content: string) => {
     if (!selectedFolder) return;
 
-    setFolders(prevFolders =>
+    setFolders(prevFolders => 
       prevFolders.map(folder => {
         if (folder.id === selectedFolder.id) {
-          if (selectedNote) {
-            // Update existing note
-            const updatedNotes = folder.notes.map(note =>
-              note.id === selectedNote.id ? { 
-                ...note, 
+          const newNotes = selectedNote
+            ? folder.notes.map(note => 
+                note.id === selectedNote.id 
+                  ? { ...note, content, createdAt: new Date().toISOString() }
+                  : note
+              )
+            : [...folder.notes, {
+                id: Date.now().toString(),
                 content,
-                createdAt: new Date().toISOString() // Update edit timestamp
-              } : note
-            );
-            return { ...folder, notes: updatedNotes };
-          } else {
-            // Create new note
-            const newNote: Note = {
-              id: Math.random().toString(),
-              content,
-              createdAt: new Date().toISOString(),
-            };
-            return { ...folder, notes: [...folder.notes, newNote] };
-          }
+                createdAt: new Date().toISOString()
+              }];
+
+          return { ...folder, notes: newNotes };
         }
         return folder;
       })
@@ -134,7 +128,7 @@ export default function NotepadPage() {
     <div className="min-h-screen bg-gray-200 dark:bg-gray-700 p-2">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Folder List Sidebar */}
-        <div className="md:col-span-1 bg-white dark:bg-gray-900 rounded-lg shadow-md p-4">
+        <div className="md:col-span-1 min-h-[85vh] bg-white dark:bg-gray-900 rounded-lg shadow-md p-4">
           <FolderList
             folders={filteredFolders}
             search={search}

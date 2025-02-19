@@ -21,7 +21,7 @@ export const NoteModal = ({
   isEditing = false
 }: NoteModalProps) => {
   const [noteContent, setNoteContent] = useState(content);
-  const [internalEditing, setInternalEditing] = useState(isEditing);
+  const [internalEditing, setInternalEditing] = useState(isEditing);//Controls whether the user is editing or just viewing the note
 
   useEffect(() => {
     if (isOpen) {
@@ -74,12 +74,16 @@ export const NoteModal = ({
         <div className="flex justify-end gap-2 p-4 border-t">
           {internalEditing ? (
             <>
-              <Button 
-                variant="outline" 
-                onClick={onClose}
-              >
-                Cancel
-              </Button>
+               <Button
+                    
+                    size="sm"
+                    onClick={onClose}
+                    className="bg-gray-500 hover:bg-[#5a5a5a] text-white hover:text-white"
+
+                  >
+                    <XIcon className="h-4 w-4 mr-2" />
+                    Cancel
+                  </Button>
               <Button 
                 onClick={handleSave}
                 className="bg-[#1366e8] hover:bg-[#1158c7] text-white"
