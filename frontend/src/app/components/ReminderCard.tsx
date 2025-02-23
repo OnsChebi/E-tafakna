@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+//import { useState } from "react";
 import Image from "next/image";
-import { Video, Users, ArrowRight, Bell } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Bell } from "lucide-react";
+//import { Button } from "@/components/ui/button";
 
 type Meeting = {
   id: string;

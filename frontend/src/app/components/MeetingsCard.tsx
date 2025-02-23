@@ -2,7 +2,7 @@
 import { useState } from "react";
 import ReschedulePopup from "./ReschedulePopup";
 
-// the Meeting type
+
 type Meeting = {
   id: string;
   client: string;
@@ -11,23 +11,23 @@ type Meeting = {
   type: "recent" | "upcoming";
 };
 
-//  props for this component
+//  props 
 type MeetingsCardProps = {
   recentMeetings: Meeting[];
   upcomingMeetings: Meeting[];
 };
 
 const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) => {
-  // State for active tab (recent or upcoming)
+  
   const [activeTab, setActiveTab] = useState<"recent" | "upcoming">("recent");
 
-  // State for the selected meeting to reschedule
+  //  selected meeting to reschedule
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
 
-  // State to control the visibility of the reschedule popup
+  // bch n7lou popup
   const [showReschedule, setShowReschedule] = useState(false);
 
-  // Function for the reschedule button click
+  // Function for the reschedule button 
   const handleReschedule = (meeting: Meeting) => {
     setSelectedMeeting(meeting);
     setShowReschedule(true);

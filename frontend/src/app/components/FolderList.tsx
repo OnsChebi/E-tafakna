@@ -3,12 +3,21 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FolderIcon, EditIcon, TrashIcon, PlusIcon, CheckIcon, XIcon } from "lucide-react";
-import { Folder } from "../notepad/page";
+import {
+  FolderIcon,
+  EditIcon,
+  TrashIcon,
+  PlusIcon,
+  CheckIcon,
+  XIcon,
+} from "lucide-react";
 
+export type Folder = {
+  id: string;
+  name: string;
+};
 
-
-type FolderListProps = {
+interface FolderListProps {
   folders: Folder[];
   search: string;
   setSearch: (value: string) => void;
@@ -17,7 +26,7 @@ type FolderListProps = {
   onCreateFolder: (name: string) => void;
   onUpdateFolder: (id: string, newName: string) => void;
   onDeleteFolder: (id: string) => void;
-};
+}
 
 export default function FolderList({
   folders,
@@ -30,24 +39,23 @@ export default function FolderList({
   onDeleteFolder,
 }: FolderListProps) {
   const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
-  const [editedName, setEditedName] = useState("");//store folder's name that is being edited
-  const [isAddingNewFolder, setIsAddingNewFolder] = useState(false);//visibilité du form
+  const [editedName, setEditedName] = useState("");
+  const [isAddingNewFolder, setIsAddingNewFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
-  const [error, setError] = useState<string | null>(null);//store error in case folder's name is duplicated
+  const [error, setError] = useState<string | null>(null);
 
-
-  //to set ID and name in state (to start edit)
   const handleEditStart = (folder: Folder) => {
     setEditingFolderId(folder.id);
     setEditedName(folder.name);
-    setError(null); // Clear any previous errors
+    setError(null);
   };
 
-//update folder's name
   const handleEditSave = () => {
     if (editingFolderId && editedName.trim()) {
       const isNameUnique = !folders.some(
-        (folder) => folder.name.toLowerCase() === editedName.trim().toLowerCase() && folder.id !== editingFolderId
+        (folder) =>
+          folder.name.toLowerCase() === editedName.trim().toLowerCase() &&
+          folder.id !== editingFolderId
       );
       if (!isNameUnique) {
         setError("Folder name must be unique.");
@@ -63,7 +71,8 @@ export default function FolderList({
   const handleAddFolder = () => {
     if (newFolderName.trim()) {
       const isNameUnique = !folders.some(
-        (folder) => folder.name.toLowerCase() === newFolderName.trim().toLowerCase()
+        (folder) =>
+          folder.name.toLowerCase() === newFolderName.trim().toLowerCase()
       );
       if (!isNameUnique) {
         setError("Folder already exists");
@@ -78,13 +87,13 @@ export default function FolderList({
   };
 
   const handleDeleteFolder = (id: string) => {
-    if (confirm("Are you sure you want to delete this folder? All files inside will also be deleted.")) {
+    if (confirm("Are you sure you want to delete this folder?")) {
       onDeleteFolder(id);
     }
   };
 
   return (
-    <div className="space-y-4 p-4 ">
+    <div className="space-y-4 p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-800 dark:text-gray-100">
           <FolderIcon className="h-5 w-5" />
@@ -92,15 +101,13 @@ export default function FolderList({
         </h2>
       </div>
 
-      {/* Search input */}
       <Input
         placeholder="Search folders..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="mb-4 w-full max-w-2xl dark:text-gray-100  dark:bg-gray-700"
+        className="mb-4 w-full max-w-2xl dark:text-gray-100 dark:bg-gray-700"
       />
 
-      {/* Add New Folder Section */}
       <div className="mb-4">
         {isAddingNewFolder ? (
           <div className="flex flex-col gap-2">
@@ -108,7 +115,7 @@ export default function FolderList({
               placeholder="Add new folder name..."
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
-              className="flex-grow w-full max-w-2xl dark:text-gray-100 dark:bg-gray-700 "
+              className="flex-grow w-full max-w-2xl dark:text-gray-100 dark:bg-gray-700"
             />
             <div className="flex gap-2">
               <Button
@@ -123,7 +130,6 @@ export default function FolderList({
                 size="sm"
                 onClick={() => setIsAddingNewFolder(false)}
                 className="bg-gray-500 hover:bg-[#5a5a5a] text-white hover:text-white"
-
               >
                 <XIcon className="h-4 w-4 mr-2" />
                 Cancel
@@ -143,13 +149,11 @@ export default function FolderList({
         {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
       </div>
 
-      {/* Folder list */}
       <ul className="space-y-2 md:max-h-[50vh] max-h-[30vh] overflow-y-auto">
         {folders.map((folder) => (
           <li key={folder.id} className="flex gap-2 items-center">
             {editingFolderId === folder.id ? (
-              <div className="flex flex-col  gap-2 w-full">
-                {/*change folder's name */}
+              <div className="flex flex-col gap-2 w-full">
                 <Input
                   value={editedName}
                   onChange={(e) => setEditedName(e.target.value)}
@@ -165,11 +169,9 @@ export default function FolderList({
                     Save
                   </Button>
                   <Button
-                    
                     size="sm"
                     onClick={() => setEditingFolderId(null)}
                     className="bg-gray-500 hover:bg-[#5a5a5a] text-white hover:text-white"
-
                   >
                     <XIcon className="h-4 w-4 mr-2" />
                     Cancel
@@ -190,10 +192,9 @@ export default function FolderList({
                   <div className="flex items-center gap-3">
                     <FolderIcon className="h-5 w-5 dark:text-gray-200 flex-shrink-0" />
                     <div>
-                      <p className="font-bold dark:text-gray-200 whitespace-normal break-words">{folder.name}</p>
-                      {/* <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-normal break-words">
-                        {folder.clientName}
-                      </p> */}
+                      <p className="font-bold dark:text-gray-200 whitespace-normal break-words">
+                        {folder.name}
+                      </p>
                     </div>
                   </div>
                 </Button>

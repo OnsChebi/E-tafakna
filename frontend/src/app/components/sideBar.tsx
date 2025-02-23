@@ -1,3 +1,4 @@
+"use client"
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -47,7 +48,7 @@ const Sidebar = ({ isOpen, isMobile, onClose }: SidebarProps) => {
           "lg:hover:w-[250px]"
         ]
       )}
-      // Only handle hover on desktop
+      //  hover on desktop khw
       onMouseEnter={() => !isMobile && setIsHovered(true)}
       onMouseLeave={() => !isMobile && setIsHovered(false)}
       aria-label="Sidebar"

@@ -1,8 +1,10 @@
 import {configureStore}from '@reduxjs/toolkit';
 import foldersReducer from './slices/foldersSlice'
+import notesReducer from './slices/notesSlice'
 export const store = configureStore({
     reducer:{
         folders:foldersReducer,
+        notes:notesReducer
     },
     middleware: getDefaultMiddleware =>getDefaultMiddleware(),
 

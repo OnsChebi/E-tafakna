@@ -1,4 +1,3 @@
-// components/NoteEditor.tsx (updated)
 "use client";
 
 import React from "react";

@@ -4,124 +4,116 @@ import { useMemo, useState } from "react";
 import FolderList from "../components/FolderList";
 import NoteList from "../components/NoteList";
 import { NoteModal } from "../components/NoteModal";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import {
+  addFolder,
+  deleteFolder,
+  updateFolder,
+  setSelectedFolder,
+  setSearch,
+} from "../redux/slices/foldersSlice";
+import { addNote, deleteNote, updateNote } from "../redux/slices/notesSlice";
 
 export type Note = {
   id: string;
   content: string;
   createdAt: string;
+  folderId:string;
 };
 
 export type Folder = {
   id: string;
   name: string;
-  clientName: string;
-  notes: Note[];
+
 };
 
 export default function NotepadPage() {
-  const [folders, setFolders] = useState<Folder[]>([
-    {
-      id: "1",
-      name: "Client A Folder",
-      clientName: "Client A",
-      notes: [
-        { id: "n1", content: "First note for Client A", createdAt: "2024-03-20T10:00:00Z" },
-        { id: "n2", content: "Second note for Client A", createdAt: "2024-03-21T11:00:00Z" },
-      ],
-    },
-    {
-      id: "2",
-      name: "Client B Folder",
-      clientName: "Client B",
-      notes: [
-        { id: "n3", content: "First note for Client B", createdAt: "2024-03-22T12:00:00Z" },
-      ],
-    },
-  ]);
+  const dispatch = useDispatch<AppDispatch>();
+  // const [folders, setFolders] = useState<Folder[]>([
+  //   {
+  //     id: "1",
+  //     name: "Client A Folder",
+  //     clientName: "Client A",
+  //     notes: [
+  //       { id: "n1", content: "First note for Client A", createdAt: "2024-03-20T10:00:00Z" },
+  //       { id: "n2", content: "Second note for Client A", createdAt: "2024-03-21T11:00:00Z" },
+  //     ],
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Client B Folder",
+  //     clientName: "Client B",
+  //     notes: [
+  //       { id: "n3", content: "First note for Client B", createdAt: "2024-03-22T12:00:00Z" },
+  //     ],
+  //   },
+  // ]);
 
-  const [search, setSearch] = useState("");
-  const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
+  //const [search, setSearch] = useState("");
+  const search = useSelector((state: RootState) => state.folders.search);
+
+  const { folders, selectedFolder } = useSelector((state: RootState) => state.folders);
+  const { notes } = useSelector((state: RootState) => state.notes);
+  //const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [modalEditing, setModalEditing] = useState(false);
 
-  const filteredFolders = useMemo(() => {
-    return folders.filter(
-      (folder) =>
-        folder.name.toLowerCase().includes(search.toLowerCase()) ||
-        folder.clientName.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [folders, search]);
+  const filteredFolders = useMemo(
+    () =>
+      folders.filter((folder) =>
+        folder.name.toLowerCase().includes(search.toLowerCase())
+      ),
+    [folders, search]
+  );
 
   const handleCreateFolder = (name: string) => {
-    const newFolder: Folder = {
-      id: Date.now().toString(),
-      name,
-      clientName: "New Client",
-      notes: []
-    };
-    setFolders([...folders, newFolder]);
+    dispatch(addFolder(name));
   };
 
   const handleUpdateFolder = (id: string, newName: string) => {
-    setFolders(folders.map(folder => 
-      folder.id === id ? { ...folder, name: newName } : folder
-    ));
+    // setFolders(folders.map(folder => 
+    //   folder.id === id ? { ...folder, name: newName } : folder
+    // ));
+    dispatch(updateFolder({ id, newName }));
   };
 
   const handleDeleteFolder = (id: string) => {
-    setFolders(folders.filter(folder => folder.id !== id));
-    if (selectedFolder?.id === id) {
-      setSelectedFolder(null);
+    // setFolders(folders.filter(folder => folder.id !== id));
+    // if (selectedFolder?.id === id) {
+    //   setSelectedFolder(null);
+    // }
+    if (confirm("Are you sure you want to delete this folder? All files inside will also be deleted.")) {
+      dispatch(deleteFolder(id));
+      if (selectedFolder?.id === id) {
+        dispatch(setSelectedFolder(null));
+      }
     }
   };
 
   const handleSelectFolder = (folder: Folder) => {
-    setSelectedFolder(folder);
+    dispatch(setSelectedFolder(folder));
   };
 
   const handleSaveNote = (content: string) => {
     if (!selectedFolder) return;
-
-    setFolders(prevFolders => 
-      prevFolders.map(folder => {
-        if (folder.id === selectedFolder.id) {
-          const newNotes = selectedNote
-            ? folder.notes.map(note => 
-                note.id === selectedNote.id 
-                  ? { ...note, content, createdAt: new Date().toISOString() }
-                  : note
-              )
-            : [...folder.notes, {
-                id: Date.now().toString(),
-                content,
-                createdAt: new Date().toISOString()
-              }];
-
-          return { ...folder, notes: newNotes };
-        }
-        return folder;
-      })
-    );
+      if (selectedNote) {
+        
+        dispatch(updateNote({ ...selectedNote, content, createdAt: new Date().toISOString() }));
+      } else {
+        dispatch(addNote({ id: Date.now().toString(), content, createdAt: new Date().toISOString(), folderId: selectedFolder.id }));
+    }
 
     setSelectedNote(null);
     setShowNoteModal(false);
   };
 
   const handleDeleteNote = (noteId: string) => {
-    if (!selectedFolder) return;
-
-    setFolders(prevFolders =>
-      prevFolders.map(folder => {
-        if (folder.id === selectedFolder.id) {
-          return {
-            ...folder,
-            notes: folder.notes.filter(note => note.id !== noteId)
-          };
-        }
-        return folder;
-      })
-    );
+  
+    if (confirm("Are you sure you want to delete this note?")) {
+      dispatch(deleteNote(noteId));
+    }
   };
 
   return (
@@ -129,10 +121,10 @@ export default function NotepadPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Folder List Sidebar */}
         <div className="md:col-span-1 min-h-[85vh] bg-white dark:bg-gray-900 rounded-lg shadow-md p-4">
-          <FolderList
+        <FolderList
             folders={filteredFolders}
             search={search}
-            setSearch={setSearch}
+            setSearch={(value: string) => dispatch(setSearch(value))}
             onSelectFolder={handleSelectFolder}
             selectedFolder={selectedFolder}
             onCreateFolder={handleCreateFolder}
@@ -146,34 +138,29 @@ export default function NotepadPage() {
           {selectedFolder ? (
             <>
               <NoteList
-                folder={selectedFolder}
-                onEditNote={(noteId) => {
-                  const note = selectedFolder.notes.find(n => n.id === noteId);
-                  if (note) {
-                    setSelectedNote(note);
-                    setModalEditing(true);
-                    setShowNoteModal(true);
-                  }
-                }}
-                onDeleteNote={(noteId) => {
-                  if (confirm("Are you sure you want to delete this note?")) {
-                    handleDeleteNote(noteId);
-                  }
-                }}
-                onAddNote={() => {
-                  setSelectedNote(null);
-                  setModalEditing(true);
-                  setShowNoteModal(true);
-                }}
-                onViewNote={(noteId) => {
-                  const note = selectedFolder.notes.find(n => n.id === noteId);
-                  if (note) {
-                    setSelectedNote(note);
-                    setModalEditing(false);
-                    setShowNoteModal(true);
-                  }
-                }}
-              />
+  folderId={selectedFolder?.id || ""}
+  onEditNote={(noteId) => {
+    const note = notes.find((n) => n.id === noteId);
+    if (note) {
+      setSelectedNote(note);
+      setModalEditing(true);
+      setShowNoteModal(true);
+    }
+  }}
+  onAddNote={() => {
+    setSelectedNote(null);
+    setModalEditing(true);
+    setShowNoteModal(true);
+  }}
+  onViewNote={(noteId) => {
+    const note = notes.find((n) => n.id === noteId);
+    if (note) {
+      setSelectedNote(note);
+      setModalEditing(false);
+      setShowNoteModal(true);
+    }
+  }}
+/>
             </>
           ) : (
             <div className="flex items-center justify-center h-full bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 text-gray-500 dark:text-gray-400">

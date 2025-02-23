@@ -25,7 +25,7 @@ export const NoteModal = ({
 
   useEffect(() => {
     if (isOpen) {
-      setNoteContent(content);
+      setNoteContent(content);//to ensure the modal shows the latest note
       setInternalEditing(isEditing || !content);
     }
   }, [isOpen, content, isEditing]);

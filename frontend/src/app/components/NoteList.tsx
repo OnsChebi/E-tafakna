@@ -1,30 +1,48 @@
-"use client";
+"use client"; 
 
 import React from "react";
-import { Folder } from "../notepad/page";
 import { Button } from "@/components/ui/button";
 import { EditIcon, TrashIcon, PlusIcon } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import { addNote, deleteNote, updateNote } from "../redux/slices/notesSlice";
+
+export type Note = {
+  id: string;
+  content: string;
+  createdAt: string;
+  folderId: string;
+};
 
 type NoteListProps = {
-  folder: Folder;
+  folderId: string; // Pass folderId instead of the entire folder object
   onEditNote: (noteId: string) => void;
-  onDeleteNote: (noteId: string) => void;
   onAddNote: () => void;
   onViewNote: (noteId: string) => void;
 };
 
 export default function NoteList({ 
-  folder, 
+  folderId, 
   onEditNote, 
-  onDeleteNote,
   onAddNote,
   onViewNote
 }: NoteListProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  const notes = useSelector((state: RootState) => 
+    state.notes.notes.filter((note) => note.folderId === folderId)
+  );
+
+  const handleDeleteNote = (noteId: string) => {
+    if (confirm("Are you sure you want to delete this note?")) {
+      dispatch(deleteNote(noteId));
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 h-full flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
-          Notes in {folder.name}
+          Notes in Folder
         </h2>
         <Button 
           onClick={onAddNote}
@@ -36,9 +54,9 @@ export default function NoteList({
         </Button>
       </div>
       
-      {folder.notes.length > 0 ? (
+      {notes.length > 0 ? (
         <ul className="space-y-4 flex-1 overflow-y-auto max-h-[60vh]">
-          {folder.notes.map((note) => (
+          {notes.map((note) => (
             <li key={note.id} className="border-b pb-2 group hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2 transition-colors">
               <div className="flex justify-between items-start">
                 <div className="flex-1 cursor-pointer" onClick={() => onViewNote(note.id)}>
@@ -67,7 +85,7 @@ export default function NoteList({
                     className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onDeleteNote(note.id);
+                      handleDeleteNote(note.id);
                     }}
                   >
                     <TrashIcon className="h-4 w-4" />

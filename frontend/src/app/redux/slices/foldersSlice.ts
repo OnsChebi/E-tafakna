@@ -1,41 +1,45 @@
-import { Folder } from "@/app/notepad/page";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface FoldersState {
+export type Folder = {
+  id: string;
+  name: string;
+};
+
+type FolderState = {
   folders: Folder[];
   selectedFolder: Folder | null;
-}
-const initialState: FoldersState = {
+  search: string;
+};
+
+const initialState: FolderState = {
   folders: [],
   selectedFolder: null,
+  search: '',
 };
 
 const foldersSlice = createSlice({
-  name: "folders",
+  name: 'folders',
   initialState,
   reducers: {
-    addFolder: (state, action: payloadAction<Folder>) => {
-      state.folders.push(action.payload);
+    addFolder: (state, action: PayloadAction<string>) => {
+      const newFolder = { id: Date.now().toString(), name: action.payload };
+      state.folders.push(newFolder);
     },
-    updateFolder: (
-      state,
-      action: payloadAction<{ id: string; name: string }>
-    ) => {
-      const index = state.folders.findIndex(f => f.id === action.payload.id);
-      if (index !== -1) {
-        state.folders[index].name = action.payload.name;
-      }
+    updateFolder: (state, action: PayloadAction<{ id: string; newName: string }>) => {
+      const folder = state.folders.find((f) => f.id === action.payload.id);
+      if (folder) folder.name = action.payload.newName;
     },
-    deleteFolders: (state, action: payloadAction<string>) => {
-      state.folders = state.folders.filter((f) => f.id !== action.payload);
+    deleteFolder: (state, action: PayloadAction<string>) => {
+      state.folders = state.folders.filter((folder) => folder.id !== action.payload);
     },
-    selectFolder: (state, action: payloadAction<Folder | null>) => {
+    setSearch: (state, action: PayloadAction<string>) => {
+      state.search = action.payload;
+    },
+    setSelectedFolder: (state, action: PayloadAction<Folder | null>) => {
       state.selectedFolder = action.payload;
-    },
-    setFolders: (state, action: payloadAction<Folder[]>) => {
-      state.folders = action.payload;
     },
   },
 });
 
-export const {addFolder,updateFolder,deleteFolder,selectFolder,setFolders}=foldersSlice.action;
+export const { addFolder, updateFolder, deleteFolder, setSearch, setSelectedFolder } = foldersSlice.actions;
 export default foldersSlice.reducer;
