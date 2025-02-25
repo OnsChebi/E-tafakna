@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { EditIcon, TrashIcon, PlusIcon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
-import { addNote, deleteNote, updateNote } from "../redux/slices/notesSlice";
+import { deleteNote} from "../redux/slices/notesSlice";
 
 export type Note = {
   id: string;
@@ -15,7 +15,7 @@ export type Note = {
 };
 
 type NoteListProps = {
-  folderId: string; // Pass folderId instead of the entire folder object
+  folderId: string; 
   onEditNote: (noteId: string) => void;
   onAddNote: () => void;
   onViewNote: (noteId: string) => void;

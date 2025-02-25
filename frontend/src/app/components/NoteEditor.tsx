@@ -1,8 +1,16 @@
 "use client";
 
-import React from "react";
+import dynamic from 'next/dynamic';
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
+
+const NoteModal = dynamic(
+  () => import('./NoteModal').then(mod => mod.NoteModal),
+  { 
+    ssr: false,
+    loading: () => <p className="text-center p-4">Loading editor...</p>
+  }
+);
 
 type NoteEditorProps = {
   onAddNote: () => void;
