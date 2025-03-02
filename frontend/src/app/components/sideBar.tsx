@@ -13,6 +13,7 @@ const menuItems = [
       { icon: "/stat.svg", label: "Statistics", href: "/statistics" },
       { icon: "/user.svg", label: "Profile", href: "/profile" },
       { icon: "/note.svg", label: "Notepad", href: "/notepad" },
+      { icon: "/calendar.svg", label: "Calendar", href: "/calendar" },
       { icon: "/log-out.svg", label: "Logout", href: "/logout" },
     ],
   },
