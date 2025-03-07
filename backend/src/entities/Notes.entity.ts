@@ -5,9 +5,9 @@ import { Folder } from "./Folder.entity";
 export class Note {
     @PrimaryGeneratedColumn()
     id!: number;
-    @Column("title")
-    title!: string;
-    @Column("text")
+    // @Column("title")
+    // title!: string;
+    @Column()
     text!: string;
     @CreateDateColumn()
     created_at!: Date;

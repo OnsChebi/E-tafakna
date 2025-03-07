@@ -1,9 +1,6 @@
 import {DataSource}from "typeorm";
 import dotenv from "dotenv";
-import { User } from "../entities/User.entity";
-import { Expert } from "../entities/Expert.entity";
-import { Meeting } from "../entities/Meeting.entity";
-import { MeetingsNotification } from "../entities/MeetingsNotifications.entity";
+
 
 dotenv.config();
 
@@ -15,15 +12,15 @@ export const AppDataSource=new DataSource({
     username:process.env.DB_USERNAME || "root",
     password:process.env.DB_PASSWORD,
     database:process.env.DB_NAME ,
-    entities:[User,Expert,Meeting,MeetingsNotification],
-    synchronize:true,});
-
-    AppDataSource.initialize()
-.then(()=>{
-    console.log("Data Source has been initialized!")
-})
-.catch((err)=>{
-    console.error("Error during Data Source initialization:", err)
-})
-
-    
+    synchronize:false,
+    logging: true,
+  migrations: ["src/migrations/*.ts"],
+  entities: ['src/entities/*.ts'],
+  subscribers: ["src/subscriber/**/*.ts"]
+});
+// console.log("Database Configuration:", {
+//     host: process.env.DB_HOST,
+//     port: process.env.DB_PORT,
+//     username: process.env.DB_USERNAME,
+//     database: process.env.DB_NAME,
+//   });

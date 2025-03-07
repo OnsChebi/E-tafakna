@@ -6,14 +6,17 @@ import { Note } from "./Notes.entity";
 export class Folder {
     @PrimaryGeneratedColumn()
     id!: number;
-    @Column("name")
-    name!: string;
-    // if the folder name is the same as the client name
-    // @Column({nullable:true})
-    // clientName?:string;
 
-    @ManyToOne(()=>Expert,(expert)=>expert.folders)
+    @Column("varchar", { length: 255, unique: true }) 
+    name!: string;
+
+    // Optional: If you want to store the client name
+    // @Column("varchar", { length: 255, nullable: true }) // Use "varchar" for string fields
+    // clientName?: string;
+
+    @ManyToOne(() => Expert, (expert) => expert.folders)
     expert!: Expert;
-    @OneToMany(()=>Note,(note)=>note.folder)
-    notes!:Note[];
-    }
+
+    @OneToMany(() => Note, (note) => note.folder)
+    notes!: Note[];
+}

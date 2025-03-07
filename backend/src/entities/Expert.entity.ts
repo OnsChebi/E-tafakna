@@ -5,11 +5,13 @@ import { Folder } from "./Folder.entity";
 @Entity("Experts")
 export class Expert {
     @PrimaryGeneratedColumn()
-    id!:Number
+    id!:number
     @Column()
     name!: string
     @Column({unique:true})
     email!:string
+    @Column()
+    password!: string;
     @OneToMany(() => MeetingsNotification, (MeetingsNotification) => MeetingsNotification.expert)
     meetingsNotifications!: MeetingsNotification[];
     @OneToOne(()=>Meeting, (meeting)=>meeting.expert)
