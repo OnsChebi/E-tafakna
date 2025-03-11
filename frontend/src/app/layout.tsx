@@ -1,12 +1,8 @@
-import type { Metadata } from "next";
 import "./globals.css";
-import Layout from "./components/Layout";
+import Layout from "./main/Layout";
 import ReduxProvider from "./redux/ReduxProvider";
 
-export const metadata: Metadata = {
-  title: "",
-  description: "A modern dashboard with Next.js, Tailwind CSS, and ShadCN",
-};
+
 
 export default function RootLayout({
   children,
@@ -17,7 +13,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="dark:bg-gray-900">
         <ReduxProvider>
-          <Layout>{children}</Layout>
+          {children}
         </ReduxProvider>
       </body>
     </html>

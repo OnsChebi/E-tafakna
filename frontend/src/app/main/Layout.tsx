@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import Navbar from "./Navbar";
-import Sidebar from "./sideBar";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/sideBar";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -14,7 +14,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       setIsMobile(mobile);
       if (!mobile) setIsOpen(false);
     };
-    
+
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
@@ -41,11 +41,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             !isMobile && (isOpen ? "ml-[250px]" : "ml-[60px]")
           } ${isOpen && isMobile ? "opacity-60" : ""}`}
         >
-          <Navbar 
-            isOpen={isOpen} 
-            setIsOpen={setIsOpen} 
+          <Navbar
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
             darkMode={darkMode}
-            setDarkMode={setDarkMode} 
+            setDarkMode={setDarkMode}
           />
           {children}
         </div>
@@ -54,4 +54,4 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default Layout;
+export default MainLayout;

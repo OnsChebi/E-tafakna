@@ -9,7 +9,7 @@ const menuItems = [
   {
     title: "Menu",
     items: [
-      { icon: "/video.svg", label: "Meetings", href: "/" },
+      { icon: "/video.svg", label: "Meetings", href: "/meetings" },
       { icon: "/stat.svg", label: "Statistics", href: "/statistics" },
       { icon: "/user.svg", label: "Profile", href: "/profile" },
       { icon: "/note.svg", label: "Notepad", href: "/notepad" },

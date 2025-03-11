@@ -1,19 +1,19 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import FolderList from "../components/FolderList";
-import NoteList from "../components/NoteList";
-import { NoteModal } from "../components/NoteModal";
+import FolderList from "../../components/FolderList";
+import NoteList from "../../components/NoteList";
+import { NoteModal } from "../../components/NoteModal";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../redux/store";
+import { AppDispatch, RootState } from "../../redux/store";
 import {
   addFolder,
   deleteFolder,
   updateFolder,
   setSelectedFolder,
   setSearch,
-} from "../redux/slices/foldersSlice";
-import { addNote, deleteNote, updateNote } from "../redux/slices/notesSlice";
+} from "../../redux/slices/foldersSlice";
+import { addNote, deleteNote, updateNote } from "../../redux/slices/notesSlice";
 
 export type Note = {
   id: string;
