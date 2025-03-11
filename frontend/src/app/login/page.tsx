@@ -3,8 +3,6 @@ import { useState,FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Eye, EyeOff, User, ArrowRight, BookOpen, Shield } from 'lucide-react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Sphere } from '@react-three/drei';
 import axios from 'axios';
 
 export default function LoginPage() {
@@ -20,7 +18,7 @@ export default function LoginPage() {
 
     try{
 
-    const response = await axios.post('http:localhost:5000/api/auth/login',{
+    const response = await axios.post('http://localhost:5000/api/auth/login',{
     email:credentials.email,
     password:credentials.password
     });
