@@ -1,4 +1,4 @@
-import { Note } from "@/app/main/notepad/page";
+import { Note } from "@/app/notepad/page";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface NotesState{

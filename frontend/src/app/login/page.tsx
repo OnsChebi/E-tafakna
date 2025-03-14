@@ -25,7 +25,7 @@ export default function LoginPage() {
     if (response.status==200){
         setIsLoading(false);
         localStorage.setItem('authToken',response.data.token);
-        router.push('/main/meetings');
+        router.push('/meetings');
     }
 
     }catch (err){

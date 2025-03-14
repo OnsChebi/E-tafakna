@@ -1,8 +1,8 @@
 "use client";
-import ClientList from "../../components/ClientList";
-import MeetingsCard from "../../components/MeetingsCard";
-import MeetingsToday from "../../components/MeetingsToday";
-import ReminderCard from "../../components/ReminderCard";
+import ClientList from "../components/ClientList";
+import MeetingsCard from "../components/MeetingsCard";
+import MeetingsToday from "../components/MeetingsToday";
+import ReminderCard from "../components/ReminderCard";
 
 export default function MeetsDashboard() {
   return (
