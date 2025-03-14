@@ -1,6 +1,7 @@
+import type { Metadata } from "next";
 import "./globals.css";
-import Layout from "./main/Layout";
 import ReduxProvider from "./redux/ReduxProvider";
+import Layout from "./components/Layout";
 
 
 
@@ -13,7 +14,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="dark:bg-gray-900">
         <ReduxProvider>
-          {children}
+          <Layout>{children}</Layout>
         </ReduxProvider>
       </body>
     </html>
