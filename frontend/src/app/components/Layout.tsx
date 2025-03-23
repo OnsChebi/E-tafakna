@@ -7,7 +7,7 @@ import Sidebar from "./SideBar";
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(false); // Manage darkMode state here
   const [isMobile, setIsMobile] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -28,15 +28,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Don't render anything until mounted
   if (!isMounted) return null;
 
-  // Skip Navbar and Sidebar for login page
   if (isLoginPage) {
-    return <div>{children}</div>; // Render only children for login page
+    return <div>{children}</div>; 
   }
 
-  // Render full layout for other pages
+  
   return (
     <div className={`${darkMode ? "dark" : ""} min-h-screen relative`}>
       {isOpen && isMobile && (

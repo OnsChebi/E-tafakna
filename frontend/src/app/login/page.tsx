@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
 
   const handleSubmit = async(event:FormEvent<HTMLFormElement>)=>{
-    event.preventDefault();
+    event.preventDefault();// Prevent default form submission
     setIsLoading(true);
 
     try{
@@ -24,12 +24,12 @@ export default function LoginPage() {
     });
     if (response.status==200){
         setIsLoading(false);
-        localStorage.setItem('authToken',response.data.token);
+        localStorage.setItem('authToken',response.data.token);//store token
         router.push('/meetings');
     }
 
     }catch (err){
-        if (axios.isAxiosError(err)){
+        if (axios.isAxiosError(err)){ // Type guard for Axios errors
             setError(err.response?.data.message || 'An error occurred');
         }else{
             setError('An unexpected error occurred')

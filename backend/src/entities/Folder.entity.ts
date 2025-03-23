@@ -1,18 +1,15 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { Expert } from "./Expert.entity";
 import { Note } from "./Notes.entity";
 
 @Entity("Folders")
+@Unique("UQ_FOLDER_EXPERT_NAME", ["name", "expert"])
 export class Folder {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column("varchar", { length: 255, unique: true }) 
+    @Column("varchar", { length: 255 }) 
     name!: string;
-
-    // Optional: If you want to store the client name
-    // @Column("varchar", { length: 255, nullable: true }) // Use "varchar" for string fields
-    // clientName?: string;
 
     @ManyToOne(() => Expert, (expert) => expert.folders)
     expert!: Expert;

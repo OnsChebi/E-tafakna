@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Folder } from "./Folder.entity";
 
 @Entity("Notes")
@@ -11,8 +11,8 @@ export class Note {
     text!: string;
     @CreateDateColumn()
     created_at!: Date;
-    @ManyToMany(()=>Folder,(folder)=>folder.notes)
-    folder!: Folder[];
+    @ManyToOne(()=>Folder,(folder)=>folder.notes)
+    folder!:Folder;
 
     }
 
