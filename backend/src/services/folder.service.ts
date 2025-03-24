@@ -31,7 +31,7 @@ export class FolderService {
   // Update Folder Name
   async updateFolder(folderId: number, name: string, expertId: number): Promise<Folder> {
     if (!name) {
-      throw new Error("Folder ID, name, and expertId are required");
+      throw new Error("Folder name is required");
     }
 
     // Find the folder by ID and expertId
@@ -72,8 +72,6 @@ export class FolderService {
   }
   // Get All Folders
   async getFolders(expertId: number): Promise<Folder[]> {
-    
-
     // Fetch all folders for the expert
     return this.folderRepository.find({
       where: { expert: { id: expertId } },
@@ -82,14 +80,18 @@ export class FolderService {
   }
 // Get Folder by Name
 async getFolderByName(name: string, expertId: number): Promise<Folder | null> {
+  console.log("Searching folder with:", { name, expertId });
   if (!name) {
-    throw new Error("Name and expertId are required");
+    throw new Error("Name is required");
   }
 
   // Fetch the folder by name and expertId
-  return this.folderRepository.findOne({
+  const folder = await this.folderRepository.findOne({
     where: { name, expert: { id: expertId } },
     relations: ["notes"] 
   });
+
+  console.log("Found folder:", folder);
+  return folder;
 }
 }

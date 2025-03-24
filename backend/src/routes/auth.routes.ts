@@ -37,7 +37,6 @@ router.post("/login", async (req, res) => {
         // Generate token
         const token = generateToken(expert.id);
 
-        // Send successful response
         res.json({
             message: "Login successful",
             token,

@@ -1,12 +1,11 @@
-import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Folder } from "./Folder.entity";
 
 @Entity("Notes")
 export class Note {
     @PrimaryGeneratedColumn()
     id!: number;
-    // @Column("title")
-    // title!: string;
+    
     @Column()
     text!: string;
     @CreateDateColumn()

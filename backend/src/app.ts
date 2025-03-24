@@ -1,17 +1,16 @@
-// src/app.ts
 import express from "express";
 import dotenv from "dotenv";
 import { AppDataSource } from "./database/db";
 import cors from "cors";
 import helmet from "helmet";
-import routes from "./routes/index.routes"; // Import your routes
+import routes from "./routes/index.routes"; 
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 // Middleware
-app.use(cors()); // Enable CORS
+app.use(cors()); 
 app.use(helmet()); // Secure HTTP headers
 app.use(express.json()); // Parse JSON bodies
 

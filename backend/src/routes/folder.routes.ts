@@ -14,9 +14,9 @@ router.put("/:id", authenticate, (req, res) => folderController.updateFolder(req
 // Delete Folder
 router.delete("/:id", authenticate, (req, res) => folderController.deleteFolder(req, res));
 // Get All Folders
-router.get("/", authenticate, (req, res) => folderController.getFolders(req, res));
+router.get("/all", authenticate, (req, res) => folderController.getFolders(req, res));
 
 // Get Folder by Name
-router.get("/by-name", authenticate, (req, res) => folderController.getFolderByName(req, res));
+router.get("/:name", authenticate, (req, res) => folderController.getFolderByName(req, res));
 
 export default router;
