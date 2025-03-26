@@ -7,7 +7,7 @@ import Sidebar from "./SideBar";
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false); // Manage darkMode state here
+  const [darkMode, setDarkMode] = useState(false); 
   const [isMobile, setIsMobile] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 

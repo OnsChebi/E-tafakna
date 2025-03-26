@@ -4,7 +4,7 @@ import ReschedulePopup from "./ReschedulePopup";
 
 
 type Meeting = {
-  id: string;
+  id: number;
   client: string;
   date: string;
   time: string;

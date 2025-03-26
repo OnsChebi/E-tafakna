@@ -5,7 +5,7 @@ import { Video, Users, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type Meeting = {
-  id: string;
+  id: number;
   title: string;
   client: {
     name: string;
@@ -22,7 +22,7 @@ const MeetingsToday = () => {
   
   const meetings: Meeting[] = [
     {
-      id: '1',
+      id: 1,
       title: 'Case 1',
       client: {
         name: 'Nour masmoudi',
@@ -33,7 +33,7 @@ const MeetingsToday = () => {
       link: 'https://meet.example.com/123'
     },
     {
-      id: '2',
+      id: 2,
       title: 'Case 2',
       client: {
         name: 'Saleh ben ali',
@@ -43,7 +43,7 @@ const MeetingsToday = () => {
       type: 'In person'
     },
     {
-      id: '3',
+      id: 3,
       title: 'Case 1',
       client: {
         name: 'Nour masmoudi',

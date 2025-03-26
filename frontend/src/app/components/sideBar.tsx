@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-// Define menu items structure
 const menuItems = [
   {
     title: "Menu",
@@ -14,7 +13,7 @@ const menuItems = [
       { icon: "/user.svg", label: "Profile", href: "/profile" },
       { icon: "/note.svg", label: "Notepad", href: "/notepad" },
       { icon: "/calendar.svg", label: "Calendar", href: "/calendar" },
-      { icon: "/log-out.svg", label: "Logout", href: "/logout" },
+      { icon: "/log-out.svg", label: "Logout", href: "/login" },
     ],
   },
 ];

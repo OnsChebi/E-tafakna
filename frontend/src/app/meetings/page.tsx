@@ -39,12 +39,12 @@ export default function MeetsDashboard() {
         <div className="md:col-span-3 flex flex-col h-full min-h-[200px]">
           <MeetingsCard
             recentMeetings={[
-              { id: "1", client: "Client A", date: "2024-03-20", time: "10:00 AM", type: "recent" },
-              { id: "2", client: "Client B", date: "2024-03-21", time: "11:00 AM", type: "recent" },
+              { id: 1, client: "Client A", date: "2024-03-20", time: "10:00 AM", type: "recent" },
+              { id: 2, client: "Client B", date: "2024-03-21", time: "11:00 AM", type: "recent" },
             ]}
             upcomingMeetings={[
-              { id: "3", client: "Client C", date: "2025-03-25", time: "12:00 PM", type: "upcoming" },
-              { id: "4", client: "Client D", date: "2025-03-26", time: "1:00 PM", type: "upcoming" },
+              { id: 3, client: "Client C", date: "2025-03-25", time: "12:00 PM", type: "upcoming" },
+              { id: 4, client: "Client D", date: "2025-03-26", time: "1:00 PM", type: "upcoming" },
             ]}
           />
         </div>

@@ -5,7 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 type ReschedulePopupProps = {
   meeting: {
-    id: string;
+    id: number;
     date: string;
   };
   onClose: () => void;

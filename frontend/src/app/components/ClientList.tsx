@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 type Client = {
-  id: string;
+  id: number;
   name: string;
   image?: string;
   email: string;
@@ -10,25 +10,25 @@ type Client = {
 const ClientList = () => {
   const clients: Client[] = [
     {
-      id: "1",
+      id: 1,
       name: "Sarra boukadida ",
       image: "/clients/client1.jpg",
       email: "sara@etafakna.com",
     },
     {
-      id: "2",
+      id: 2,
       name: "ibrahim ben salah",
       image: "/clients/client2.jpg",
       email: "ibrahim@etafakna .com",
     },
     {
-        id: "3",
+        id: 3,
         name: "Ibrahim ben salah",
         image: "",
         email: "ibrahim@etafakna .com",
       },
       {
-        id: "4",
+        id: 4,
         name: "ibrahim ben salah",
         image: "/clients/client2.jpg",
         email: "ibrahim@etafakna .com",

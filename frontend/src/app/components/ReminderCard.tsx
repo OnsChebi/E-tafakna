@@ -1,11 +1,9 @@
 "use client";
-//import { useState } from "react";
 import Image from "next/image";
 import { Bell } from "lucide-react";
-//import { Button } from "@/components/ui/button";
 
 type Meeting = {
-  id: string;
+  id: number;
   client: {
     name: string;
     image?: string;
@@ -16,7 +14,7 @@ type Meeting = {
 const ReminderCard = () => {
   const meetings: Meeting[] = [
     {
-      id: "1",
+      id: 1,
       client: {
         name: "Nour masmoudi",
         image: "/clients/client1.jpg",
@@ -24,7 +22,7 @@ const ReminderCard = () => {
       time: "09:30 AM",
     },
     {
-      id: "2",
+      id: 2,
       client: {
         name: "Saleh ben ali",
         image: "/clients/client2.jpg",
@@ -32,7 +30,7 @@ const ReminderCard = () => {
       time: "11:00 AM",
     },
     {
-      id: "3",
+      id: 3,
       client: {
         name: "Nour masmoudi",
         image: "",

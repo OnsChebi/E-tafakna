@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 export type Folder = {
-  id: string;
+  id: number;
   name: string;
 };
 
@@ -24,8 +24,8 @@ interface FolderListProps {
   onSelectFolder: (folder: Folder) => void;
   selectedFolder: Folder | null;
   onCreateFolder: (name: string) => void;
-  onUpdateFolder: (id: string, newName: string) => void;
-  onDeleteFolder: (id: string) => void;
+  onUpdateFolder: (id: number, newName: string) => void;
+  onDeleteFolder: (id: number) => void;
 }
 
 export default function FolderList({
@@ -38,7 +38,7 @@ export default function FolderList({
   onUpdateFolder,
   onDeleteFolder,
 }: FolderListProps) {
-  const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
+  const [editingFolderId, setEditingFolderId] = useState<number | null>(null);
   const [editedName, setEditedName] = useState("");
   const [isAddingNewFolder, setIsAddingNewFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
@@ -86,7 +86,7 @@ export default function FolderList({
     }
   };
 
-  const handleDeleteFolder = (id: string) => {
+  const handleDeleteFolder = (id: number) => {
     if (confirm("Are you sure you want to delete this folder?")) {
       onDeleteFolder(id);
     }
