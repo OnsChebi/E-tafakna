@@ -34,7 +34,7 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6">
+    <div className="bg-white dark:bg-gray-900 rounded-lg  p-6">
       {/* Tabs for Recent and Upcoming Meetings */}
       <div className="flex gap-4 border-b dark:border-gray-700 mb-4">
         <button

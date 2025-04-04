@@ -1,9 +1,9 @@
 'use client';
-import { useState,FormEvent } from 'react';
+import { useState,FormEvent,useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Eye, EyeOff, User, ArrowRight, BookOpen, Shield } from 'lucide-react';
-import axios from 'axios';
+import { Lock, Eye, EyeOff, User, ArrowRight} from 'lucide-react';
+import api from '../service/api';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -12,13 +12,20 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+useEffect(()=>{
+  const token=localStorage.getItem('authToken');
+  if(token){
+    router.push('/meetings');
+    }
+},[router]);
+
   const handleSubmit = async(event:FormEvent<HTMLFormElement>)=>{
     event.preventDefault();// Prevent default form submission
     setIsLoading(true);
 
     try{
 
-    const response = await axios.post('http://localhost:5000/api/auth/login',{
+    const response = await api.post('/auth/login',{
     email:credentials.email,
     password:credentials.password
     });
@@ -28,16 +35,10 @@ export default function LoginPage() {
         router.push('/meetings');
     }
 
-    }catch (err){
-        if (axios.isAxiosError(err)){ // Type guard for Axios errors
-            setError(err.response?.data.message || 'An error occurred');
-        }else{
-            setError('An unexpected error occurred')
-        }
-        }
-        finally{
-        setIsLoading(false);
-       
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Login failed');
+    } finally {
+      setIsLoading(false);
     }
   };
 

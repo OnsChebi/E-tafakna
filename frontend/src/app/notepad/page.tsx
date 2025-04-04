@@ -21,8 +21,8 @@ import {
 } from "../redux/slices/notesSlice";
 
 export default function NotepadPage() {
-  const dispatch = useDispatch<AppDispatch>();
-  const search = useSelector((state: RootState) => state.folders.search);
+  const dispatch = useDispatch<AppDispatch>();//sending  actions to redux store
+  const search = useSelector((state: RootState) => state.folders.search);//bch njibou search value from redux store(useSelector 3akss use dispatch )
   const { folders, selectedFolder, status: folderStatus, error: folderError } = 
     useSelector((state: RootState) => state.folders);
   const { notes, status: noteStatus, error: noteError } = 
@@ -30,7 +30,7 @@ export default function NotepadPage() {
   
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [showNoteModal, setShowNoteModal] = useState(false);
-  const [modalEditing, setModalEditing] = useState(false);
+  const [modalEditing, setModalEditing] = useState(false);//track edit mode
 
   // Load initial data
   useEffect(() => {
@@ -42,19 +42,18 @@ export default function NotepadPage() {
   if (selectedFolder?.id) {
     console.log('Fetching notes for folder ID:', selectedFolder.id);
     dispatch(fetchNotes(selectedFolder.id))
-      .unwrap()
-      .then((notes) => {
-        console.log('Received notes:', notes);
-      })
+      // .then((notes) => {
+      //   console.log('Received notes:', notes);
+      // })
       .catch((error) => {
         console.error('Error fetching notes:', error);
-        console.log('Error details:', {
-          config: error.config,
-          response: error.response?.data
-        });
+        // console.log('Error details:', {
+        //   config: error.config,
+        //   response: error.response?.data
+        // });
       });
   }
-}, [dispatch, selectedFolder]);
+}, [dispatch, selectedFolder]);//run when selectd folder change
 
   const filteredFolders = useMemo(
     () => folders.filter(folder =>
@@ -65,7 +64,7 @@ export default function NotepadPage() {
 
   const handleCreateFolder = async (name: string) => {
     try {
-      await dispatch(addFolder(name)).unwrap();
+      await dispatch(addFolder(name))
     } catch (error) {
       console.error("Folder creation failed:", error);
       alert("Failed to create folder");
@@ -74,7 +73,7 @@ export default function NotepadPage() {
 
   const handleUpdateFolder = async (id: number, newName: string) => { 
     try {
-      await dispatch(editFolder({ id, name: newName })).unwrap();
+      await dispatch(editFolder({ id, name: newName }))
     } catch (error) {
       console.error("Folder update failed:", error);
       alert("Failed to update folder");
@@ -85,7 +84,7 @@ export default function NotepadPage() {
     if (!confirm("Delete folder and all notes inside?")) return;
     
     try {
-      await dispatch(removeFolder(id)).unwrap();
+      await dispatch(removeFolder(id))
       if (selectedFolder?.id === id) {
         dispatch(setSelectedFolder(null));
       }
@@ -97,25 +96,25 @@ export default function NotepadPage() {
 
   const handleSaveNote = async (text: string) => {
     if (!selectedFolder) return;
-    console.log('Saving note with:', { 
-      text, 
-      folderId: selectedFolder.id,
-      isUpdate: !!selectedNote 
-    });
+    // console.log('Saving note with:', { 
+    //   text, 
+    //   folderId: selectedFolder.id,
+    //   isUpdate: !!selectedNote 
+    // });
 
     try {
       if (selectedNote) {
-        console.log('Updating note:', selectedNote.id, 'with text:', text);
+        //console.log('Updating note:', selectedNote.id, 'with text:', text);
         await dispatch(updateNoteContent({
           ...selectedNote,
           text
-        })).unwrap();
+        }))
       } else {
         await dispatch(createNote({
           text,
           folderId: selectedFolder.id 
-        })).unwrap();
-        console.log(selectedNote);
+        }))
+        //console.log(selectedNote);
       }
       // Refresh notes after update
       dispatch(fetchNotes(selectedFolder.id));
@@ -127,11 +126,11 @@ export default function NotepadPage() {
     }
   };
 
-  const handleDeleteNote = async (noteId: number) => { // number type
+  const handleDeleteNote = async (noteId: number) => { 
     if (!confirm("Delete this note permanently?")) return;
     
     try {
-      await dispatch(deleteNote(noteId)).unwrap();
+      await dispatch(deleteNote(noteId))
       // Refresh notes after deletion
       if (selectedFolder?.id) {
         dispatch(fetchNotes(selectedFolder.id));

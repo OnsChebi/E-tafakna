@@ -37,7 +37,7 @@ const ClientList = () => {
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md w-full md:max-w-md lg:w-[300px] min-h-[176px]">
+    <div className="bg-white dark:bg-gray-900 rounded-xl  w-full md:max-w-md lg:w-[300px] min-h-[176px]">
       {/* Card Header */}
       <div className="p-4 md:p-4  border-b dark:border-gray-700">
         <h3 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-white text-center">

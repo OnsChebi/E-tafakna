@@ -17,6 +17,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response)=>response,
+  (error) => {
+    if (error.response.status === 401) {
+      // redirect to login page
+      localStorage.removeItem('authToken');
+      window.location.href = '/login';
+      }
+      return Promise.reject(error);
+      }
+)
+
 export const folderApi = {
   getAll: () => api.get('/folder/all'),
   create: (name: string) => api.post('/folder', { name }),
@@ -30,3 +42,17 @@ export const noteApi = {
   update: (id: number, text: string) => api.put(`/note/${id}`, { text }),
   delete: (id: number) => api.delete(`/note/${id}`),
 };
+
+export const isAuthenticated = ()=>{
+  if (typeof window !== 'undefined') {
+    return !!localStorage.getItem('authToken');
+}
+return false;
+};
+
+export const logout=()=>{
+  localStorage.removeItem('authToken');
+  window.location.href = '/login';
+};
+
+export default api;

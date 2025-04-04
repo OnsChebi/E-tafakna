@@ -1,192 +1,134 @@
 'use client';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Input } from '../../../../components/ui/input';
 import { Button } from '../../../../components/ui/button';
-import {
-  ArrowLeftIcon,
-  MagnifyingGlassIcon,
-  UserPlusIcon,
-  CalendarIcon,
-} from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, MagnifyingGlassIcon, UserPlusIcon } from '@heroicons/react/24/outline';
 
-export default function HourDetailsPage({
-  params,
-}: {
-  params: { day: string; hour: string; minutes: string };
-}) {
+
+
+export default function HourDetailsPage() {
   const router = useRouter();
-  const { day, hour, minutes } = params;
+  const params = useParams<{
+    day: string;
+    hour: string; // Should match your folder structure [day]/[hour]
+  }>();
+  
+  if (!params?.day || !params?.hour) {
+    return <div>Invalid parameters</div>;
+  }
+  const [hours, minutes] = params.hour.split(':');
+  const { day } = params;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [clientName, setClientName] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
+  const [selectedClient, setSelectedClient] = useState('');
+  const [activeTab, setActiveTab] = useState<'search' | 'new'>('search');
 
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) {
-      alert('Please enter a client name or email to search.');
+  const handleSchedule = async () => {
+    if (!selectedClient) {
+      alert('Please select or create a client');
       return;
     }
 
-    setIsSearching(true);
-    // Simulate a search API call
-    setTimeout(() => {
-      alert(`Searching for client: ${searchQuery}`);
-      setIsSearching(false);
-    }, 1000);
-  };
-
-  const handleCreateClient = async () => {
-    if (!clientName.trim()) {
-      alert('Please enter a client name.');
-      return;
-    }
-
-    setIsCreating(true);
-    // Simulate a create client API call
-    setTimeout(() => {
-      alert(`Created new client: ${clientName}`);
-      setIsCreating(false);
-      setClientName(''); // Clear the input after creation
-    }, 1000);
-  };
-
-  const handleScheduleAppointment = () => {
-    if (!clientName.trim()) {
-      alert('Please enter a client name to schedule an appointment.');
-      return;
-    }
-
-    // Save the appointment (e.g., to a global state or API)
-    const appointment = {
-      date: day,
-      time: `${hour}:${minutes}`,
-      clientName,
-    };
-    console.log('Scheduled Appointment:', appointment);
-
-    // Show success feedback
-    alert('Appointment scheduled successfully!');
-
-    // Redirect back to the calendar
+    console.log('Scheduling for:', selectedClient);
     router.push(`/calendar/${day}`);
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 p-6"
-    >
-      <div className="max-w-2xl mx-auto">
-        {/* Back Button */}
-        <motion.div whileHover={{ scale: 1.05 }} className="mb-6">
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-md mx-auto">
+        {/* Header */}
+        <div className="mb-8">
           <button
             onClick={() => router.back()}
-            className="flex items-center text-[#1366e8] hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+            className="flex items-center text-gray-600 hover:text-gray-800 mb-4"
           >
-            <ArrowLeftIcon className="h-6 w-6 mr-2" />
-            <span className="font-medium">Back to Schedule</span>
+            <ArrowLeftIcon className="h-5 w-5 mr-1" />
+            <span className="text-sm">Back</span>
           </button>
-        </motion.div>
+          <h1 className="text-2xl font-bold text-gray-800">
+            {hours}:{minutes} - {day}
+          </h1>
+        </div>
+          
 
-        {/* Hour Slot Card */}
-        <motion.div
-          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6 hover:shadow-xl transition-shadow"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                Appointment Details
-              </h2>
-              <p className="mt-1 text-lg text-gray-600 dark:text-gray-300">
-                {day}
-              </p>
-            </div>
-            <div className="flex items-center text-[#1366e8] dark:text-blue-400">
-              <CalendarIcon className="h-6 w-6 mr-2" />
-              {/* <span className="text-xl font-medium">
-                {hour}:{minutes}
-              </span> */}
-            </div>
+        {/* Client Selection */}
+        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+          <div className="flex gap-2 mb-4">
+            <button
+              className={`flex-1 py-2 text-sm ${activeTab === 'search' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
+              onClick={() => setActiveTab('search')}
+            >
+              Existing Client
+            </button>
+            <button
+              className={`flex-1 py-2 text-sm ${activeTab === 'new' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
+              onClick={() => setActiveTab('new')}
+            >
+              New Client
+            </button>
           </div>
-        </motion.div>
 
-        {/* Interactive Sections */}
-        <motion.div className="space-y-6">
-          {/* Find Client Section */}
-          <motion.div
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow"
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-          >
-            <div className="flex items-center mb-4">
-              <MagnifyingGlassIcon className="h-6 w-6 text-[#1366e8] dark:text-blue-400 mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                Find Client
-              </h2>
+          {activeTab === 'search' ? (
+            <div className="space-y-4">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Search clients..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1"
+                />
+                <Button className="px-4" onClick={() => setSelectedClient(searchQuery)}>
+                  <MagnifyingGlassIcon className="h-4 w-4 mr-2" />
+                  Search
+                </Button>
+              </div>
+              {/* Search results would go here */}
             </div>
-            <div className="flex gap-3">
+          ) : (
+            <div className="space-y-4">
               <Input
-                placeholder="Client name or email..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 rounded-lg border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-[#1366e8] dark:focus:ring-blue-400 dark:bg-gray-700 dark:text-gray-200"
-              />
-              <Button
-                onClick={handleSearch}
-                disabled={isSearching}
-                className="bg-[#1366e8] hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 px-6 rounded-lg transition-transform hover:scale-105"
-              >
-                {isSearching ? 'Searching...' : 'Search'}
-              </Button>
-            </div>
-          </motion.div>
-
-          {/* New Client Section */}
-          <motion.div
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow"
-            initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-          >
-            <div className="flex items-center mb-4">
-              <UserPlusIcon className="h-6 w-6 text-[#1366e8] dark:text-blue-400 mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                New Client
-              </h2>
-            </div>
-            <div className="flex gap-3">
-              <Input
-                placeholder="Enter client name..."
+                placeholder="Client name"
                 value={clientName}
                 onChange={(e) => setClientName(e.target.value)}
-                className="flex-1 rounded-lg border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-[#1366e8] dark:focus:ring-blue-400 dark:bg-gray-700 dark:text-gray-200"
               />
-              <Button
-                onClick={handleCreateClient}
-                disabled={isCreating}
-                className="bg-[#1366e8] hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 px-6 rounded-lg transition-transform hover:scale-105"
+              <Button 
+                className="w-full" 
+                onClick={() => {
+                  setSelectedClient(clientName);
+                  setClientName('');
+                }}
               >
-                {isCreating ? 'Creating...' : 'Create'}
+                <UserPlusIcon className="h-4 w-4 mr-2" />
+                Create Client
               </Button>
             </div>
-          </motion.div>
-        </motion.div>
+          )}
+        </div>
 
-        {/* Confirm Appointment Button */}
-        <motion.div className="pt-6">
-          <Button
-            onClick={handleScheduleAppointment}
-            className="w-full bg-gradient-to-r from-[#1366e8] to-blue-500 hover:from-blue-600 hover:to-blue-400 dark:from-blue-600 dark:to-blue-500 dark:hover:from-blue-700 dark:hover:to-blue-600 text-white py-6 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+        {/* Selected Client */}
+        {selectedClient && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-blue-50 rounded-lg p-4 mb-6"
           >
-            Confirm Appointment
-          </Button>
-        </motion.div>
+            <p className="text-sm text-gray-600">Selected Client</p>
+            <p className="font-medium text-blue-600">{selectedClient}</p>
+          </motion.div>
+        )}
+
+        {/* Confirm Button */}
+        <Button
+          onClick={handleSchedule}
+          className="w-full bg-blue-600 hover:bg-blue-700"
+          disabled={!selectedClient}
+        >
+          Confirm Appointment
+        </Button>
       </div>
-    </motion.div>
+    </div>
   );
 }

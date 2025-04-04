@@ -1,10 +1,24 @@
 "use client";
+import { useEffect } from "react";
 import ClientList from "../components/ClientList";
 import MeetingsCard from "../components/MeetingsCard";
 import MeetingsToday from "../components/MeetingsToday";
 import ReminderCard from "../components/ReminderCard";
+import { isAuthenticated } from "../service/api";
+import { useRouter } from "next/navigation";
 
 export default function MeetsDashboard() {
+  const router = useRouter();
+
+  useEffect(()=>{
+    if(!isAuthenticated()){
+      router.push('/login')
+    }
+  },[router]);
+
+  if(!isAuthenticated()){
+    return <div>Unauthorized</div>;
+  }
   return (
     <main className="p-4 min-h-screen bg-gray-200 dark:bg-gray-700">
       {/* First Row - Responsive Layout */}

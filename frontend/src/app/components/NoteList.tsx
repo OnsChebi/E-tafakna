@@ -27,7 +27,7 @@ export default function NoteList({
   onViewNote,
   onDeleteNote,
 }: NoteListProps) {
-  console.log("Notes received:", notes, "for folder ID:", folderId);
+  //console.log("Notes received:", notes, "for folder ID:", folderId);
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 h-full flex flex-col">
@@ -78,7 +78,7 @@ export default function NoteList({
                     size="sm"
                     className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
                     onClick={(e) => {
-                      e.stopPropagation();
+                      e.stopPropagation();//clicking delete ONLY deletes - doesn't open the note
                       onDeleteNote(note.id);
                     }}
                   >
