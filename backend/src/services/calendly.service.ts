@@ -1,44 +1,32 @@
-import axios from "axios";
-const CALENDLY_TOKEN = process.env.CALENDLY_ACCESS_TOKEN;
+import axios from 'axios';
 
-const calendlyApi = axios.create({
-  baseURL: "https://api.calendly.com",
-  headers: {
-    Authorization: `Bearer ${CALENDLY_TOKEN}`,
-    "content-Type": "application/json",
-  },
-});
+export class CalendlyService {
+  static async getCalendlyUserUri(accessToken: string) {
+    const response = await axios.get("https://api.calendly.com/users/me", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-export const getCalendlyUserUri = async () => {
-  const response = await calendlyApi.get("/user/me");
-  return response.data.resource.uri;
-};
-export const getScheduledEvents = async (
-  userUri: string,
-  startTime: string,
-  endTime: string
-) => {
-  const response = await calendlyApi.get(`/scheduled_events`, {
-    params: {
-      user: userUri,
-      min_start_time: startTime,
-      max_start_time: endTime,
-    },
-  });
-  // Return just the array of events
-  return response.data.collection;
-};
+    return response.data.resource.uri; // This returns the correct "urn:calendly:user:..." format
+  }
 
-export const createCalendlyEvent = async (
-  eventTypeUri: string,
-  inviteEmail: string,
-  startTime: string
-) => {
-  const response = await calendlyApi.post(`/scheduledEvents`, {
-    evenType: eventTypeUri,//kind of meeting
-    start_time: startTime,
-    invitees: [{ email: inviteEmail }],//the clients
-  });
-  //return promise with created eveny data
-  return response.data;
-};
+  static async getScheduledEvents(accessToken: string, userUri: string, startTime: string, endTime: string) {
+    console.log("📡 Calendly Request URI:", userUri);
+
+    const response = await axios.get("https://api.calendly.com/scheduled_events", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        user: userUri, // Must be in URN format
+        status: "active",
+        ...(startTime && { min_start_time: startTime }),
+        ...(endTime && { max_start_time: endTime }),
+      },
+    });
+
+    return response.data.collection;
+  }
+}

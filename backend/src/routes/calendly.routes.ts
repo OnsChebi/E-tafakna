@@ -1,10 +1,9 @@
-import express from 'express';
-import { getAvailability, scheduleMeeting } from '../controllers/calendly.controller';
-import { validateAvailability } from '../middleware/validation';
+import { Router } from 'express';
+import { CalendarController } from '../controllers/calendly.controller';
+import { authenticate } from '../middleware/auth';
 
-const router = express.Router();
+const router = Router();
 
-router.get('/availability', validateAvailability, getAvailability);
-router.post('/schedule', scheduleMeeting);
+router.get('/busy', authenticate, CalendarController.getBusyDays);
 
 export default router;

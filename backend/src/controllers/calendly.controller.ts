@@ -1,38 +1,48 @@
 import { Request, Response } from 'express';
-import {
-  getCalendlyUserUri,
-  getScheduledEvents,
-  createCalendlyEvent
-} from '../services/calendly.service';
+import { Expert } from '../entities/Expert.entity';
+import { AppDataSource } from '../database/db';
+import { CalendlyService } from '../services/calendly.service';
 
-export const getAvailability = async (req: Request, res: Response) => {
-  try {
-    const { month } = req.query;
-    //user's calendly id
-    const userUri = await getCalendlyUserUri();
-    //calcul date range for the entire month
-    const startDate = new Date(`${month}-01T00:00:00Z`);//first day 00:00
-    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59);//last day at 23:59
-    //fetch event mn calendly
-    const events = await getScheduledEvents(userUri, startDate.toISOString(), endDate.toISOString());
-    //bch n5arjou w dates (without time)
-    const busyDays = events.map((event: any) => event.start_time.split('T')[0]);
-    //send succ res with busy days
-    res.json({ busyDays });
-  } catch (error) {
-    console.error('Availability error:', error);
-    res.status(500).json({ error: 'Failed to fetch availability' });
-  }
-};
+export class CalendarController {
+  static async getBusyDays(req: Request, res: Response): Promise<void> {
+    try {
+      const expertId = (req as any).user?.id;
 
-export const scheduleMeeting = async (req: Request, res: Response) => {
-  try {
-    const { eventTypeUri, email, startTime } = req.body;
-    const event = await createCalendlyEvent(eventTypeUri, email, startTime);
-    //send back the created event 
-    res.json(event);
-  } catch (error) {
-    console.error('Scheduling error:', error);
-    res.status(500).json({ error: 'Failed to schedule meeting' });
+      const expert = await AppDataSource.getRepository(Expert).findOne({
+        where: { id: expertId },
+      });
+
+      if (!expert || !expert.calendly_access_token) {
+        res.status(404).json({ message: 'Calendly account not connected' });
+        return;
+      }
+
+      // Always get fresh userUri in case it was stored incorrectly before
+      const userUri = await CalendlyService.getCalendlyUserUri(expert.calendly_access_token);
+      console.log('✅ Calendly URN:', userUri);
+
+      // Optional: you could update expert.calendly_user_uri in the DB here if needed
+
+      const now = new Date();
+      const startTime = now.toISOString();
+      const endTime = new Date(now.setDate(now.getDate() + 30)).toISOString(); // next 30 days
+
+      const events = await CalendlyService.getScheduledEvents(
+        expert.calendly_access_token,
+        userUri,
+        startTime,
+        endTime
+      );
+
+      const busyDates = events.map((event: any) =>
+        new Date(event.start_time).toISOString().split('T')[0]
+      );
+      const uniqueBusyDates = [...new Set(busyDates)];
+
+      res.status(200).json({ busyDates: uniqueBusyDates });
+    } catch (error: any) {
+      console.error('Busy days error:', error.response?.data || error);
+      res.status(500).json({ message: 'Server error', error: error.message });
+    }
   }
-};
+}

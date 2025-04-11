@@ -4,6 +4,7 @@ import { MeetingsNotification } from "./MeetingsNotifications.entity";
 import { Folder } from "./Folder.entity";
 @Entity("Experts")
 export class Expert {
+    
     @PrimaryGeneratedColumn()
     id!:number
     @Column()
@@ -18,4 +19,17 @@ export class Expert {
     meetings!:Meeting[];
     @OneToMany(()=>Folder,(folder)=>folder.expert)
     folders!:Folder[];
+    @Column({ type: 'varchar', length: 1000, nullable: true })
+    calendly_access_token!: string;
+
+    @Column({ type: 'varchar', length: 1000, nullable: true })
+    calendly_refresh_token!: string;
+
+    @Column({ type: 'varchar', length: 1000, nullable: true })
+    calendly_user_uri!: string;
+
+    @Column({ type: 'varchar',length: 1000, nullable: true })
+        calendly_link!: string;
+
+   
 }
