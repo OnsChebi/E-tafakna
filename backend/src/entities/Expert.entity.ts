@@ -30,6 +30,7 @@ export class Expert {
 
     @Column({ type: 'varchar',length: 1000, nullable: true })
         calendly_link!: string;
+  calendly_token: any;
 
    
 }

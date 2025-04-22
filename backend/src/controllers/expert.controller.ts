@@ -16,7 +16,7 @@ export const loginExpert =async(req:Request,res:Response)=>
 {
     const {email,password}=req.body;
     const expert = await findExpertByEmail(email);
-    if (!expert || (await comparePassword(password, expert.password))) {
+    if (!expert || !(await comparePassword(password, expert.password))) {
         return res.status(401).json({ error: "Invalid email or password" });
 }
 const token =  generateToken(expert.id);

@@ -10,11 +10,12 @@ import { useRouter } from "next/navigation";
 export default function MeetsDashboard() {
   const router = useRouter();
 
-  useEffect(()=>{
-    if(!isAuthenticated()){
-      router.push('/login')
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      router.push('/login');
     }
-  },[router]);
+  }, [router]);
 
   if(!isAuthenticated()){
     return <div>Unauthorized</div>;
