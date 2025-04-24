@@ -10,10 +10,13 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('authToken');
+  if (typeof window !== 'undefined'){
+    const token = localStorage.getItem('authToken');
+  
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+}
   return config;
 });
 
@@ -29,6 +32,27 @@ api.interceptors.response.use(
       }
 )
 
+//client api
+export const clientApi={
+  getClientList:()=>api.get<ApiResponse>('/calendly/clients'),
+}
+export type ApiResponse={
+  clients:Client[];
+}
+
+export type Client={
+  name:string;
+  email:string;
+  image?:string;
+};
+
+//meetings today api
+export const meetingToday={
+  getTodaysMeetings:()=>api.get('/calendly/today ')
+}
+
+
+//folsers api
 export const folderApi = {
   getAll: () => api.get('/folder/all'),
   create: (name: string) => api.post('/folder', { name }),
@@ -36,6 +60,7 @@ export const folderApi = {
   delete: (id: number) => api.delete(`/folder/${id}`),
 };
 
+//note api
 export const noteApi = {
   getByFolder: (folderId: number) => api.get(`/note/folder/${folderId}`),
   create: (note: { text: string; folderId: number }) => api.post('/note', note),
@@ -44,10 +69,9 @@ export const noteApi = {
 };
 
 export const isAuthenticated = ()=>{
-  if (typeof window !== 'undefined') {
+  if (typeof window == 'undefined') return false;
     return !!localStorage.getItem('authToken');
-}
-return false;
+
 };
 
 export const logout=()=>{

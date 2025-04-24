@@ -1,41 +1,39 @@
 import Image from "next/image";
+import { useEffect,useState } from "react";
+import { Client ,clientApi } from "../service/api";
 
-type Client = {
-  id: number;
-  name: string;
-  image?: string;
-  email: string;
-};
 
-const ClientList = () => {
-  const clients: Client[] = [
-    {
-      id: 1,
-      name: "Sarra boukadida ",
-      image: "/clients/client1.jpg",
-      email: "sara@etafakna.com",
-    },
-    {
-      id: 2,
-      name: "ibrahim ben salah",
-      image: "/clients/client2.jpg",
-      email: "ibrahim@etafakna .com",
-    },
-    {
-        id: 3,
-        name: "Ibrahim ben salah",
-        image: "",
-        email: "ibrahim@etafakna .com",
-      },
-      {
-        id: 4,
-        name: "ibrahim ben salah",
-        image: "/clients/client2.jpg",
-        email: "ibrahim@etafakna .com",
-      },
-    
-  ];
 
+
+const ClientList=()=>{
+  const [clients, setClients] = useState<Client[]>([]);
+  const [loading,setLoading]= useState(true);
+  const [mounted,setMounted]=useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const fetchClients = async () => {
+      try {
+        const response = await clientApi.getClientList();
+        console.log('response data', response.data);
+        
+        // Correct access to nested array
+        const data = Array.isArray(response.data?.clients) 
+          ? response.data.clients 
+          : [];
+        
+        console.log('Processed clients:', data);
+        setClients(data);
+      } catch (error) {
+        console.error("Error:", error);
+        setClients([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchClients();
+  }, []);
+const clientItems=Array.isArray(clients)? clients : [];
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl  w-full md:max-w-md lg:w-[300px] min-h-[176px]">
       {/* Card Header */}
@@ -47,11 +45,16 @@ const ClientList = () => {
 
       {/* Scrollable Client List */}
       <div className="overflow-y-auto max-h-[300px]  md:max-h-56">
-        {clients.map((client) => (
-          <div
-            key={client.id}
-            className="flex items-center gap-3 p-3 md:p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b dark:border-gray-700 last:border-b-0"
-          >
+      {loading ? (
+          <p className="p-4 text-center text-gray-500 dark:text-gray-400">Loading...</p>
+        ) : clients.length === 0 ? (
+          <p className="p-4 text-center text-gray-500 dark:text-gray-400">No clients found.</p>
+        ) : (
+          clients.map((client, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-3 p-3 md:p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b dark:border-gray-700 last:border-b-0"
+            >
             {/* Client Avatar */}
             <div className="flex-shrink-0">
               {client.image ? (
@@ -65,7 +68,7 @@ const ClientList = () => {
               ) : (
                 <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
                   <span className="text-white font-medium">
-                    {client.name[0]}
+                    {client.name[0].toUpperCase()}
                   </span>
                 </div>
               )}
@@ -74,15 +77,16 @@ const ClientList = () => {
             {/* Client Info */}
             <div className="min-w-0 flex-1">
               <p className="text-sm md:text-base font-medium text-gray-900 dark:text-white truncate">
-                {client.name}
+              {client.name || 'No name provided'}
               </p>
               <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 truncate">
-                {client.email}
+              {client.email || 'No email provided'}
               </p>
             </div>
           </div>
-        ))}
-      </div>
+        ))
+        )}
+    </div>
     </div>
   );
 };

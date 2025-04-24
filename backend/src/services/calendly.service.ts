@@ -22,18 +22,12 @@ export class CalendlyService {
     startTime?: string,
     endTime?: string,
     withDetails = false
-  ):Promise<any[]> {
+  ): Promise<any[]> {
     try {
       const response = await axios.get("https://api.calendly.com/scheduled_events", {
         headers: { Authorization: `Bearer ${accessToken}` },
         params: {
           user: userUri,
-          // status: "active",
-          // ...(startTime && { min_start_time: startTime }),
-          // ...(endTime && { max_start_time: endTime }),
-          // count: 100,
-          // sort: 'start_time:asc',
-          // invitees: 'true'
           min_start_time: startTime,
           max_start_time: endTime,
           count: 100
@@ -43,20 +37,48 @@ export class CalendlyService {
 
       const events = response.data.collection;
       if (!withDetails) return events;
-      
 
-      return events.map((event: any) => ({
-        eventId: event.uri,
-        startTime: event.start_time,
-        endTime: event.end_time,
-        title: event.name || 'Meeting',
-        clientName: event.name || 'Unknown',
-        clientEmail: event.email || 'Unknown',
-        meetingType: this.getMeetingType(event.location?.type),
-        meetingUrl: event.location?.join_url
+      // Fetch invitee details for each event
+      const detailedEvents = await Promise.all(events.map(async (event: any) => {
+        const invitee = await this.getInviteeDetails(accessToken, event.uri);
+        return {
+          eventId: event.uri,
+          startTime: event.start_time,
+          endTime: event.end_time,
+          title: event.name || 'Meeting',
+          clientName: invitee?.name || 'Unknown',
+          clientEmail: invitee?.email || 'Unknown',
+          meetingType: this.getMeetingType(event.location?.type),
+          meetingUrl: event.location?.join_url
+        };
       }));
+
+      return detailedEvents;
     } catch (error) {
       throw this.handleAxiosError(error, 'Failed to fetch scheduled events');
+    }
+  }
+
+  static async getInviteeDetails(accessToken: string, eventUri: string): Promise<{ name: string; email: string } | null> {
+    try {
+      const eventId = eventUri.split('/').pop();
+      console.log("Fetching invitee for event ID:", eventId);
+
+      const response = await axios.get(`https://api.calendly.com/scheduled_events/${eventId}/invitees`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: { count: 1 }, 
+      });
+
+      const invitee = response.data.collection?.[0];
+      if (!invitee) return null;
+
+      return {
+        name: invitee.name,
+        email: invitee.email,
+      };
+    } catch (error) {
+      console.error("Error fetching invitee details for", eventUri, error);
+      return null;
     }
   }
 

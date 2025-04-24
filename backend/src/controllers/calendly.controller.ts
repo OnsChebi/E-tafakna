@@ -80,15 +80,20 @@ export class CalendarController {
 
       const userUri = await CalendlyService.getCalendlyUserUri(accessToken);
       const events = await CalendlyService.getScheduledEvents(accessToken, userUri, undefined, undefined, true);
-
-      const clients = events.map((event: any) => ({
-        name: event.clientName,
-        email: event.clientEmail,
-        date: event.startTime,
-        title: event.title,
-        type: event.meetingType,
-        url: event.meetingUrl
-      }));
+      const uniqueClients = new Map<string , any>();
+      events.forEach((event:any)=>{
+        if (event.clientEmail){
+          const email=event.clientEmail.toLowerCase().trim();
+          if(!uniqueClients.has(email)){
+            uniqueClients.set(email,{
+              name:event.clientName?.trim() || 'Unknown',
+              email:email
+            })
+          }
+        }
+      })
+      
+      const clients = Array.from(uniqueClients.values());
 
       res.status(200).json({ clients });
     } catch (error: any) {
@@ -97,7 +102,6 @@ export class CalendarController {
     }
   }
 
-  // 🔧 Fix: static helper
   private static async ensureCalendlyConnection(req: Request, res: Response): Promise<{ accessToken?: string }> {
     const expertId = (req as any).user?.id;
 
