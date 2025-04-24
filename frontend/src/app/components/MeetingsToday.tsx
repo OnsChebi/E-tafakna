@@ -1,120 +1,99 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Video, Users, ArrowRight } from 'lucide-react';
+import { Button } from '../../components/ui/button';
+import { meetingToday, CalendlyEvent } from '../service/api';
 
-interface Meeting {
-  id: string;
-  title: string;
-  client: {
-    name: string;
-    image: string;
-  };
-  time: string;
-  type: string;
-  link: string;
-}
-
-const TodayMeetings: React.FC = () => {
-  const [meetings, setMeetings] = useState<Meeting[]>([]);
-  const [filteredMeetings, setFilteredMeetings] = useState<Meeting[]>([]);
-  const [activeType, setActiveType] = useState<string>('All');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+const MeetingsToday = () => {
+  const [activeTab, setActiveTab] = useState<'all' | 'Online' | 'In person'>('all');
+  const [meetings, setMeetings] = useState<CalendlyEvent[]>([]);
 
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const token = localStorage.getItem('authtoken');
-        const response = await axios.get('http://localhost:5000/api/calendly/today', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setMeetings(response.data);
-        setFilteredMeetings(response.data);
-      } catch (err) {
-        setError('Failed to load meetings');
-      } finally {
-        setLoading(false);
+        const res = await meetingToday.getTodaysMeetings();
+        setMeetings(res.data.events);
+      } catch (error) {
+        console.error('Failed to fetch meetings:', error);
       }
     };
-
     fetchMeetings();
   }, []);
 
-  const handleTabClick = (type: string) => {
-    setActiveType(type);
-    if (type === 'All') {
-      setFilteredMeetings(meetings);
-    } else {
-      setFilteredMeetings(meetings.filter((meeting) => meeting.type === type));
-    }
-  };
-
-  const meetingTypes = Array.from(new Set(meetings.map((m) => m.type)));
-  const tabs = ['All', ...meetingTypes];
-
-  if (loading) return <div className="text-center mt-10">Loading meetings...</div>;
-  if (error) return <div className="text-red-500 text-center mt-10">{error}</div>;
+  const filteredMeetings = meetings.filter(
+    (meeting) => activeTab === 'all' || meeting.meetingType === activeTab
+  );
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
-      <h2 className="text-2xl font-bold mb-6 text-center">Today's Meetings</h2>
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h2 className="text-xl font-semibold dark:text-white">Meetings Today</h2>
 
-      {/* Tabs */}
-      <div className="flex justify-center gap-4 mb-6 flex-wrap">
-        {tabs.map((type) => (
-          <button
-            key={type}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-              activeType === type
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-            onClick={() => handleTabClick(type)}
-          >
-            {type}
-          </button>
-        ))}
-      </div>
-
-      {/* Meeting Cards */}
-      {filteredMeetings.length === 0 ? (
-        <div className="text-center">No meetings found for this type.</div>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-2">
-          {filteredMeetings.map((meeting) => (
-            <div key={meeting.id} className="bg-white shadow-md rounded-xl p-5 flex flex-col gap-3">
-              <div className="flex items-center gap-4">
-                <img
-                  src={meeting.client.image || 'https://via.placeholder.com/40'}
-                  alt={meeting.client.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-semibold">{meeting.client.name}</p>
-                  <p className="text-sm text-gray-500">{meeting.type}</p>
-                </div>
-              </div>
-              <div className="flex justify-between items-center mt-2">
-                <span className="text-gray-600">{meeting.time}</span>
-                <a
-                  href={meeting.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline font-medium"
-                >
-                  Join Meeting
-                </a>
-              </div>
-            </div>
+        {/* Tabs */}
+        <div className="flex gap-2 border-b dark:border-gray-700">
+          {['all', 'Online', 'In person'].map((tab) => (
+            <Button
+              key={tab}
+              variant="ghost"
+              onClick={() => setActiveTab(tab as any)}
+              className={`rounded-none px-4 py-2 ${
+                activeTab === tab
+                  ? 'border-b-2 border-primary text-primary'
+                  : 'text-gray-500 dark:text-gray-400'
+              }`}
+            >
+              <Users className="w-4 h-4 mr-2" />
+              {tab === 'all' ? 'All' : tab}
+            </Button>
           ))}
         </div>
-      )}
+      </div>
+
+      {/* Meeting List */}
+      <div className="space-y-4 max-h-[600px] min-h-[176px] overflow-y-auto md:max-h-44">
+        {filteredMeetings.length === 0 ? (
+          <div className="text-center py-8 text-gray-500 dark:text-gray-300">
+            No meetings scheduled for today
+          </div>
+        ) : (
+          filteredMeetings.map((meeting) => (
+            <div
+              key={meeting.eventId}
+              className="flex items-center justify-between p-4 rounded-lg border dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            >
+              {/* Client Initial */}
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+                  {meeting.clientName?.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <h3 className="font-medium dark:text-white">{meeting.title}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {meeting.clientName} • {new Date(meeting.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              </div>
+
+              {/* Join Button */}
+              {meeting.meetingType === 'Online' && (
+                <Button
+                  variant="outline"
+                  className="gap-2 bg-[#1366e8] hover:bg-gray-400"
+                  onClick={() => window.open(meeting.eventId, '_blank')}
+                >
+                  <Video className="w-4 h-4 text-white" />
+                  <span className="text-white">Join</span>
+                  <ArrowRight className="w-4 h-4 text-white" />
+                </Button>
+              )}
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 };
 
-export default TodayMeetings;
+export default MeetingsToday;

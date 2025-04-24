@@ -47,9 +47,28 @@ export type Client={
 };
 
 //meetings today api
-export const meetingToday={
-  getTodaysMeetings:()=>api.get('/calendly/today ')
+export const meetingToday = {
+  getTodaysMeetings: () => api.get<MeetingApiResponse>('/calendly/today')
 }
+//upcoming meetingss
+export const upcomingMeeting ={
+  getUpcomingMeetings:()=>api.get<MeetingApiResponse>('/calenldy/upcoming')
+}
+
+export type MeetingApiResponse = {
+  events: CalendlyEvent[];
+};
+
+export type CalendlyEvent = {
+  eventId: string;
+  startTime: string;
+  endTime: string;
+  title: string;
+  clientName: string;
+  clientEmail: string;
+  meetingType: 'Online' | 'In person';
+};
+
 
 
 //folsers api
