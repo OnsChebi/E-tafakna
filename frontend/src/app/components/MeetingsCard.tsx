@@ -1,33 +1,48 @@
 "use client";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { MeetingToday, upcomingMeeting,CalendlyEvent, Meeting as ApiMeeting } from "../service/api";
 import ReschedulePopup from "./ReschedulePopup";
 
-
+// Internal Meeting type for the card
 type Meeting = {
-  id: number;
+  id: string;
   client: string;
   date: string;
   time: string;
   type: "recent" | "upcoming";
 };
 
-//  props 
-type MeetingsCardProps = {
-  recentMeetings: Meeting[];
-  upcomingMeetings: Meeting[];
-};
-
-const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) => {
-  
+const MeetingsCard = () => {
+  const [recentMeetings, setRecentMeetings] = useState<Meeting[]>([]);
+  const [upcomingMeetings, setUpcomingMeetings] = useState<Meeting[]>([]);
   const [activeTab, setActiveTab] = useState<"recent" | "upcoming">("recent");
-
-  //  selected meeting to reschedule
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
-
-  // bch n7lou popup
   const [showReschedule, setShowReschedule] = useState(false);
 
-  // Function for the reschedule button 
+  useEffect(() => {
+    const fetchMeetings = async () => {
+      try {
+        const responseUpcoming = await upcomingMeeting.getUpcomingMeetings();
+        
+
+        const upcomingMeetingsList: Meeting[] = responseUpcoming.data.events.map((event: ApiMeeting) => ({
+          id: event.eventId,
+          client: event.clientName,
+          date: event.startTime,
+          time: new Date(event.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          type: "upcoming",
+        }));
+
+        setUpcomingMeetings(upcomingMeetingsList);
+      } catch (error) {
+        console.error("Error fetching meetings:", error);
+      }
+    };
+
+    fetchMeetings();
+  }, []);
+
   const handleReschedule = (meeting: Meeting) => {
     setSelectedMeeting(meeting);
     setShowReschedule(true);
@@ -35,7 +50,7 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg  p-6">
-      {/* Tabs for Recent and Upcoming Meetings */}
+      {/* Tabs */}
       <div className="flex gap-4 border-b dark:border-gray-700 mb-4">
         <button
           onClick={() => setActiveTab("recent")}
@@ -59,9 +74,8 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
         </button>
       </div>
 
-      {/* Tables for Recent and Upcoming Meetings */}
+      {/* Meetings Table */}
       {activeTab === "recent" ? (
-        // Recent Meetings Table
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -88,7 +102,6 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
           </table>
         </div>
       ) : (
-        // Upcoming Meetings Table
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -131,8 +144,7 @@ const MeetingsCard = ({ recentMeetings, upcomingMeetings }: MeetingsCardProps) =
           meeting={selectedMeeting}
           onClose={() => setShowReschedule(false)}
           onConfirm={(newDate) => {
-            //  reschedule logic 
-            //console.log("Rescheduled to:", newDate);
+            console.log("Rescheduled to:", newDate);
             setShowReschedule(false);
           }}
         />

@@ -1,19 +1,29 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ClientList from "../components/ClientList";
 import MeetingsCard from "../components/MeetingsCard";
 import MeetingsToday from "../components/MeetingsToday";
 import ReminderCard from "../components/ReminderCard";
-import { isAuthenticated } from "../service/api";
+import { Meeting, isAuthenticated, upcomingMeeting } from "../service/api";
 import { useRouter } from "next/navigation";
 
 export default function MeetsDashboard() {
   const router = useRouter();
 
+  //const [recentMeetings,setRecentMeetings]=useState<Meeting[]>([]);
+  const [upcomingMeetings,setUpcomingMeetings]=useState<Meeting[]>([]);
+
+
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (!token) {
       router.push('/login');
+    }else{
+      upcomingMeeting.getUpcomingMeetings().then(res => {
+        console.log("Upcoming Meetings API response:", res.data);
+        setUpcomingMeetings(res.data.events);
+      });
+      
     }
   }, [router]);
 
@@ -52,16 +62,7 @@ export default function MeetsDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
         {/* Meetings Card - Takes 3/4 on larger screens */}
         <div className="md:col-span-3 flex flex-col h-full min-h-[200px]">
-          <MeetingsCard
-            recentMeetings={[
-              { id: 1, client: "Client A", date: "2024-03-20", time: "10:00 AM", type: "recent" },
-              { id: 2, client: "Client B", date: "2024-03-21", time: "11:00 AM", type: "recent" },
-            ]}
-            upcomingMeetings={[
-              { id: 3, client: "Client C", date: "2025-03-25", time: "12:00 PM", type: "upcoming" },
-              { id: 4, client: "Client D", date: "2025-03-26", time: "1:00 PM", type: "upcoming" },
-            ]}
-          />
+          <MeetingsCard/>
         </div>
 
         {/* Reminders - Takes 1/4 on larger screens */}
