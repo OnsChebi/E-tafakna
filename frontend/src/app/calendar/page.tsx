@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   addMonths,
   format,
@@ -14,9 +14,25 @@ import {
 import { Button } from '../../components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { clientApi } from '../service/api'; 
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [busyDates, setBusyDates] = useState<string[]>([]);
+
+  // Fetch busy dates from the API
+  useEffect(() => {
+    const fetchBusyDates = async () => {
+      try {
+        const response = await clientApi.getBusyDates();
+        setBusyDates(response.data.busyDates); 
+      } catch (error) {
+        console.error('Error fetching busy dates:', error);
+      }
+    };
+
+    fetchBusyDates();
+  }, []);
 
   // Calculate the start and end of the current month and week
   const start = startOfMonth(currentDate);
@@ -35,6 +51,12 @@ export default function CalendarPage() {
   // Handler to navigate to the next month
   const handleNextMonth = () => {
     setCurrentDate(addMonths(currentDate, 1));
+  };
+
+  // Check if a day is busy
+  const isBusy = (day: Date) => {
+    const dayString = format(day, 'yyyy-MM-dd'); // Format the day to compare with busyDates
+    return busyDates.includes(dayString); // Compare date string
   };
 
   return (
@@ -80,20 +102,19 @@ export default function CalendarPage() {
               href={`/calendar/${format(day, 'yyyy-MM-dd')}`}
             >
               <div
-                className={`p-2 border-b border-r border-gray-200 ${
-                  isCurrentMonth ? 'bg-white dark:bg-gray-800' : 'bg-gray-100 dark:bg-gray-600'
-                } h-[4.5rem] flex flex-col justify-center items-center`} // Increased height and centered content
+                className={`p-2 border-b border-r border-gray-200 ${isCurrentMonth ? 'bg-white dark:bg-gray-800' : 'bg-gray-100 dark:bg-gray-600'} h-[4.5rem] flex flex-col justify-center items-center`}
               >
                 {/* Day Number */}
                 <div
-                  className={`text-sm font-semibold ${
-                    isToday(day)
-                      ? 'bg-[#1366e8] text-white rounded-full w-8 h-8 flex items-center justify-center'
-                      : 'text-gray-800 dark:text-gray-200'
-                  } ${!isCurrentMonth && 'text-gray-400 dark:text-gray-500'}`}
+                  className={`text-sm font-semibold ${isToday(day) ? 'bg-[#1366e8] text-white rounded-full w-8 h-8 flex items-center justify-center' : 'text-gray-800 dark:text-gray-200'} ${!isCurrentMonth && 'text-gray-400 dark:text-gray-500'}`}
                 >
                   {format(day, 'd')}
                 </div>
+
+                {/* Blue Dot for Busy Days */}
+                {isBusy(day) && (
+                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
+                )}
               </div>
             </Link>
           );

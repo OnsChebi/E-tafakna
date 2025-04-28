@@ -1,3 +1,4 @@
+// api.ts
 import axios from "axios";
 
 const API_BASE = "http://localhost:5000/api";
@@ -33,6 +34,9 @@ api.interceptors.response.use(
 // Clients API
 export const clientApi = {
   getClientList: () => api.get<ApiResponse>("/calendly/clients"),
+
+  // Add a new function to fetch busy dates
+  getBusyDates: () => api.get<{ busyDates: string[] }>("/calendly/busy"),
 };
 
 export type ApiResponse = {
@@ -53,6 +57,10 @@ export const MeetingToday = {
 export const upcomingMeeting = {
   getUpcomingMeetings: () => api.get<MeetingsApiResponse>("/calendly/upcoming"),
 };
+
+export const  recentMeeting = {
+  getRecentMeetings: ()=> api.get<MeetingApiResponse>("/calendly/past")
+}
 
 export type MeetingApiResponse = {
   events: CalendlyEvent[];

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Video, Users, ArrowRight } from 'lucide-react';
 import { Button } from '../../components/ui/button';
-import { meetingToday, CalendlyEvent } from '../service/api';
+import { MeetingToday, CalendlyEvent } from '../service/api';
 
 const MeetingsToday = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'Online' | 'In person'>('all');
@@ -12,7 +12,7 @@ const MeetingsToday = () => {
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const res = await meetingToday.getTodaysMeetings();
+        const res = await MeetingToday.getTodaysMeetings();
         setMeetings(res.data.events);
       } catch (error) {
         console.error('Failed to fetch meetings:', error);
