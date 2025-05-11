@@ -2,11 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { cn } from "@/lib/utils";
+import {
+  CalendarDays,
+  ChartColumnIncreasing,
+  LogOut,
+  NotebookPen,
+  UserRoundPen,
+  Video,
+} from "lucide-react";
 
 interface MenuItem {
-  icon: string;
+  icon: ReactElement;
   label: string;
   href?: string;
   onClick?: () => void;
@@ -21,18 +29,38 @@ const menuItems: MenuGroup[] = [
   {
     title: "Menu",
     items: [
-      { icon: "/video.svg", label: "Meetings", href: "/meetings" },
-      { icon: "/stat.svg", label: "Statistics", href: "/statistics" },
-      { icon: "/user.svg", label: "Profile", href: "/profile" },
-      { icon: "/note.svg", label: "Notepad", href: "/notepad" },
-      { icon: "/calendar.svg", label: "Calendar", href: "/calendar" },
-      { 
-        icon: "/log-out.svg", 
-        label: "Logout", 
+      {
+        icon: <Video className="min-w-[24px]" />,
+        label: "Meetings",
+        href: "/meetings",
+      },
+      {
+        icon: <ChartColumnIncreasing className="min-w-[24px]" />,
+        label: "Statistics",
+        href: "/statistics",
+      },
+      {
+        icon: <UserRoundPen className="min-w-[24px]" />,
+        label: "Profile",
+        href: "/profile",
+      },
+      {
+        icon: <NotebookPen className="min-w-[24px]" />,
+        label: "Notepad",
+        href: "/notepad",
+      },
+      {
+        icon: <CalendarDays className="min-w-[24px]" />,
+        label: "Calendar",
+        href: "/calendar",
+      },
+      {
+        icon: <LogOut className="text-black" />,
+        label: "Logout",
         onClick: () => {
-          localStorage.removeItem('authToken');
-          window.location.href = '/login';
-        } 
+          localStorage.removeItem("authToken");
+          window.location.href = "/login";
+        },
       },
     ],
   },
@@ -64,12 +92,12 @@ const Sidebar = ({ isOpen, isMobile, onClose }: SidebarProps) => {
         "transition-all duration-300 ease-in-out",
         isMobile && [
           "w-[250px]",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isOpen ? "translate-x-0" : "-translate-x-full",
         ],
         !isMobile && [
           "w-[60px]",
           isHovered && "w-[250px]",
-          "lg:hover:w-[250px]"
+          "lg:hover:w-[250px]",
         ]
       )}
       onMouseEnter={() => !isMobile && setIsHovered(true)}
@@ -99,19 +127,14 @@ const Sidebar = ({ isOpen, isMobile, onClose }: SidebarProps) => {
                     href={item.href}
                     className={cn(
                       "flex items-center gap-3 text-gray-700 dark:text-gray-300",
-                      "p-3 rounded-lg transition-all duration-200",
+                      "py-3 rounded-lg transition-all duration-200",
                       "hover:bg-gray-100 dark:hover:bg-gray-800",
                       "active:scale-95 group"
                     )}
                     onClick={() => handleItemClick(item)}
                   >
-                    <Image
-                      src={item.icon}
-                      alt={item.label}
-                      width={24}
-                      height={24}
-                      className="min-w-[24px]"
-                    />
+                    {item.icon}
+
                     <span
                       className={cn(
                         "text-sm font-medium transition-opacity",
@@ -124,20 +147,11 @@ const Sidebar = ({ isOpen, isMobile, onClose }: SidebarProps) => {
                 ) : (
                   <button
                     onClick={() => handleItemClick(item)}
-                    className={cn(
-                      "flex items-center gap-3 text-gray-700 dark:text-gray-300 w-full",
-                      "p-3 rounded-lg transition-all duration-200",
-                      "hover:bg-gray-100 dark:hover:bg-gray-800",
-                      "active:scale-95 group"
-                    )}
+                    className=  {isExpanded ? "flex items-center gap-3 w-full" : ""}
+               
                   >
-                    <Image
-                      src={item.icon}
-                      alt={item.label}
-                      width={24}
-                      height={24}
-                      className="min-w-[24px]"
-                    />
+                    {item.icon}
+
                     <span
                       className={cn(
                         "text-sm font-medium transition-opacity",

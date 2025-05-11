@@ -1,9 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
-import { AppDataSource } from "./database/db";
 import cors from "cors";
 import helmet from "helmet";
-import routes from "./routes/index.routes"; 
+import { AppDataSource } from "./infrastructure/database/db";
+import indexRouter from "./infrastructure/http/routes/index.routes";
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ app.use(helmet()); // Secure HTTP headers
 app.use(express.json()); // Parse JSON bodies
 
 // Routes
-app.use("/api", routes); 
+app.use("/api", indexRouter); 
 
 // Database Initialization
 AppDataSource.initialize()

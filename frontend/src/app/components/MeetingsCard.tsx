@@ -10,6 +10,8 @@ type Meeting = {
   date: string;
   time: string;
   type: "recent" | "upcoming";
+  email?: string;
+  meetingUrl?: string;
 };
 
 const MeetingsCard = () => {
@@ -31,7 +33,7 @@ const MeetingsCard = () => {
 
         const processMeeting = (event: ApiMeeting, type: Meeting["type"]) => ({
           id: event.eventId,
-          client: event.clientName,
+          client: event.inviteeName,
           date: event.startTime,
           time: new Date(event.startTime).toLocaleTimeString([], { 
             hour: "2-digit", 
@@ -39,6 +41,7 @@ const MeetingsCard = () => {
             hour12: true
           }),
           type,
+          email: event.inviteeEmail
         });
 
         setUpcomingMeetings(
@@ -100,7 +103,7 @@ const MeetingsCard = () => {
         ) : activeTab === "recent" ? (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="sticky top-0 bg-white dark:bg-gray-900 z-10">
+              <thead className="sticky top-0 bg-white dark:bg-gray-900 ">
                 <tr className="text-left text-gray-500 dark:text-gray-200">
                   <th className="pb-3">Client Name</th>
                   <th className="pb-3">Meeting Date & Time</th>
@@ -128,7 +131,7 @@ const MeetingsCard = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="sticky top-0 bg-white dark:bg-gray-900 z-10">
+              <thead className="sticky top-0 bg-white dark:bg-gray-900 ">
                 <tr className="text-left text-gray-500 dark:text-gray-200">
                   <th className="pb-3">Client Name</th>
                   <th className="pb-3">Meeting Date & Time</th>
@@ -171,7 +174,7 @@ const MeetingsCard = () => {
           meeting={selectedMeeting}
           onClose={() => setShowReschedule(false)}
           onConfirm={(newDate) => {
-            console.log("Rescheduled to:", newDate);
+            //console.log("Rescheduled to:", newDate);
             setShowReschedule(false);
           }}
         />

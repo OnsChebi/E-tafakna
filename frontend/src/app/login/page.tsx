@@ -25,7 +25,7 @@ useEffect(()=>{
 
     try{
 
-    const response = await api.post('/auth/login',{
+    const response = await api.post('/expert/login',{
     email:credentials.email,
     password:credentials.password
     });

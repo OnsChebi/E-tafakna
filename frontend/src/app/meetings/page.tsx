@@ -20,7 +20,7 @@ export default function MeetsDashboard() {
       router.push('/login');
     }else{
       upcomingMeeting.getUpcomingMeetings().then(res => {
-        console.log("Upcoming Meetings API response:", res.data);
+        //console.log("Upcoming Meetings API response:", res.data);
         setUpcomingMeetings(res.data.events);
       });
       

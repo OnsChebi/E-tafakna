@@ -10,53 +10,53 @@ import {
   eachDayOfInterval,
   isSameMonth,
   isToday,
+  isAfter,
+  parseISO
 } from 'date-fns';
 import { Button } from '../../components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-import { clientApi } from '../service/api'; 
+import { busyDays } from '../service/api';
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [busyDates, setBusyDates] = useState<string[]>([]);
+  const [today] = useState(new Date());
 
   // Fetch busy dates from the API
   useEffect(() => {
     const fetchBusyDates = async () => {
       try {
-        const response = await clientApi.getBusyDates();
-        setBusyDates(response.data.busyDates); 
+        const response = await busyDays.getBusyDays();
+        // Filter dates to include only today and future dates
+        const filteredDates = response.data.busyDays.filter(dateString => {
+          const date = parseISO(dateString);
+          return isAfter(date, today) || isToday(date);
+        });
+        setBusyDates(filteredDates);
       } catch (error) {
         console.error('Error fetching busy dates:', error);
       }
     };
 
     fetchBusyDates();
-  }, []);
+  }, [today]);
 
-  // Calculate the start and end of the current month and week
+  // Calendar calculation logic
   const start = startOfMonth(currentDate);
   const end = endOfMonth(currentDate);
   const startWeek = startOfWeek(start);
   const endWeek = endOfWeek(end);
-
-  // Return the array of dates within the specified time interval.
   const days = eachDayOfInterval({ start: startWeek, end: endWeek });
 
-  // Handler to navigate to the previous month
-  const handlePrevMonth = () => {
-    setCurrentDate(addMonths(currentDate, -1));
-  };
+  const handlePrevMonth = () => setCurrentDate(addMonths(currentDate, -1));
+  const handleNextMonth = () => setCurrentDate(addMonths(currentDate, 1));
 
-  // Handler to navigate to the next month
-  const handleNextMonth = () => {
-    setCurrentDate(addMonths(currentDate, 1));
-  };
-
-  // Check if a day is busy
+  // Check if a day is busy and in the future
   const isBusy = (day: Date) => {
-    const dayString = format(day, 'yyyy-MM-dd'); // Format the day to compare with busyDates
-    return busyDates.includes(dayString); // Compare date string
+    const dayString = format(day, 'yyyy-MM-dd');
+    return busyDates.includes(dayString) && 
+      (isAfter(day, today) || isToday(day));
   };
 
   return (
@@ -70,7 +70,9 @@ export default function CalendarPage() {
         >
           <ChevronLeft className="h-7 w-7 text-blue-500" />
         </Button>
-        <h1 className="text-2xl font-bold dark:text-gray-50">{format(currentDate, 'MMMM yyyy')}</h1>
+        <h1 className="text-2xl font-bold dark:text-gray-50">
+          {format(currentDate, 'MMMM yyyy')}
+        </h1>
         <Button
           variant="ghost"
           className="p-2 hover:bg-blue-50 dark:hover:bg-gray-800"
@@ -95,25 +97,28 @@ export default function CalendarPage() {
         {/* Days */}
         {days.map((day) => {
           const isCurrentMonth = isSameMonth(day, currentDate);
+          const dayFormatted = format(day, 'yyyy-MM-dd');
 
           return (
             <Link
-              key={day.toISOString()}
-              href={`/calendar/${format(day, 'yyyy-MM-dd')}`}
+              key={dayFormatted}
+              href={`/calendar/${dayFormatted}`}
             >
-              <div
-                className={`p-2 border-b border-r border-gray-200 ${isCurrentMonth ? 'bg-white dark:bg-gray-800' : 'bg-gray-100 dark:bg-gray-600'} h-[4.5rem] flex flex-col justify-center items-center`}
-              >
+              <div className={`relative p-2 border-b border-r border-gray-200 
+                ${isCurrentMonth ? 'bg-white dark:bg-gray-800' : 'bg-gray-100 dark:bg-gray-600'} 
+                h-[4.5rem] flex flex-col justify-center items-center`}>
+
                 {/* Day Number */}
-                <div
-                  className={`text-sm font-semibold ${isToday(day) ? 'bg-[#1366e8] text-white rounded-full w-8 h-8 flex items-center justify-center' : 'text-gray-800 dark:text-gray-200'} ${!isCurrentMonth && 'text-gray-400 dark:text-gray-500'}`}
-                >
+                <div className={`text-sm font-semibold 
+                  ${isToday(day) ? 'bg-[#1366e8] text-white rounded-full w-8 h-8 flex items-center justify-center' : 'text-gray-800 dark:text-gray-200'} 
+                  ${!isCurrentMonth && 'text-gray-400 dark:text-gray-500'}`}>
                   {format(day, 'd')}
                 </div>
 
-                {/* Blue Dot for Busy Days */}
+                {/* Blue Dot for Future Busy Days */}
                 {isBusy(day) && (
-                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
+                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 
+                    w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
                 )}
               </div>
             </Link>

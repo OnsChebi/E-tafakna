@@ -32,7 +32,7 @@ export default function HourDetailsPage() {
       return;
     }
 
-    console.log('Scheduling for:', selectedClient);
+    //console.log('Scheduling for:', selectedClient);
     router.push(`/calendar/${day}`);
   };
 

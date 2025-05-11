@@ -3,26 +3,26 @@
 import { useEffect, useState } from 'react';
 import { Video, Users, ArrowRight } from 'lucide-react';
 import { Button } from '../../components/ui/button';
-import { MeetingToday, CalendlyEvent } from '../service/api';
+import { MeetingToday } from '../service/api';
 
 const MeetingsToday = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'Online' | 'In person'>('all');
-  const [meetings, setMeetings] = useState<CalendlyEvent[]>([]);
+  const [meetings, setMeetings] = useState<any[]>([]); // Temporarily use any
 
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
         const res = await MeetingToday.getTodaysMeetings();
-        setMeetings(res.data.events);
-      } catch (error) {
-        console.error('Failed to fetch meetings:', error);
+        setMeetings(res.data.events); // Make sure it maps directly
+      } catch (error: any) {
+        console.error('Failed to fetch meetings:', error?.response?.data || error.message);
       }
     };
     fetchMeetings();
   }, []);
 
   const filteredMeetings = meetings.filter(
-    (meeting) => activeTab === 'all' || meeting.meetingType === activeTab
+    (meeting) => activeTab === 'all' || meeting.type === activeTab
   );
 
   return (
@@ -66,22 +66,22 @@ const MeetingsToday = () => {
               {/* Client Initial */}
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
-                  {meeting.clientName?.charAt(0).toUpperCase()}
+                  {meeting.inviteeName?.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <h3 className="font-medium dark:text-white">{meeting.title}</h3>
+                  <h3 className="font-medium dark:text-white">{meeting.inviteeName}</h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {meeting.clientName} • {new Date(meeting.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(meeting.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
               </div>
 
               {/* Join Button */}
-              {meeting.meetingType === 'Online' && (
+              {meeting.type === 'Online' && (
                 <Button
                   variant="outline"
                   className="gap-2 bg-[#1366e8] hover:bg-gray-400"
-                  onClick={() => window.open(meeting.eventId, '_blank')}
+                  onClick={() => window.open(meeting.meetingUrl, '_blank')}
                 >
                   <Video className="w-4 h-4 text-white" />
                   <span className="text-white">Join</span>

@@ -40,7 +40,7 @@ export default function NotepadPage() {
   // Load notes when selected folder changes
   useEffect(() => {
   if (selectedFolder?.id) {
-    console.log('Fetching notes for folder ID:', selectedFolder.id);
+    //console.log('Fetching notes for folder ID:', selectedFolder.id);
     dispatch(fetchNotes(selectedFolder.id))
       // .then((notes) => {
       //   console.log('Received notes:', notes);
