@@ -1,7 +1,8 @@
 import { Expert } from "../../../core/entities/Expert.entity";
+import { IExpertRepository } from "../../../core/repositories/expert.repository";
 import { AppDataSource } from "../db";
 
-export class ExpertRepositoryImpl implements ExpertRepositoryImpl {
+export class ExpertRepositoryImpl implements IExpertRepository {
   private repo = AppDataSource.getRepository(Expert);
 
   async create(expert: Expert): Promise<Expert> {
@@ -10,5 +11,14 @@ export class ExpertRepositoryImpl implements ExpertRepositoryImpl {
 
   async findByEmail(email: string): Promise<Expert | null> {
     return await this.repo.findOneBy({ email });
+  }
+
+  async findById(id: number): Promise<Expert | null> {
+    return this.repo.findOneBy({ id });
+  }
+
+  async update(id: number, data: Partial<Expert>): Promise<Expert | null> {
+    await this.repo.update(id, data);
+    return this.findById(id);
   }
 }

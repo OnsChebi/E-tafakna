@@ -19,6 +19,12 @@ export class Expert {
   @Column({ name: 'accessToken', type: 'text' })
   accessToken!: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  profileImage!: string;
+
+  @Column({ type: 'text', nullable: true })
+  bio!: string;
+
   @OneToMany(() => Folder, (folder) => folder.expert)
   folders!: Folder[];
 

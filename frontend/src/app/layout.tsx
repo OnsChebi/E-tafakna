@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import ReduxProvider from "./redux/ReduxProvider";
 import Layout from "./components/Layout";

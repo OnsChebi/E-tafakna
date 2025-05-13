@@ -1,16 +1,18 @@
-
 import axios from "axios";
 
+// Base API URL
 const API_BASE = "http://localhost:5000/api";
+
+
 
 const api = axios.create({
   baseURL: API_BASE,
   headers: {
     "Content-Type": "application/json",
-    
   },
 });
 
+// Auth token injection
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("authToken");
@@ -21,6 +23,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Handle 401 errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -32,20 +35,19 @@ api.interceptors.response.use(
   }
 );
 
+// Expert API
+export const expertApi = {
+  getProfile: () => api.get("/expert/me"),
+  updateProfile: (formData: FormData) =>
+    api.put("/expert/profile", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      withCredentials: true,
+    }),
+};
+
 // Clients API
 export const clientApi = {
-  getClientList: () => api.get<ApiResponse>("/calendly/clients"),
-  //getBusyDates: () => api.get<{ busyDates: string[] }>("/calendly/busy"),
-};
-
-export type ApiResponse = {
-  clients: Client[];
-};
-
-export type Client = {
-  name: string;
-  email: string;
-  
+  getClientListe: () => api.get<ApiResponse>("/calendly/clients"),
 };
 
 // Meetings API
@@ -54,45 +56,18 @@ export const MeetingToday = {
 };
 
 export const upcomingMeeting = {
-  getUpcomingMeetings: () => api.get<MeetingsApiResponse>("/calendly/upcoming")
+  getUpcomingMeetings: () => api.get<MeetingsApiResponse>("/calendly/upcoming"),
 };
 
-export const  recentMeeting = {
-  getRecentMeetings: ()=> api.get<MeetingApiResponse>("/calendly/past")
-}
-
-export type MeetingApiResponse = {
-  events: CalendlyEvent[];
+export const recentMeeting = {
+  getRecentMeetings: () => api.get<MeetingApiResponse>("/calendly/past"),
 };
 
 export const busyDays = {
-  getBusyDays: () => api.get<busyDatesResponse>("calendly/busy")
-}
-export type busyDatesResponse ={
-  busyDays : string[]
-}
-
-export type CalendlyEvent = {
-  eventId: string;
-  startTime: string;
-  endTime: string;
-  inviteeName: string;
-  inviteeEmail: string;
-  meetingType: "Online" | "In person";
-  meetingUrl?: string;
+  getBusyDays: () => api.get<busyDatesResponse>("/calendly/busy"),
 };
 
-export type Meeting = {
-  eventId: string;
-  startTime: string;
-  inviteeName: string;
-  inviteeEmail:string;
-};
-
-export type MeetingsApiResponse = {
-  events: Meeting[];
-};
-//folder
+// Folder API
 export const folderApi = {
   getAll: () => api.get("/folder"),
   create: (name: string) => api.post("/folder", { name }),
@@ -101,14 +76,14 @@ export const folderApi = {
   delete: (id: number) => api.delete(`/folder/${id}`),
 };
 
-//note
+// Note API
 export type Note = {
   id: number;
   text: string;
   created_at: string;
-  folder_id: number; 
+  folder_id: number;
 };
-// Notes API
+
 export const noteApi = {
   getByFolder: (folderId: number) => api.get(`/note/folder/${folderId}`),
   create: (note: { text: string; folderId: number }) => api.post("/note", note),
@@ -128,6 +103,45 @@ export const logout = () => {
     localStorage.removeItem("authToken");
     window.location.href = "/login";
   }
+};
+
+// Type Definitions
+export type ApiResponse = {
+  clients: Client[];
+};
+
+export type Client = {
+  name: string;
+  email: string;
+};
+
+export type MeetingApiResponse = {
+  events: CalendlyEvent[];
+};
+
+export type busyDatesResponse = {
+  busyDays: string[];
+};
+
+export type CalendlyEvent = {
+  eventId: string;
+  startTime: string;
+  endTime: string;
+  inviteeName: string;
+  inviteeEmail: string;
+  meetingType: "Online" | "In person";
+  meetingUrl?: string;
+};
+
+export type Meeting = {
+  eventId: string;
+  startTime: string;
+  inviteeName: string;
+  inviteeEmail: string;
+};
+
+export type MeetingsApiResponse = {
+  events: Meeting[];
 };
 
 export default api;
