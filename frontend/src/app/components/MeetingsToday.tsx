@@ -7,15 +7,22 @@ import { MeetingToday } from '../service/api';
 
 const MeetingsToday = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'Online' | 'In person'>('all');
-  const [meetings, setMeetings] = useState<any[]>([]); // Temporarily use any
+  const [meetings, setMeetings] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
         const res = await MeetingToday.getTodaysMeetings();
-        setMeetings(res.data.events); // Make sure it maps directly
+        //console.log('API Response:', res.data);
+        setMeetings(res.data.events || []); 
       } catch (error: any) {
-        console.error('Failed to fetch meetings:', error?.response?.data || error.message);
+        console.error('Failed to fetch meetings:', {
+          message: error.message,
+          response: error.response,
+          status: error.response?.status,
+          data: error.response?.data,
+          config: error.config,
+        });
       }
     };
     fetchMeetings();

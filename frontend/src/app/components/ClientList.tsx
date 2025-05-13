@@ -1,6 +1,7 @@
-"use client";
-import { useEffect, useState } from "react";
-import { Client, clientApi } from "../service/api";
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Client, clientApi } from '../service/api';
 
 const ClientList = () => {
   const [clients, setClients] = useState<Client[]>([]);
@@ -11,11 +12,16 @@ const ClientList = () => {
     const fetchClients = async () => {
       try {
         const response = await clientApi.getClientListe();
-        console.log(response.data.clients)
-        setClients(response.data.clients);
-      } catch (err) {
-        console.error("Failed to fetch clients:", err);
-        setError("Failed to load clients.");
+        console.log('Clients:', response.data.clients);
+        setClients(response.data.clients || []);
+      } catch (err: any) {
+        console.error('Failed to fetch clients:', {
+          message: err.message,
+          status: err.response?.status,
+          data: err.response?.data,
+          config: err.config,
+        });
+        setError('Failed to load clients.');
       } finally {
         setLoading(false);
       }
@@ -31,7 +37,6 @@ const ClientList = () => {
           Client List
         </h3>
       </div>
-
       <div className="overflow-y-auto max-h-[300px] md:max-h-56">
         {loading ? (
           <p className="p-4 text-center text-gray-500 dark:text-gray-400">
@@ -51,15 +56,15 @@ const ClientList = () => {
             >
               <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
                 <span className="text-white font-medium text-lg">
-                  {client.name?.charAt(0).toUpperCase() || "?"}
+                  {client.name?.charAt(0).toUpperCase() || '?'}
                 </span>
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                  {client.name || "No name"}
+                  {client.name || 'No name'}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                  {client.email || "No email"}
+                  {client.email || 'No email'}
                 </p>
               </div>
             </div>
