@@ -1,16 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Menu, Sun, Moon, X } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { expertApi } from "../service/api";
+import { useToast } from "@/hooks/use-toast";
 
 interface NavbarProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   darkMode: boolean;
   setDarkMode: (mode: boolean) => void;
-  username: string;
-  profileImage?: string;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
@@ -18,9 +19,26 @@ const Navbar: React.FC<NavbarProps> = ({
   setIsOpen,
   darkMode,
   setDarkMode,
-  username,
-  profileImage
 }) => {
+  const [name, setName] = useState("");
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const { data } = await expertApi.getProfile();
+        setName(data.name || "");
+        setPreviewImage(data.profileImage);
+      } catch (error) {
+        toast({ title: "Error", description: "Failed to load profile." });
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  const fullImageUrl = previewImage || "/user.svg";
+
   return (
     <header className="sticky top-0 bg-white dark:bg-gray-900 shadow-md px-4 py-2 flex justify-between items-center z-20 h-14">
       <div className="flex items-center gap-4">
@@ -36,13 +54,13 @@ const Navbar: React.FC<NavbarProps> = ({
 
       <div className="flex items-center gap-4">
         <Image
-          src={profileImage || "/user.svg"}
+          src={fullImageUrl}
           alt="User Profile"
           width={32}
           height={32}
           className="rounded-full border border-gray-300 dark:border-gray-600 object-cover"
         />
-        <span className="dark:text-gray-50 hidden sm:block">{username}</span>
+        <span className="dark:text-gray-50 hidden sm:block">{name}</span>
 
         <Button variant="ghost" onClick={() => setDarkMode(!darkMode)} aria-label="Toggle theme">
           {darkMode ? (

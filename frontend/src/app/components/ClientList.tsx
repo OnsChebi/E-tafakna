@@ -10,7 +10,7 @@ const ClientList = () => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await clientApi.getClientList();
+        const response = await clientApi.getClientListe();
         console.log(response.data.clients)
         setClients(response.data.clients);
       } catch (err) {
