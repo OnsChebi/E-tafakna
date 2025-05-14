@@ -24,38 +24,39 @@ interface MenuGroup {
   title: string;
   items: MenuItem[];
 }
+const iconClasses = "min-w-[24px] text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white";
 
 const menuItems: MenuGroup[] = [
   {
     title: "Menu",
     items: [
       {
-        icon: <Video className="min-w-[24px]" />,
+        icon: <Video className={iconClasses} />,
         label: "Meetings",
         href: "/meetings",
       },
       {
-        icon: <ChartColumnIncreasing className="min-w-[24px]" />,
+        icon: <ChartColumnIncreasing className={iconClasses} />,
         label: "Statistics",
         href: "/statistics",
       },
       {
-        icon: <UserRoundPen className="min-w-[24px]" />,
+        icon: <UserRoundPen className={iconClasses} />,
         label: "Profile",
         href: "/profile",
       },
       {
-        icon: <NotebookPen className="min-w-[24px]" />,
+        icon: <NotebookPen className={iconClasses} />,
         label: "Notepad",
         href: "/notepad",
       },
       {
-        icon: <CalendarDays className="min-w-[24px]" />,
+        icon: <CalendarDays className={iconClasses} />,
         label: "Calendar",
         href: "/calendar",
       },
       {
-        icon: <LogOut className="text-black" />,
+        icon: <LogOut className={iconClasses} />,
         label: "Logout",
         onClick: () => {
           localStorage.removeItem("authToken");
@@ -65,6 +66,7 @@ const menuItems: MenuGroup[] = [
     ],
   },
 ];
+
 
 interface SidebarProps {
   isOpen: boolean;
@@ -126,7 +128,7 @@ const Sidebar = ({ isOpen, isMobile, onClose }: SidebarProps) => {
                   <Link
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 text-gray-700 dark:text-gray-300",
+                      "flex items-center gap-3 text-gray-900 dark:text-gray-300",
                       "py-3 rounded-lg transition-all duration-200",
                       "hover:bg-gray-100 dark:hover:bg-gray-800",
                       "active:scale-95 group"

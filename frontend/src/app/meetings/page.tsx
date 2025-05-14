@@ -40,7 +40,7 @@ export default function MeetsDashboard() {
 
         {/* Client List - Takes 1/4 on medium screens */}
         <div className="md:col-span-1 flex flex-col h-full min-h-[200px]">
-          {/* <ClientList /> */}
+          <ClientList />
         </div>
 
         {/* Calendar Section + Button */}
