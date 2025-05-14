@@ -25,12 +25,23 @@ const MeetingsToday = () => {
         });
       }
     };
+
     fetchMeetings();
+    const interval = setInterval(fetchMeetings, 60 * 1000); // Optional: auto-refresh every 1 min
+    return () => clearInterval(interval);
   }, []);
 
-  const filteredMeetings = meetings.filter(
-    (meeting) => activeTab === 'all' || meeting.type === activeTab
-  );
+  const now = new Date();
+
+  const filteredMeetings = meetings
+    .filter((meeting) => {
+      const startTime = new Date(meeting.startTime);
+      const endTime = meeting.endTime
+        ? new Date(meeting.endTime)
+        : new Date(startTime.getTime() + 30 * 60000); // Assume 30 mins if endTime is missing
+      return endTime > now;
+    })
+    .filter((meeting) => activeTab === 'all' || meeting.type === activeTab);
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
