@@ -62,12 +62,12 @@ export default function MeetsDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
         {/* Meetings Card - Takes 3/4 on larger screens */}
         <div className="md:col-span-3 flex flex-col h-full min-h-[200px]">
-          <MeetingsCard/>
+          {/* <MeetingsCard/> */}
         </div>
 
         {/* Reminders - Takes 1/4 on larger screens */}
         <div className="md:col-span-1 flex flex-col h-full min-h-[200px]">
-          <ReminderCard />
+          {/* <ReminderCard /> */}
         </div>
       </div>
     </main>

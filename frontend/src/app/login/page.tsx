@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({});
 
 useEffect(()=>{
   const token=localStorage.getItem('authToken');
@@ -36,8 +36,17 @@ useEffect(()=>{
     }
 
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed');
-    } finally {
+      const msg = err.response?.data?.message || 'Login failed';
+  if (msg.includes('Email')) {
+    setErrors({ email: msg });
+  } else if (msg.includes('password') || msg.includes('Password')) {
+    setErrors({ password: msg });
+  } else {
+    setErrors({ general: msg });
+  }
+//bch y5tafi msg
+  setTimeout(() => setErrors({}), 4000);
+} finally {
       setIsLoading(false);
     }
   };
@@ -199,18 +208,16 @@ useEffect(()=>{
       required
     />
     {/* Email Error Message */}
-    {error && error.includes('Email') && (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-[#ee8989] text-xs mt-1 ml-2 font-medium flex items-center gap-1"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-        </svg>
-        {error}
-      </motion.div>
-    )}
+    {errors.email && (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="text-[#e20260] text-sm mt-1 ml-2 font-medium flex items-center gap-1"
+  >
+    {errors.email}
+  </motion.div>
+)}
+
   </motion.div>
 
   {/* Password Input */}
@@ -236,35 +243,30 @@ useEffect(()=>{
       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
     </button>
     {/* Password Error Message */}
-    {error && error.includes('Password') && (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-[#ff4444] text-xs mt-1 ml-2 font-medium flex items-center gap-1"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-        </svg>
-        {error}
-      </motion.div>
-    )}
+    {errors.password && (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="text-[#e20260] text-sm mt-1 ml-2 font-medium flex items-center gap-1"
+    >
+    {errors.password}
+  </motion.div>
+)}
+
   </motion.div>
 
   {/* General Error Message */}
   <AnimatePresence>
-    {error && !error.includes('Email') && !error.includes('Password') && (
-      <motion.div
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: 1, height: 'auto' }}
-        exit={{ opacity: 0, height: 0 }}
-        className="text-[#ff4444] text-sm text-left mt-2 ml-2 font-medium flex items-center gap-2"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-        </svg>
-        {error}
-      </motion.div>
-    )}
+  {errors.general && (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="text-[#e20260] text-sm mt-1 ml-2 font-medium flex items-center gap-1"
+    >
+    {errors.general}
+  </motion.div>
+)}
+
   </AnimatePresence>
             {/* Submit Button */}
             <motion.button

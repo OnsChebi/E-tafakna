@@ -15,11 +15,11 @@ export class LoginExpertUseCase {
     if (!expert) throw new Error('Expert not found');
 
     const isValid = await compare(password, expert.password);
-    if (!isValid) throw new Error('Invalid credentials');
+    if (!isValid) throw new Error('Incorrect password');
 
     const token = jwt.sign(
       { id: expert.id, email: expert.email },
-      process.env.JWT_SECRET || 'secret',
+      process.env.JWT_SECRET ||'e0df18fazeFSRDTF5854HbgGY' ,
       { expiresIn: '6h' }
     );
 

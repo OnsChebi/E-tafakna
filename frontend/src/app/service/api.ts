@@ -29,7 +29,7 @@ api.interceptors.response.use(
   (error) => {
     if (typeof window !== "undefined" && error.response?.status === 401) {
       localStorage.removeItem("authToken");
-      window.location.href = "/expert/login";
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
