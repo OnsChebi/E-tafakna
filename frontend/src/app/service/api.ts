@@ -12,7 +12,7 @@ const api = axios.create({
   },
 });
 
-// Auth token injection
+// Inject token before request
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("authToken");
@@ -23,34 +23,38 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle 401 errors
+
+// Global error handler
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (typeof window !== "undefined" && error.response?.status === 401) {
-      localStorage.removeItem("authToken");
-      window.location.href = "/login";
+    if (typeof window !== "undefined") {
+      if (error.response?.status === 401) {
+        localStorage.removeItem("authToken");
+        window.location.href = "/login";
+      } else if (error.response?.status === 500) {
+        console.error("Internal Server Error:", error.response?.data);
+      }
     }
     return Promise.reject(error);
   }
 );
 
-// Expert API
+
+// ==== API Services ====
+
 export const expertApi = {
   getProfile: () => api.get("/expert/me"),
   updateProfile: (formData: FormData) =>
     api.put("/expert/profile", formData, {
       headers: { "Content-Type": "multipart/form-data" },
-      withCredentials: true,
     }),
 };
 
-// Clients API
 export const clientApi = {
   getClientListe: () => api.get<ApiResponse>("/calendly/clients"),
 };
 
-// Meetings API
 export const MeetingToday = {
   getTodaysMeetings: () => api.get<MeetingApiResponse>("/calendly/today"),
 };
@@ -105,7 +109,8 @@ export const logout = () => {
   }
 };
 
-// Type Definitions
+// ===== Types =====
+
 export type ApiResponse = {
   clients: Client[];
 };

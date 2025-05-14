@@ -9,41 +9,47 @@ import { useRouter } from "next/navigation";
 
 export default function MeetsDashboard() {
   const router = useRouter();
+    const [recentMeetings,setRecentMeetings]=useState<Meeting[]>([]);
 
-  //const [recentMeetings,setRecentMeetings]=useState<Meeting[]>([]);
-  const [upcomingMeetings,setUpcomingMeetings]=useState<Meeting[]>([]);
-
+  const [upcomingMeetings, setUpcomingMeetings] = useState<Meeting[]>([]);
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (!token) {
-      router.push('/login');
-    }else{
-      upcomingMeeting.getUpcomingMeetings().then(res => {
-        //console.log("Upcoming Meetings API response:", res.data);
-        setUpcomingMeetings(res.data.events);
-      });
-      
+      router.push("/login");
+    } else {
+      setAuthChecked(true);
+      upcomingMeeting
+        .getUpcomingMeetings()
+        .then((res) => {
+          setUpcomingMeetings(res.data.events);
+        })
+        .catch((err) => {
+          console.error("Error fetching meetings:", err);
+        });
     }
   }, [router]);
 
-  if(!isAuthenticated()){
-    return <div>Unauthorized</div>;
+  if (!authChecked) {
+    return <div className="p-4 text-gray-500">Checking authentication...</div>;
   }
+
+  if (!isAuthenticated()) {
+    return <div className="p-4 text-red-500">Unauthorized</div>;
+  }
+
   return (
     <main className="p-4 min-h-screen bg-gray-200 dark:bg-gray-700">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        {/* Meetings Today - Takes 2/4 on medium screens */}
         <div className="md:col-span-2 flex flex-col h-full min-h-[200px]">
           {/* <MeetingsToday /> */}
         </div>
 
-        {/* Client List - Takes 1/4 on medium screens */}
         <div className="md:col-span-1 flex flex-col h-full min-h-[200px]">
           <ClientList />
         </div>
 
-        {/* Calendar Section + Button */}
         <div className="md:col-span-1 flex flex-col gap-4">
           {/* <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
             <h2 className="text-lg font-semibold mb-2 dark:text-white">Calendar</h2>
@@ -57,14 +63,10 @@ export default function MeetsDashboard() {
         </div>
       </div>
 
-      {/* Second Row - Responsive Layout */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-        {/* Meetings Card - Takes 3/4 on larger screens */}
         <div className="md:col-span-3 flex flex-col h-full min-h-[200px]">
-          {/* <MeetingsCard/> */}
+          {/* <MeetingsCard /> */}
         </div>
-
-        {/* Reminders - Takes 1/4 on larger screens */}
         <div className="md:col-span-1 flex flex-col h-full min-h-[200px]">
           {/* <ReminderCard /> */}
         </div>

@@ -9,16 +9,30 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
   async getAccessToken(expertId: number): Promise<string> {
     const expert = await AppDataSource.getRepository(Expert).findOneBy({ id: expertId });
     if (!expert?.accessToken) throw new Error("Calendly not connected");
-    //console.log("Access token being used:", decryptToken(expert.accessToken));
-    return decryptToken(expert.accessToken);
+  
+    try {
+      const decrypted = decryptToken(expert.accessToken);
+      //console.log(" Decrypted token:", decrypted);
+      return decrypted;
+    } catch (err) {
+      console.error(" Failed to decrypt token", err);
+      throw new Error("Failed to decrypt Calendly token");
+    }
   }
+  
 
   async getUserUri(token: string): Promise<string> {
-    const res = await axios.get("https://api.calendly.com/users/me", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data.resource.uri;
+    try {
+      const res = await axios.get("https://api.calendly.com/users/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data.resource.uri;
+    } catch (err: any) {
+      console.error(" Failed to get Calendly user URI", err.response?.data || err.message);
+      throw new Error("Calendly user URI fetch failed");
+    }
   }
+  
 
   async getScheduledEvents(token: string, userUri: string, start?: string, end?: string): Promise<any[]> {
     const res = await axios.get("https://api.calendly.com/scheduled_events", {
@@ -85,19 +99,30 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
   }
 
   async getClientList(token: string, userUri: string): Promise<any[]> {
-    const events = await this.getScheduledEvents(token, userUri);
-    const invitees = await Promise.all(events.map(async (event: any) => {
-      const invitee = await this.getInvitee(token, event.uri);
-      return invitee ? { name: invitee.name, email: invitee.email } : null;
-    }));
-
-    const unique = new Map<string, any>();
-    for (const client of invitees) {
-      if (client && !unique.has(client.email)) {
-        unique.set(client.email, client);
+    try {
+      const events = await this.getScheduledEvents(token, userUri);
+      const invitees = await Promise.all(events.map(async (event: any) => {
+        try {
+          const invitee = await this.getInvitee(token, event.uri);
+          return invitee ? { name: invitee.name, email: invitee.email } : null;
+        } catch (err:any) {
+          console.warn(` Failed to get invitee for event ${event.uri}`, err.response?.data || err.message);
+          return null;
+        }
+      }));
+  
+      const unique = new Map<string, any>();
+      for (const client of invitees) {
+        if (client && !unique.has(client.email)) {
+          unique.set(client.email, client);
+        }
       }
+  
+      return Array.from(unique.values());
+    } catch (err:any) {
+      console.error("Failed to get client list", err.response?.data || err.message);
+      throw new Error("Client list fetch failed");
     }
-
-    return Array.from(unique.values());
   }
+  
 }
