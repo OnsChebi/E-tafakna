@@ -19,7 +19,7 @@ export class LoginExpertUseCase {
 
     const token = jwt.sign(
       { id: expert.id, email: expert.email },
-      process.env.JWT_SECRET ||'e0df18fazeFSRDTF5854HbgGY' ,
+      process.env.JWT_SECRET ||'edffazeFSRDTF5854HGY' ,
       { expiresIn: '6h' }
     );
 

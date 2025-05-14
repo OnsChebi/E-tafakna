@@ -28,15 +28,14 @@ export const loginController = async (req: Request, res: Response) => {
 
   try {
     const result = await useCase.execute({ email, password });
-    res.status(200).json({ success: true, data: result });
+    res.json(result);
   } catch (e: any) {
     const errorMessage = e.message === 'Expert not found' || e.message === 'Incorrect password'
       ? e.message
       : 'Login failed';
     res.status(400).json({ success: false, message: errorMessage });
   }
-};
-
+}
 
 export async function getProfileController(req: Request, res: Response): Promise<void> {
   try {
