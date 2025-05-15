@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-import { MeetingToday, clientApi, folderApi} from "../service/api";
+import { MeetingToday, clientApi, folderApi, upcomingMeeting} from "../service/api";
 import { Calendar, Folder, Notebook } from "lucide-react";
 import { KeyMetricsGrid } from "../components/KeyMetricGrid";
 import { MeetingTypesChart } from "../components/MeetingTypeChart";
