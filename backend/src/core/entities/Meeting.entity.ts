@@ -27,8 +27,14 @@ export class Meeting {
   @Column()
   type!: 'Online' | 'In person';
 
+  @Column()
+  status!: 'active' | 'canceled';
+
   @Column({ nullable: true })
   meetingUrl!: string;
+
+  @Column({ type: 'text', nullable: true  })
+  reason!: string;
 
   @ManyToOne(() => Expert, (expert) => expert.meetings)
   expert!: Expert;

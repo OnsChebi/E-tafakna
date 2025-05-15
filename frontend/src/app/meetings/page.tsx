@@ -51,7 +51,7 @@ export default function MeetsDashboard() {
         </div>
 
         <div className="md:col-span-1 flex flex-col gap-4">
-          {/* <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+          <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
             <h2 className="text-lg font-semibold mb-2 dark:text-white">Calendar</h2>
             <div className="h-[calc(100%-2.5rem)] grid place-items-center text-gray-400">
               Calendar Content
@@ -59,13 +59,13 @@ export default function MeetsDashboard() {
           </div>
           <button className="w-full h-12 bg-[#1366e8] text-white hover:bg-gray-300 dark:hover:bg-[#1158c7] rounded-lg shadow-md transition-colors">
             Create Meet
-          </button> */}
+          </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
         <div className="md:col-span-3 flex flex-col h-full min-h-[200px]">
-          {/* <MeetingsCard /> */}
+          <MeetingsCard />
         </div>
         <div className="md:col-span-1 flex flex-col h-full min-h-[200px]">
           {/* <ReminderCard /> */}

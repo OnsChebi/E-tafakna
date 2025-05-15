@@ -5,6 +5,7 @@ import { GetUpcomingMeetingsUseCase } from "../../../core/use-cases/GetUpcomingM
 import { GetPastMeetingsUseCase } from "../../../core/use-cases/GetPastMeetings";
 import { GetClientListUseCase } from "../../../core/use-cases/GetClientList";
 import { GetBusyDays } from "../../../core/use-cases/GetBusyDays";
+import { CancelMeetingUseCase } from "../../../core/use-cases/CancelMeetings";
 
 const calendlyRepo = new CalendlyRepositoryImpl();
 
@@ -54,6 +55,22 @@ export class CalendlyController {
       const useCase = new GetClientListUseCase(calendlyRepo);
       const clients = await useCase.execute((req as any).user.id);
       res.status(200).json({ clients });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+
+  static async cancelMeeting(req: Request, res: Response) {
+    try {
+      const { eventUri, reason} = req.body;
+      if (!eventUri || !reason) {
+         res.status(400).json({ error: "Event URI and reason are required" });
+        return
+      }
+      const useCase = new CancelMeetingUseCase(calendlyRepo);
+      await useCase.execute((req as any).user.id, eventUri ,reason);
+  
+      res.status(200).json({ message: "Meeting canceled successfully" });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }

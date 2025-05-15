@@ -8,5 +8,7 @@ export interface ICalendlyRepository {
   getPastMeetings(token: string, userUri: string): Promise<Meeting[]>;
   getClientList(token: string, userUri: string): Promise<{ name: string, email: string }[]>;
   getAccessToken(expertId: number): Promise<string>;
+  cancelMeeting(token: string, eventUri: string , reason:string): Promise<void>;
+
 
 }

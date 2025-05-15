@@ -44,7 +44,8 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
         count: 100,
       },
     });
-    return res.data.collection;
+    const activeEvents = res.data.collection.filter((event:Meeting)=>event.status ==='active');
+    return activeEvents;
   }
 
   async getInvitee(token: string, eventUri: string): Promise<any> {
@@ -54,6 +55,7 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
     });
     return res.data.collection[0] || null;
   }
+  //============= manage meetings ===========//
 
   async getMeetings(token: string, userUri: string, startTime?: string, endTime?: string): Promise<Meeting[]> {
     const events = await this.getScheduledEvents(token, userUri, startTime, endTime);
@@ -69,8 +71,9 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
       meeting.inviteeEmail = invitee?.email || 'Unknown';
       meeting.inviteeImage = invitee?.avatar_url || null;
       meeting.type = event.location?.join_url ? 'Online' : 'In person';
+      meeting.status = event.status === 'canceled' ? 'canceled' : 'active';
       meeting.meetingUrl = event.location?.join_url || null;
-      meeting.expert = null as any; // You can set this if you're persisting
+      //meeting.expert = null as any; 
       meeting.created_at = new Date();
 
       return meeting;
@@ -97,6 +100,23 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
     const start = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
     return this.getMeetings(token, userUri, start, end);
   }
+
+  async cancelMeeting(token: string, eventUri: string,reason:string): Promise<void> {
+    try {
+      const eventId = eventUri.split('/').pop();
+      await axios.post(
+        `https://api.calendly.com/scheduled_events/${eventId}/cancellation`,
+        { reason },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    } catch (err: any) {
+      console.error("Failed to cancel meeting", err.response?.data || err.message);
+      throw new Error("Cancellation failed");
+    }
+  }
+  
 
   async getClientList(token: string, userUri: string): Promise<any[]> {
     try {

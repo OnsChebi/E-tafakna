@@ -10,4 +10,6 @@ calendlyRoutes.get('/today',authenticate,CalendlyController.todaysMeetings);
 calendlyRoutes.get('/upcoming',authenticate,CalendlyController.upcomingMeetings);
 calendlyRoutes.get('/past',authenticate,CalendlyController.pastMeetings);
 calendlyRoutes.get('/clients', authenticate,CalendlyController.clientList); 
+calendlyRoutes.post('/cancel', authenticate, CalendlyController.cancelMeeting);
+
 export default calendlyRoutes;
