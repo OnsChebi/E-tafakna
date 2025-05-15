@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from 'react';
 import { Video, Users, ArrowRight } from 'lucide-react';
@@ -27,7 +27,7 @@ const MeetingsToday = () => {
     };
 
     fetchMeetings();
-    const interval = setInterval(fetchMeetings, 60 * 1000); // Optional: auto-refresh every 1 min
+    const interval = setInterval(fetchMeetings, 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -38,7 +38,7 @@ const MeetingsToday = () => {
       const startTime = new Date(meeting.startTime);
       const endTime = meeting.endTime
         ? new Date(meeting.endTime)
-        : new Date(startTime.getTime() + 30 * 60000); // Assume 30 mins if endTime is missing
+        : new Date(startTime.getTime() + 30 * 60000);
       return endTime > now;
     })
     .filter((meeting) => activeTab === 'all' || meeting.type === activeTab);

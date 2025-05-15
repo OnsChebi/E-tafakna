@@ -70,6 +70,11 @@ export const recentMeeting = {
 export const busyDays = {
   getBusyDays: () => api.get<busyDatesResponse>("/calendly/busy"),
 };
+export const cancelMeeting = {
+  cancel: (eventUri: string, reason: string) =>
+    api.post("/calendly/cancel", { eventUri, reason }),
+};
+
 
 // Folder API
 export const folderApi = {

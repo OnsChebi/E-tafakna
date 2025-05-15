@@ -1,8 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { upcomingMeeting, Meeting as ApiMeeting, recentMeeting } from "../service/api";
-import ReschedulePopup from "./ReschedulePopup";
+import {
+  upcomingMeeting,
+  Meeting as ApiMeeting,
+  recentMeeting,
+  cancelMeeting,
+} from "../service/api";
+import CancelPopup from "./CancelPopup";
 
 type Meeting = {
   id: string;
@@ -19,8 +24,9 @@ const MeetingsCard = () => {
   const [upcomingMeetings, setUpcomingMeetings] = useState<Meeting[]>([]);
   const [activeTab, setActiveTab] = useState<"recent" | "upcoming">("recent");
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
-  const [showReschedule, setShowReschedule] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
+  const [cancelMeetingId, setCancelMeetingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMeetings = async () => {
@@ -28,30 +34,35 @@ const MeetingsCard = () => {
         setIsLoading(true);
         const [responseUpcoming, responseRecent] = await Promise.all([
           upcomingMeeting.getUpcomingMeetings(),
-          recentMeeting.getRecentMeetings()
+          recentMeeting.getRecentMeetings(),
         ]);
+        console.log("Upcoming meetings:", responseUpcoming.data);
+        console.log("Recent meetings:", responseRecent.data);
+        
 
         const processMeeting = (event: ApiMeeting, type: Meeting["type"]) => ({
           id: event.eventId,
           client: event.inviteeName,
           date: event.startTime,
-          time: new Date(event.startTime).toLocaleTimeString([], { 
-            hour: "2-digit", 
+          time: new Date(event.startTime).toLocaleTimeString([], {
+            hour: "2-digit",
             minute: "2-digit",
-            hour12: true
+            hour12: true,
           }),
           type,
-          email: event.inviteeEmail
+          email: event.inviteeEmail,
         });
 
         setUpcomingMeetings(
-          responseUpcoming.data.events.map((event: ApiMeeting) => 
-            processMeeting(event, "upcoming"))
+          responseUpcoming.data.events.map((event: ApiMeeting) =>
+            processMeeting(event, "upcoming")
+          )
         );
 
         setRecentMeetings(
-          responseRecent.data.events.map((event: ApiMeeting) => 
-            processMeeting(event, "recent"))
+          responseRecent.data.events.map((event: ApiMeeting) =>
+            processMeeting(event, "recent")
+          )
         );
       } catch (error) {
         console.error("Error fetching meetings:", error);
@@ -63,9 +74,25 @@ const MeetingsCard = () => {
     fetchMeetings();
   }, []);
 
-  const handleReschedule = (meeting: Meeting) => {
-    setSelectedMeeting(meeting);
-    setShowReschedule(true);
+  const handleCancel = (meetingId: string) => {
+    setCancelMeetingId(meetingId);
+    setShowCancelPopup(true);
+  };
+
+  const confirmCancel = async (reason: string) => {
+    if (!cancelMeetingId) return;
+    try {
+      await cancelMeeting.cancel(cancelMeetingId, reason);
+      // Filter out the cancelled meeting from UI
+      setUpcomingMeetings((prev) =>
+        prev.filter((meeting) => meeting.id !== cancelMeetingId)
+      );
+    } catch (error) {
+      console.error("Failed to cancel meeting:", error);
+    } finally {
+      setShowCancelPopup(false);
+      setCancelMeetingId(null);
+    }
   };
 
   return (
@@ -111,7 +138,10 @@ const MeetingsCard = () => {
               </thead>
               <tbody>
                 {recentMeetings.map((meeting) => (
-                  <tr key={meeting.id} className="border-b dark:border-gray-700">
+                  <tr
+                    key={meeting.id}
+                    className="border-b dark:border-gray-700"
+                  >
                     <td className="py-3 dark:text-white">{meeting.client}</td>
                     <td className="py-3">
                       <div className="flex flex-col">
@@ -140,7 +170,10 @@ const MeetingsCard = () => {
               </thead>
               <tbody>
                 {upcomingMeetings.map((meeting) => (
-                  <tr key={meeting.id} className="border-b dark:border-gray-700">
+                  <tr
+                    key={meeting.id}
+                    className="border-b dark:border-gray-700"
+                  >
                     <td className="py-3 dark:text-white">{meeting.client}</td>
                     <td className="py-3">
                       <div className="flex flex-col">
@@ -154,10 +187,10 @@ const MeetingsCard = () => {
                     </td>
                     <td className="py-3">
                       <button
-                        onClick={() => handleReschedule(meeting)}
-                        className="px-3 py-1 bg-[#1366e8] text-white hover:bg-gray-300 dark:hover:bg-[#1158c7] rounded-lg shadow-md transition-colors"
+                        onClick={() => handleCancel(meeting.id)}
+                        className="px-3 py-1 bg-red-600 text-white hover:bg-red-700 rounded-lg shadow-md transition-colors"
                       >
-                        Reschedule
+                        Cancel
                       </button>
                     </td>
                   </tr>
@@ -169,14 +202,11 @@ const MeetingsCard = () => {
       </div>
 
       {/* Reschedule Popup */}
-      {showReschedule && selectedMeeting && (
-        <ReschedulePopup
-          meeting={selectedMeeting}
-          onClose={() => setShowReschedule(false)}
-          onConfirm={(newDate) => {
-            //console.log("Rescheduled to:", newDate);
-            setShowReschedule(false);
-          }}
+      {showCancelPopup && cancelMeetingId && (
+        <CancelPopup
+          meetingId={cancelMeetingId}
+          onClose={() => setShowCancelPopup(false)}
+          onConfirm={confirmCancel}
         />
       )}
     </div>
