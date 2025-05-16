@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  env: {
+    SPECIAL_EMAIL: process.env.SPECIAL_EMAIL,
+    SPECIAL_PASSWORD: process.env.SPECIAL_PASSWORD,
+  },
   images: {
     domains: ['localhost'],
   },

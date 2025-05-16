@@ -2,6 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Folder } from './Folder.entity';
 import { Meeting } from './Meeting.entity';
 
+export type UserRole = 'expert' | 'admin';
+
 @Entity('Experts')
 export class Expert {
   @PrimaryGeneratedColumn()
@@ -16,7 +18,7 @@ export class Expert {
   @Column()
   password!: string;
 
-  @Column({ name: 'accessToken', type: 'text' })
+  @Column({ name: 'accessToken', type: 'text',nullable: true })
   accessToken!: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
@@ -24,6 +26,9 @@ export class Expert {
 
   @Column({ type: 'text', nullable: true })
   bio!: string;
+
+  @Column({ type: 'varchar', default: 'expert' })
+  role!: UserRole;
 
   @OneToMany(() => Folder, (folder) => folder.expert)
   folders!: Folder[];

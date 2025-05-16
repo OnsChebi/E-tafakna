@@ -13,9 +13,9 @@ interface AuthenticatedRequest extends Request {
 
 export async function registerExpertController(req: Request, res: Response): Promise<void> {
   try {
-    const { name, email, password, accessToken } = req.body;
+    const { name, email, password, accessToken,role } = req.body;
     const registerUseCase = new RegisterExpertUseCase(repo);
-    const expert = await registerUseCase.execute({ name, email, password, accessToken });
+    const expert = await registerUseCase.execute({ name, email, password, accessToken,role });
     res.status(201).json(expert);
   } catch (e: any) {
     res.status(400).json({ error: e.message });
@@ -53,7 +53,7 @@ export async function getProfileController(req: Request, res: Response): Promise
 
     const BASE_URL = `${req.protocol}://${req.get('host')}`;
     const IMAGE_FOLDER = 'uploads/profile-images/';
-    const imageFileName = expert.profileImage?.split('\\').pop()?.split('/').pop(); // normalize Windows paths
+    const imageFileName = expert.profileImage?.split('\\').pop()?.split('/').pop();
 
     const expertWithImageUrl = {
       ...expert,
@@ -80,7 +80,7 @@ export async function updateProfileController(req: Request, res: Response): Prom
       return;
     }
 
-    const imageFileName = file?.filename || ''; // save only the filename in the DB
+    const imageFileName = file?.filename || ''; 
 
     const updatedExpert = await updateExpertProfileUseCase(
       expertId,

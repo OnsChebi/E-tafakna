@@ -2,11 +2,11 @@
 import { useState,FormEvent,useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Eye, EyeOff, User, ArrowRight} from 'lucide-react';
-import api from '../service/api';
+import { Lock, Eye, EyeOff, User, ArrowRight } from 'lucide-react';
+import { Api } from '../service/api';
 
 export default function LoginPage() {
-    const router = useRouter();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
@@ -20,21 +20,29 @@ useEffect(()=>{
 },[router]);
 
   const handleSubmit = async(event:FormEvent<HTMLFormElement>)=>{
-    event.preventDefault();// Prevent default form submission
+    event.preventDefault();
     setIsLoading(true);
 
     try{
 
-    const response = await api.post('/expert/login',{
+    const response = await Api.post('/expert/login',{
     email:credentials.email,
     password:credentials.password
     });
     if (response.status==200){
         setIsLoading(false);
-        localStorage.setItem('authToken',response.data.token);//store token
-        router.push('/meetings');
-    }
-
+        const { token, role } = response.data;
+        localStorage.setItem('authToken',token);
+        console.log("response:",response)
+        console.log("expert", role);
+        if (role === 'expert') {
+          router.push('/meetings');
+        } else if (role === 'admin') {
+          router.push('/register');
+        } else {
+          setErrors({ general: 'Unknown role' });
+        }
+      }
     } catch (err: any) {
       const msg = err.response?.data?.message || 'Login failed';
   if (msg.includes('Email')) {
