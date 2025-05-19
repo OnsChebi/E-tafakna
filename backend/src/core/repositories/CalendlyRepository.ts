@@ -1,3 +1,4 @@
+
 import { Meeting } from "../entities/Meeting.entity";
 
 export interface ICalendlyRepository {

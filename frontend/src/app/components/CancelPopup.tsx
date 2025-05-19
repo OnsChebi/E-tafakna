@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 type CancelPopupProps = {
-  meetingId: string;
+  meetingId: number;
   onClose: () => void;
   onConfirm: (reason: string) => void;
 };

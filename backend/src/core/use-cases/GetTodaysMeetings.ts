@@ -1,12 +1,9 @@
-import { ICalendlyRepository } from '../repositories/CalendlyRepository';
+import { IMeetingRepository } from '../repositories/MeetingRepository';
 
 export class GetTodaysMeetingsUseCase {
-  constructor(private readonly calendlyRepo: ICalendlyRepository) {}
+  constructor(private meetingRepo: IMeetingRepository) {}
 
   async execute(expertId: number) {
-    const accessToken = await this.calendlyRepo.getAccessToken(expertId);
-    const userUri = await this.calendlyRepo.getUserUri(accessToken);
-
-    return this.calendlyRepo.getTodaysMeetings(accessToken, userUri);
+    return this.meetingRepo.findTodaysMeetings(expertId);
   }
 }

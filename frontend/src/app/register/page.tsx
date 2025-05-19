@@ -151,7 +151,7 @@ export default function RegisterPage() {
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="john@example.com"
+                  placeholder="user@example.com"
                   className="pl-4 pr-10 py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500"
                 />
                 {formData.email && (

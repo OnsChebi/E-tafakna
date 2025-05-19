@@ -1,10 +1,10 @@
-import { ICalendlyRepository } from "../repositories/CalendlyRepository";
+// core/use-cases/CancelMeetings.ts
+import { IMeetingRepository } from "../repositories/MeetingRepository";
 
-export class CancelMeetingUseCase {
-  constructor(private calendlyRepo: ICalendlyRepository) {}
+export class CancelMeetingsUseCase {
+  constructor(private meetingRepo: IMeetingRepository) {}
 
-  async execute(expertId: number, eventUri: string, reason:string): Promise<void> {
-    const token = await this.calendlyRepo.getAccessToken(expertId);
-    await this.calendlyRepo.cancelMeeting(token, eventUri ,reason);
+  async execute(meetingId: number) {
+    return this.meetingRepo.cancelMeeting(meetingId); 
   }
 }

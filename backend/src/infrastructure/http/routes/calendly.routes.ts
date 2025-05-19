@@ -1,15 +1,18 @@
+
 import { Router } from 'express';
 import { authenticate, authorize } from '../middlewares/auth';
-import { CalendlyController } from '../controllers/calendly.controller';
+import { MeetingController} from '../controllers/meeting.controller';
+import { syncCalendlyMeetings } from '../controllers/Sync.controller';
 
 
-const calendlyRoutes = Router();
+const MeetingRoutes = Router();
 
-calendlyRoutes.get('/busy', authenticate,authorize("expert", "admin"), CalendlyController.busyDays);
-calendlyRoutes.get('/today',authenticate,CalendlyController.todaysMeetings);
-calendlyRoutes.get('/upcoming',authenticate,CalendlyController.upcomingMeetings);
-calendlyRoutes.get('/past',authenticate,CalendlyController.pastMeetings);
-calendlyRoutes.get('/clients', authenticate,CalendlyController.clientList); 
-calendlyRoutes.post('/cancel', authenticate, CalendlyController.cancelMeeting);
+MeetingRoutes.get('/busy', authenticate,authorize("expert", "admin"), MeetingController.busyDays);
+MeetingRoutes.get('/today',authenticate,MeetingController.todaysMeetings);
+MeetingRoutes.get('/upcoming',authenticate,MeetingController.upcomingMeetings);
+MeetingRoutes.get('/past',authenticate,MeetingController.pastMeetings);
+MeetingRoutes.get('/clients', authenticate,MeetingController.clientList); 
+MeetingRoutes.post('/cancel', authenticate, MeetingController.cancelMeeting);
+MeetingRoutes.post("/sync/:expertId", syncCalendlyMeetings);
 
-export default calendlyRoutes;
+export default MeetingRoutes;

@@ -1,24 +1,10 @@
-import { ICalendlyRepository } from '../repositories/CalendlyRepository';
+// core/use-cases/GetClientList.ts
+import { IMeetingRepository } from "../repositories/MeetingRepository";
 
 export class GetClientListUseCase {
-  constructor(private readonly calendlyRepo: ICalendlyRepository) {}
+  constructor(private meetingRepo: IMeetingRepository) {}
 
   async execute(expertId: number) {
-    try {
-      const accessToken = await this.calendlyRepo.getAccessToken(expertId);
-      //console.log('Access token:', accessToken);
-  
-      const userUri = await this.calendlyRepo.getUserUri(accessToken);
-      //console.log('User URI:', userUri);
-  
-      const clients = await this.calendlyRepo.getClientList(accessToken, userUri);
-      //console.log('Clients:', clients);
-  
-      return clients;
-    } catch (error) {
-      //console.error('Error in GetClientListUseCase:', error);
-      throw error; 
-    }
+    return this.meetingRepo.findClientsForExpert(expertId);
   }
-  
 }

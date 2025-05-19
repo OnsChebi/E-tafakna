@@ -74,7 +74,7 @@ const MeetingsCard = () => {
     fetchMeetings();
   }, []);
 
-  const handleCancel = (meetingId: string) => {
+  const handleCancel = (meetingId: number) => {
     setCancelMeetingId(meetingId);
     setShowCancelPopup(true);
   };
@@ -83,7 +83,7 @@ const MeetingsCard = () => {
     if (!cancelMeetingId) return;
     try {
       await cancelMeeting.cancel(cancelMeetingId, reason);
-      // Filter out the cancelled meeting from UI
+      // Filter out the canceled meeting from UI
       setUpcomingMeetings((prev) =>
         prev.filter((meeting) => meeting.id !== cancelMeetingId)
       );
