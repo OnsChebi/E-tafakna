@@ -1,8 +1,7 @@
-import { Repository } from "typeorm";
+import { Repository, LessThan, MoreThan, Between } from "typeorm";
 import { IMeetingRepository } from "../../../core/repositories/MeetingRepository";
 import { Meeting } from "../../../core/entities/Meeting.entity";
 import { Expert } from "../../../core/entities/Expert.entity";
-import { LessThan, MoreThan, Between } from "typeorm";
 import { AppDataSource } from "../db";
 
 export class MeetingRepositoryImpl implements IMeetingRepository {
@@ -11,20 +10,22 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
   constructor() {
     this.repo = AppDataSource.getRepository(Meeting);
   }
+
   async save(meeting: Meeting): Promise<Meeting> {
     const existing = await this.repo.findOneBy({ eventId: meeting.eventId });
-    if (!existing) {
-      return this.repo.save(meeting);
-    }
-    return existing;
+    return existing ?? this.repo.save(meeting);
   }
+
   async findByEventId(eventId: string): Promise<Meeting | null> {
-    return this.repo.findOne({ where: { eventId } });
+    return await this.repo.findOne({
+      where: { eventId },
+      relations: ['expert'],
+    });
   }
   
 
   async cancelMeeting(meetingId: number): Promise<void> {
-    const meeting = await this.repo.findOneOrFail({ where: { id: Number(meetingId) } });
+    const meeting = await this.repo.findOneOrFail({ where: { id: meetingId } });
     meeting.status = "canceled";
     await this.repo.save(meeting);
   }
@@ -44,7 +45,7 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
     return busyDays;
   }
 
-  async findClientsForExpert(expertId: number): Promise<Expert[]> {
+  async findClientsForExpert(expertId: number): Promise<Partial<Expert>[]> {
     const meetings = await this.repo.find({
       where: {
         expert: { id: expertId },
@@ -52,9 +53,8 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
       },
     });
 
-    // Simulate "clients" using inviteeEmail/name (since there's no Client entity)
     const clients = meetings.map(m => ({
-      id: m.inviteeEmail, // use email as a pseudo ID
+      id: m.inviteeEmail,
       name: m.inviteeName,
       email: m.inviteeEmail,
       image: m.inviteeImage,
@@ -70,7 +70,10 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
   async findTodaysMeetings(expertId: number): Promise<Meeting[]> {
     const today = new Date();
     const start = new Date(today.setHours(0, 0, 0, 0));
+    console.log("Now:", today.toISOString());
     const end = new Date(today.setHours(23, 59, 59, 999));
+    console.log("Expert ID:", expertId);
+
 
     return this.repo.find({
       where: {
@@ -95,7 +98,7 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
 
   async findUpcomingMeetings(expertId: number): Promise<Meeting[]> {
     const now = new Date();
-
+    console.log("Expeeeeeeeeeeeeeeeeeert ID iiiiiiiiiiiis:", expertId);
     return this.repo.find({
       where: {
         expert: { id: expertId },
@@ -106,17 +109,12 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
   }
 
   async saveMeetingsForExpert(expertId: number, meetings: Meeting[]): Promise<void> {
-    const repo = AppDataSource.getRepository(Meeting);
-  
     for (const meeting of meetings) {
-      // Avoid duplicates using eventId
-      const existing = await repo.findOneBy({ eventId: meeting.eventId });
+      const existing = await this.repo.findOneBy({ eventId: meeting.eventId });
       if (!existing) {
-        meeting.expert = { id: expertId } as any;
-        await repo.save(meeting);
+        meeting.expert = { id: expertId } as Expert;
+        await this.repo.save(meeting);
       }
     }
   }
-  
-  
 }

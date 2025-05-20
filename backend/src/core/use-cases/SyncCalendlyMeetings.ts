@@ -11,7 +11,7 @@ export class SyncCalendlyMeetingsUseCase {
     private expertRepo: IExpertRepository 
   ) {}
 
-  async execute(expertId: number): Promise<void> {
+  async execute(expertId: number): Promise<Meeting[]> {
     // Get expert once
     const expert: Expert | null = await this.expertRepo.findById(expertId);
     if (!expert) {
@@ -22,12 +22,16 @@ export class SyncCalendlyMeetingsUseCase {
     const userUri = await this.calendlyRepo.getUserUri(token);
     const meetings: Meeting[] = await this.calendlyRepo.getMeetings(token, userUri);
 
+    const savedMeetings: Meeting[] = [];
+
     for (const meeting of meetings) {
       const existing = await this.meetingRepo.findByEventId(meeting.eventId);
       if (!existing) {
         meeting.expert = expert;
-        await this.meetingRepo.save(meeting);
+        const saved = await this.meetingRepo.save(meeting);
+        savedMeetings.push(saved);
       }
     }
+    return savedMeetings;
   }
 }

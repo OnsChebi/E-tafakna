@@ -17,9 +17,9 @@ interface AuthenticatedRequest extends Request {
 export class MeetingController {
   static async cancelMeeting(req: Request, res: Response) {
     try {
-      const { meetingId } = req.body;
-      const useCase = new CancelMeetingsUseCase(meetingRepo);
-      await useCase.execute(meetingId);
+      const { meetingId , reason } = req.body;
+      const useCase = new CancelMeetingsUseCase(meetingRepo , calendlyRepo);
+      await useCase.execute(meetingId , reason);
       res.status(200).json({ message: "Meeting canceled successfully" });
       return;
     } catch (error) {
@@ -36,7 +36,7 @@ export class MeetingController {
     }
       const days = await meetingRepo.findBusyDays(expertId);
       res.json(days);
-      
+
     } catch (error) {
       console.error("Busy days error:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -81,7 +81,7 @@ export class MeetingController {
       res.json(meetings);
     } catch (error) {
       console.error("Past meetings error:", error);
-       res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 
@@ -92,11 +92,13 @@ export class MeetingController {
       return;
     }
       const useCase = new SyncCalendlyMeetingsUseCase(meetingRepo, calendlyRepo, expertRepo);
-      const meetings = await useCase.execute(expertId);
-      res.json(meetings);
-    } catch (error) {
+      await useCase.execute(expertId);
+      const upcoming = await meetingRepo.findUpcomingMeetings(expertId);
+
+      res.status(200).json(upcoming);
+      } catch (error) {
       console.error("Sync and fetch upcoming meetings error:", error);
-       res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 

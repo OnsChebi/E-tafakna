@@ -7,6 +7,7 @@ import { Meeting } from '../../../core/entities/Meeting.entity';
 import { decryptToken } from '../../../shared/utils/auth';
 
 export class CalendlyRepositoryImpl implements ICalendlyRepository {
+  
   async getAccessToken(expertId: number): Promise<string> {
     const expert = await AppDataSource.getRepository(Expert).findOneBy({ id: expertId });
     if (!expert?.accessToken) throw new Error("Calendly not connected");
@@ -83,24 +84,24 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
     return meetings;
   }
 
-  async getTodaysMeetings(token: string, userUri: string): Promise<Meeting[]> {
-    const now = new Date();
-    const start = new Date(now.setHours(0, 0, 0, 0)).toISOString();
-    const end = new Date(now.setHours(23, 59, 59, 999)).toISOString();
-    return this.getMeetings(token, userUri, start, end);
-  }
+  // async getTodaysMeetings(token: string, userUri: string): Promise<Meeting[]> {
+  //   const now = new Date();
+  //   const start = new Date(now.setHours(0, 0, 0, 0)).toISOString();
+  //   const end = new Date(now.setHours(23, 59, 59, 999)).toISOString();
+  //   return this.getMeetings(token, userUri, start, end);
+  // }
 
-  async getUpcomingMeetings(token: string, userUri: string): Promise<Meeting[]> {
-    const start = new Date().toISOString();
-    const end = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-    return this.getMeetings(token, userUri, start, end);
-  }
+  // async getUpcomingMeetings(token: string, userUri: string): Promise<Meeting[]> {
+  //   const start = new Date().toISOString();
+  //   const end = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+  //   return this.getMeetings(token, userUri, start, end);
+  // }
 
-  async getPastMeetings(token: string, userUri: string): Promise<Meeting[]> {
-    const end = new Date().toISOString();
-    const start = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-    return this.getMeetings(token, userUri, start, end);
-  }
+  // async getPastMeetings(token: string, userUri: string): Promise<Meeting[]> {
+  //   const end = new Date().toISOString();
+  //   const start = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  //   return this.getMeetings(token, userUri, start, end);
+  // }
 
   async cancelMeeting(token: string, eventUri: string,reason:string): Promise<void> {
     try {
@@ -119,31 +120,25 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
   }
   
 
-  async getClientList(token: string, userUri: string): Promise<any[]> {
-    try {
-      const events = await this.getScheduledEvents(token, userUri);
-      const invitees = await Promise.all(events.map(async (event: any) => {
-        try {
-          const invitee = await this.getInvitee(token, event.uri);
-          return invitee ? { name: invitee.name, email: invitee.email } : null;
-        } catch (err:any) {
-          console.warn(` Failed to get invitee for event ${event.uri}`, err.response?.data || err.message);
-          return null;
-        }
-      }));
-  
-      const unique = new Map<string, any>();
-      for (const client of invitees) {
-        if (client && !unique.has(client.email)) {
-          unique.set(client.email, client);
-        }
+  async getClientList(token: string, userUri: string): Promise<{ name: string; email: string }[]> {
+    const response = await axios.get("https://api.calendly.com/scheduled_events", {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { user: userUri },
+    });
+
+    const clients: { name: string; email: string }[] = [];
+
+    for (const event of response.data.collection) {
+      const inviteeResponse = await axios.get(`${event.uri}/invitees`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const invitee = inviteeResponse.data.collection[0];
+      if (invitee) {
+        clients.push({ name: invitee.name, email: invitee.email });
       }
-  
-      return Array.from(unique.values());
-    } catch (err:any) {
-      console.error("Failed to get client list", err.response?.data || err.message);
-      throw new Error("Client list fetch failed");
     }
+
+    return clients;
   }
-  
 }
