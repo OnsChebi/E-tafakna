@@ -13,6 +13,6 @@ MeetingRoutes.get('/upcoming',authenticate,MeetingController.upcomingMeetings);
 MeetingRoutes.get('/past',authenticate,MeetingController.pastMeetings);
 MeetingRoutes.get('/clients', authenticate,MeetingController.clientList); 
 MeetingRoutes.post('/cancel', authenticate, MeetingController.cancelMeeting);
-MeetingRoutes.post("/sync/:expertId", syncCalendlyMeetings);
+MeetingRoutes.post("/sync", syncCalendlyMeetings);
 
 export default MeetingRoutes;

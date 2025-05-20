@@ -11,6 +11,13 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
   constructor() {
     this.repo = AppDataSource.getRepository(Meeting);
   }
+  async save(meeting: Meeting): Promise<Meeting> {
+    const existing = await this.repo.findOneBy({ eventId: meeting.eventId });
+    if (!existing) {
+      return this.repo.save(meeting);
+    }
+    return existing;
+  }
   async findByEventId(eventId: string): Promise<Meeting | null> {
     return this.repo.findOne({ where: { eventId } });
   }
@@ -98,7 +105,18 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
     });
   }
 
-  async save(meeting: Meeting): Promise<Meeting> {
-    return this.repo.save(meeting);
+  async saveMeetingsForExpert(expertId: number, meetings: Meeting[]): Promise<void> {
+    const repo = AppDataSource.getRepository(Meeting);
+  
+    for (const meeting of meetings) {
+      // Avoid duplicates using eventId
+      const existing = await repo.findOneBy({ eventId: meeting.eventId });
+      if (!existing) {
+        meeting.expert = { id: expertId } as any;
+        await repo.save(meeting);
+      }
+    }
   }
+  
+  
 }
