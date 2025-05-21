@@ -34,4 +34,4 @@ export const syncCalendlyMeetings = async (req: Request, res: Response) => {
     console.error("Failed to sync meetings", error);
     res.status(500).json({ error: "Internal server error" });
   }
-};
+}

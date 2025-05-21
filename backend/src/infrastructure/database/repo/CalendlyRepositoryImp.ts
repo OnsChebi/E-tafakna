@@ -84,24 +84,6 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
     return meetings;
   }
 
-  // async getTodaysMeetings(token: string, userUri: string): Promise<Meeting[]> {
-  //   const now = new Date();
-  //   const start = new Date(now.setHours(0, 0, 0, 0)).toISOString();
-  //   const end = new Date(now.setHours(23, 59, 59, 999)).toISOString();
-  //   return this.getMeetings(token, userUri, start, end);
-  // }
-
-  // async getUpcomingMeetings(token: string, userUri: string): Promise<Meeting[]> {
-  //   const start = new Date().toISOString();
-  //   const end = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-  //   return this.getMeetings(token, userUri, start, end);
-  // }
-
-  // async getPastMeetings(token: string, userUri: string): Promise<Meeting[]> {
-  //   const end = new Date().toISOString();
-  //   const start = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-  //   return this.getMeetings(token, userUri, start, end);
-  // }
 
   async cancelMeeting(token: string, eventUri: string,reason:string): Promise<void> {
     try {

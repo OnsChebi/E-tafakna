@@ -24,8 +24,8 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
   }
   
 
-  async cancelMeeting(meetingId: number): Promise<void> {
-    const meeting = await this.repo.findOneOrFail({ where: { id: meetingId } });
+  async cancelMeeting(eventId: string): Promise<void> {
+    const meeting = await this.repo.findOneOrFail({ where: { eventId } });
     meeting.status = "canceled";
     await this.repo.save(meeting);
   }

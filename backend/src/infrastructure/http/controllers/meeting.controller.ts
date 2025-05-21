@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { MeetingRepositoryImpl } from "../../database/repo/MeetingRepositoryImp";
 import { CancelMeetingsUseCase } from "../../../core/use-cases/CancelMeetings";
-import { SyncCalendlyMeetingsUseCase } from "../../../core/use-cases/SyncCalendlyMeetings";
 import { CalendlyRepositoryImpl } from "../../database/repo/CalendlyRepositoryImp";
 import { ExpertRepositoryImpl } from "../../database/repo/ExpertRepositoryImpl";
+import { GetUpcomingMeetingsUseCase } from "../../../core/use-cases/GetUpcomingMeetings";
 
 const meetingRepo = new MeetingRepositoryImpl();
 const calendlyRepo = new CalendlyRepositoryImpl();
@@ -91,7 +91,7 @@ export class MeetingController {
       if (!expertId) {res.status(401).json({ message: "Unauthorized" });
       return;
     }
-      const useCase = new SyncCalendlyMeetingsUseCase(meetingRepo, calendlyRepo, expertRepo);
+      const useCase = new GetUpcomingMeetingsUseCase(meetingRepo);
       await useCase.execute(expertId);
       const upcoming = await meetingRepo.findUpcomingMeetings(expertId);
 

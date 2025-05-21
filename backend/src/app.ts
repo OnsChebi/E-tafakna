@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import { AppDataSource } from './infrastructure/database/db';
 import indexRouter from './infrastructure/http/routes/index.routes';
 import path from 'path';
+import { startMeetingSyncCron } from './shared/utils/cron';
 
 dotenv.config();
 
@@ -48,6 +49,8 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
   res.status(500).json({ message: 'Internal Server Error', error: err.message });
 });
+
+startMeetingSyncCron();
 
 // Database Initialization
 AppDataSource.initialize()
