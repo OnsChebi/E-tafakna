@@ -12,8 +12,8 @@ const ClientList = () => {
     const fetchClients = async () => {
       try {
         const response = await clientApi.getClientListe();
-        console.log('Clients:', response.data.clients);
-        setClients(response.data.clients || []);
+        console.log('Clients:', response.data);
+        setClients(response.data || []);
       } catch (err: any) {
         console.error('Failed to fetch clients:', {
           message: err.message,

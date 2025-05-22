@@ -56,19 +56,19 @@ export const expertApi = {
 };
 
 export const clientApi = {
-  getClientListe: () => Api.get<ApiResponse>("/calendly/clients"),
+  getClientListe: () => Api.get<Client[]>("/calendly/clients"),
 };
 
 export const MeetingToday = {
-  getTodaysMeetings: () => Api.get<MeetingApiResponse>("/calendly/today"),
+  getTodaysMeetings: () => Api.get<CalendlyEvent[]>("/calendly/today"),
 };
 
 export const upcomingMeeting = {
-  getUpcomingMeetings: () => Api.get<MeetingsApiResponse>("/calendly/upcoming"),
+  getUpcomingMeetings: () => Api.get<CalendlyEvent[]>("/calendly/upcoming"),
 };
 
 export const recentMeeting = {
-  getRecentMeetings: () => Api.get<MeetingApiResponse>("/calendly/past"),
+  getRecentMeetings: () => Api.get<CalendlyEvent[]>("/calendly/past"),
 };
 
 export const busyDays = {
@@ -119,18 +119,18 @@ export const logout = () => {
 };
 
 // ===== Type Definitions =====
-export type ApiResponse = {
-  clients: Client[];
-};
+// export type ApiResponse = {
+//   clients: Client[];
+// };
 
 export type Client = {
   name: string;
   email: string;
 };
 
-export type MeetingApiResponse = {
-  events: CalendlyEvent[];
-};
+// export type MeetingApiResponse = {
+//   events: CalendlyEvent[];
+// };
 
 export type busyDatesResponse = {
   busyDays: string[];
@@ -153,6 +153,7 @@ export type Meeting = {
   startTime: string;
   inviteeName: string;
   inviteeEmail: string;
+ // meetingUrl:string;
 };
 
 export type MeetingsApiResponse = {

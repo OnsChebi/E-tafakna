@@ -23,7 +23,7 @@ const MeetingsCard = () => {
   const [recentMeetings, setRecentMeetings] = useState<Meeting[]>([]);
   const [upcomingMeetings, setUpcomingMeetings] = useState<Meeting[]>([]);
   const [activeTab, setActiveTab] = useState<"recent" | "upcoming">("recent");
-  const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
+  //const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   const [cancelMeetingId, setCancelMeetingId] = useState<string | null>(null);
@@ -36,8 +36,10 @@ const MeetingsCard = () => {
           upcomingMeeting.getUpcomingMeetings(),
           recentMeeting.getRecentMeetings(),
         ]);
-        console.log("Upcoming meetings:", responseUpcoming.data);
-        console.log("Recent meetings:", responseRecent.data);
+         console.log("Upcoming meetings daaataaaa:", responseUpcoming.data);
+        // console.log("Upcoming meetings eveeeeeeent:", responseUpcoming.data.events);
+        console.log("Recent meetings daaaataaaa:", responseRecent.data);
+        //console.log("Recent meetings eveeeeeent:", responseRecent.data);
         
 
         const processMeeting = (event: ApiMeeting, type: Meeting["type"]) => ({
@@ -54,13 +56,13 @@ const MeetingsCard = () => {
         });
 
         setUpcomingMeetings(
-          responseUpcoming.data.events.map((event: ApiMeeting) =>
+          responseUpcoming.data.map((event: ApiMeeting) =>
             processMeeting(event, "upcoming")
           )
         );
 
         setRecentMeetings(
-          responseRecent.data.events.map((event: ApiMeeting) =>
+          responseRecent.data.map((event: ApiMeeting) =>
             processMeeting(event, "recent")
           )
         );
@@ -74,7 +76,7 @@ const MeetingsCard = () => {
     fetchMeetings();
   }, []);
 
-  const handleCancel = (meetingId: number) => {
+  const handleCancel = (meetingId: string) => {
     setCancelMeetingId(meetingId);
     setShowCancelPopup(true);
   };

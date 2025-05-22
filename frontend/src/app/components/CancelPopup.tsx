@@ -1,7 +1,8 @@
+// CancelPopup.tsx
 import { useState } from "react";
 
 type CancelPopupProps = {
-  meetingId: number;
+  meetingId: string;
   onClose: () => void;
   onConfirm: (reason: string) => void;
 };

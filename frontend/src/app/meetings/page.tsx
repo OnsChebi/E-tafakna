@@ -23,7 +23,7 @@ export default function MeetsDashboard() {
       upcomingMeeting
         .getUpcomingMeetings()
         .then((res) => {
-          setUpcomingMeetings(res.data.events);
+          setUpcomingMeetings(res.data);
         })
         .catch((err) => {
           console.error("Error fetching meetings:", err);
