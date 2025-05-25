@@ -80,6 +80,19 @@ export const cancelMeeting = {
     Api.post("/calendly/cancel", { eventUri, reason }),
 };
 
+export const stat ={
+  getStat:()=>Api.get<CalendlyStats>("calendly/stats")
+}
+
+export type CalendlyStats = {
+  totalClients: number;
+  todaysMeetings: number;
+  upcomingMeetings: number;
+  activeFolder: number;
+  weeklyMeetings: { day: string; count: number }[];
+  meetingTypes: { type: string; count: number }[];
+};
+
 // Folder API
 export const folderApi = {
   getAll: () => Api.get("/folder"),

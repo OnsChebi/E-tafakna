@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import { CalendlyEvent, MeetingToday, clientApi, folderApi, recentMeeting, upcomingMeeting } from "../service/api";
 import { Calendar, Folder, Notebook } from "lucide-react";
-import { KeyMetricsGrid } from "../components/KeyMetricGrid";
 import { MeetingTypesChart } from "../components/MeetingTypeChart";
 import { UpcomingSchedule } from "../components/UpcomingSchedule";
 //import { TaskProgress } from "../components/TaskProgress";
 import { WeeklyMeetingsChart } from "../components/WeeklyMeetings";
 import { RecentActivity } from "../components/RecentCharts";
 import { Card } from "@/components/ui/card";
+import KeyMetricsGrid from "../components/KeyMetricGrid";
 
 const upcomingScheduleData = [
   { time: "9:00 AM", client: "John Doe", type: "Consultation" },
@@ -17,11 +17,11 @@ const upcomingScheduleData = [
   { time: "4:00 PM", client: "Jane Smith", type: "Follow-up" }
 ];
 
-const tasksData = [
-  { label: "Client Documentation", value: 75 },
-  { label: "Case Research", value: 45 },
-  { label: "Billing Reports", value: 90 }
-];
+// const tasksData = [
+//   { label: "Client Documentation", value: 75 },
+//   { label: "Case Research", value: 45 },
+//   { label: "Billing Reports", value: 90 }
+// ];
 
 const recentActivities = [
   { 
@@ -167,10 +167,7 @@ export default function StatisticsDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <WeeklyMeetingsChart data={[]}          // data={weeklyMeetingsData} 
-          // onRefresh={fetchStats}
-          // isLoading={isLoading}
-        />
+        <WeeklyMeetingsChart data={[]}/>
         <RecentActivity activities={recentActivities} />
       </div>
     </div>

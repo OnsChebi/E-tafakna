@@ -31,7 +31,7 @@ export default function DayDetailsPage({ params }: { params: { day: string } }) 
         {timeSlots.map(({ time, hour, minutes }) => (
           <Link
             key={time}
-            href={`/calendar/${params.day}/${hour}`} // Link to the hour details page
+            href={`/calendar/${params.day}/${hour}`} 
             className="group relative"
           >
             <div className="flex items-center h-16">
