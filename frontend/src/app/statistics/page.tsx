@@ -6,7 +6,7 @@ import { Calendar, Folder, Notebook } from "lucide-react";
 import { KeyMetricsGrid } from "../components/KeyMetricGrid";
 import { MeetingTypesChart } from "../components/MeetingTypeChart";
 import { UpcomingSchedule } from "../components/UpcomingSchedule";
-import { TaskProgress } from "../components/TaskProgress";
+//import { TaskProgress } from "../components/TaskProgress";
 import { WeeklyMeetingsChart } from "../components/WeeklyMeetings";
 import { RecentActivity } from "../components/RecentCharts";
 import { Card } from "@/components/ui/card";
@@ -48,6 +48,7 @@ export default function StatisticsDashboard() {
     upcoming: 0,
     folders: 0
   });
+
   const [weeklyMeetingsData, setWeeklyMeetingsData] = useState([
     { day: "Mon", meetings: 0 },
     { day: "Tue", meetings: 0 },
@@ -57,17 +58,21 @@ export default function StatisticsDashboard() {
     { day: "Sat", meetings: 0 },
     { day: "Sun", meetings: 0 }
   ]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const [meetingTypesData, setMeetingTypesData] = useState([
     { name: "Online", value: 0, fill: "#3B72F6" },
     { name: "In Person", value: 0, fill: "#10B981" }
   ]);
+
   const getWeeklyMeetings = (events: CalendlyEvent[]) => {
     const dayCounts: { [key: string]: number } = {
       "Mon": 0, "Tue": 0, "Wed": 0, 
       "Thu": 0, "Fri": 0, "Sat": 0, "Sun": 0
     };
+
     events.forEach(event => {
       const date = new Date(event.startTime);
       const day = date.toLocaleDateString('en-US', { weekday: 'short' });
@@ -86,27 +91,34 @@ export default function StatisticsDashboard() {
     try {
       setIsLoading(true);
       setError(null);
-      
-      const [clientsRes, todayMeetingsRes, upcomingRes, foldersRes, recentMeetingsRes] = 
-        await Promise.all([
-          clientApi.getClientListe(),
-          MeetingToday.getTodaysMeetings(),
-          upcomingMeeting.getUpcomingMeetings(),
-          folderApi.getAll(),
-          recentMeeting.getRecentMeetings()
-        ]);
 
-      const todayMeetings = todayMeetingsRes.data.events || [];
-const allMeetings = [
-        ...(todayMeetingsRes.data.events || []),
-        ...(recentMeetingsRes.data.events || [])
+      const [
+        clientsRes,
+        todayMeetingsRes,
+        upcomingRes,
+        foldersRes,
+        recentMeetingsRes
+      ] = await Promise.all([
+        clientApi.getClientListe(),
+        MeetingToday.getTodaysMeetings(),
+        upcomingMeeting.getUpcomingMeetings(),
+        folderApi.getAll(),
+        recentMeeting.getRecentMeetings()
+      ]);
+
+      const todayMeetings = todayMeetingsRes.data || [];
+      const allMeetings = [
+        ...(todayMeetingsRes.data || []),
+        ...(recentMeetingsRes.data || [])
       ];
+
       setWeeklyMeetingsData(getWeeklyMeetings(allMeetings));
-            // Corrected to use 'type' instead of 'meetingType'
+
+      // Safe type checking and counting meeting types
       const counts = todayMeetings.reduce((acc, meeting) => {
-        const type = meeting.meetingType.toLowerCase(); 
-        if (type.includes('online')) acc.online++;
-        if (type.includes('in person') || type.includes('in-person')) acc.inPerson++;
+        const type = meeting.meetingType?.toLowerCase(); // Safely handle undefined
+        if (type?.includes("online")) acc.online++;
+        if (type?.includes("in person") || type?.includes("in-person")) acc.inPerson++;
         return acc;
       }, { online: 0, inPerson: 0 });
 
@@ -116,9 +128,9 @@ const allMeetings = [
       ]);
 
       setStats({
-        clients: clientsRes.data.clients?.length || 0,
+        clients: clientsRes.data?.length || 0,
         meetings: todayMeetings.length,
-        upcoming: upcomingRes.data.events?.length || 0,
+        upcoming: upcomingRes.data?.length || 0,
         folders: foldersRes.data?.length || 0
       });
 
@@ -136,13 +148,13 @@ const allMeetings = [
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-3 pt-1">
-      {/* <KeyMetricsGrid 
+      <KeyMetricsGrid 
         stats={stats} 
         isLoading={isLoading} 
         onRefresh={fetchStats} 
-      /> */}
+      /> 
 
-      {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {isLoading ? (
           <Card className="h-64 flex items-center justify-center">
             <div className="animate-pulse">Loading meeting data...</div>
@@ -151,14 +163,13 @@ const allMeetings = [
           <MeetingTypesChart data={meetingTypesData} />
         )}
         <UpcomingSchedule schedule={upcomingScheduleData} />
-        <TaskProgress tasks={tasksData} />
-      </div> */}
+        {/* <TaskProgress tasks={tasksData} /> */}
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <WeeklyMeetingsChart 
-          data={weeklyMeetingsData} 
-          onRefresh={fetchStats}
-          isLoading={isLoading}
+        <WeeklyMeetingsChart data={[]}          // data={weeklyMeetingsData} 
+          // onRefresh={fetchStats}
+          // isLoading={isLoading}
         />
         <RecentActivity activities={recentActivities} />
       </div>

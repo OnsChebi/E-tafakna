@@ -58,7 +58,7 @@ const Navbar: React.FC<NavbarProps> = ({
           alt="User Profile"
           width={32}
           height={32}
-          className="rounded-full border border-gray-300 dark:border-gray-600 object-cover"
+          className="rounded-full border border-gray-300 dark:border-gray-600 object-cover object-center size-8"
         />
         <span className="dark:text-gray-50 hidden sm:block">{name}</span>
 

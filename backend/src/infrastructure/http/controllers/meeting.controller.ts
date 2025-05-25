@@ -4,10 +4,10 @@ import { CancelMeetingsUseCase } from "../../../core/use-cases/CancelMeetings";
 import { CalendlyRepositoryImpl } from "../../database/repo/CalendlyRepositoryImp";
 import { ExpertRepositoryImpl } from "../../database/repo/ExpertRepositoryImpl";
 import { GetUpcomingMeetingsUseCase } from "../../../core/use-cases/GetUpcomingMeetings";
+import { GetMeetingStatistics } from "../../../core/use-cases/GetMeetingStatistics";
 
 const meetingRepo = new MeetingRepositoryImpl();
 const calendlyRepo = new CalendlyRepositoryImpl();
-const expertRepo = new ExpertRepositoryImpl();
 
 interface AuthenticatedRequest extends Request {
   user?: { id: number };
@@ -104,3 +104,7 @@ export class MeetingController {
 
 
 }
+
+
+
+
