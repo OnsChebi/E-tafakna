@@ -1,16 +1,17 @@
-"use client";
+'use client';
+
 import { useEffect, useState } from "react";
 import ClientList from "../components/ClientList";
 import MeetingsCard from "../components/MeetingsCard";
 import MeetingsToday from "../components/MeetingsToday";
-import ReminderCard from "../components/ReminderCard";
 import { Meeting, isAuthenticated, upcomingMeeting } from "../service/api";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Calendar as ShadCalendar } from "@/components/ui/calendar";
 
 export default function MeetsDashboard() {
   const router = useRouter();
-    const [recentMeetings,setRecentMeetings]=useState<Meeting[]>([]);
-
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [upcomingMeetings, setUpcomingMeetings] = useState<Meeting[]>([]);
   const [authChecked, setAuthChecked] = useState(false);
 
@@ -22,12 +23,8 @@ export default function MeetsDashboard() {
       setAuthChecked(true);
       upcomingMeeting
         .getUpcomingMeetings()
-        .then((res) => {
-          setUpcomingMeetings(res.data);
-        })
-        .catch((err) => {
-          console.error("Error fetching meetings:", err);
-        });
+        .then((res) => setUpcomingMeetings(res.data))
+        .catch((err) => console.error("Error fetching meetings:", err));
     }
   }, [router]);
 
@@ -40,35 +37,60 @@ export default function MeetsDashboard() {
   }
 
   return (
-    <main className="p-4 min-h-screen bg-gray-200 dark:bg-gray-700">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="md:col-span-2 flex flex-col h-full min-h-[200px]">
-          <MeetingsToday />
+    <main className="p-4 min-h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Top Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Meetings Today */}
+        <div className="sm:col-span-2 flex flex-col">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-full">
+            <MeetingsToday />
+          </div>
         </div>
 
-        <div className="md:col-span-1 flex flex-col h-full min-h-[200px]">
-          <ClientList />
+        {/* Client List */}
+        <div className="flex flex-col">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-full">
+            <ClientList />
+          </div>
         </div>
 
-        <div className="md:col-span-1 flex flex-col gap-4">
-          <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-            <h2 className="text-lg font-semibold mb-2 dark:text-white">Calendar</h2>
-            <div className="h-[calc(100%-2.5rem)] grid place-items-center text-gray-400">
-              Calendar Content
+        {/* Calendar + Button */}
+        <div className="flex flex-col gap-4">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+            <h2 className="text-lg font-semibold mb-2 text-gray-800 dark:text-white">Calendar</h2>
+            <div className="flex justify-center">
+              <ShadCalendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                className="rounded-md border shadow-sm"
+              />
             </div>
           </div>
-          <button className="w-full h-12 bg-[#1366e8] text-white hover:bg-gray-300 dark:hover:bg-[#1158c7] rounded-lg shadow-md transition-colors">
-            Create Meet
-          </button>
+          <Button
+  onClick={() => router.push("/calendar")}
+  className="h-12 w-full bg-[#1366e8] hover:bg-[#1158c7] text-white rounded-lg shadow-md transition-colors"
+>
+  Create Meet
+</Button>
+
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-        <div className="md:col-span-3 flex flex-col h-full min-h-[200px]">
-          <MeetingsCard />
+      {/* Bottom Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-4">
+        {/* Meeting Cards */}
+        <div className="lg:col-span-3 flex flex-col">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-full">
+            <MeetingsCard />
+          </div>
         </div>
-        <div className="md:col-span-1 flex flex-col h-full min-h-[200px]">
-          {/* <ReminderCard /> */}
+
+        {/* Reminders / Notifications */}
+        <div className="flex flex-col">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-full">
+            <p className="text-gray-600 dark:text-gray-300">Reminders or Notifications</p>
+          </div>
         </div>
       </div>
     </main>

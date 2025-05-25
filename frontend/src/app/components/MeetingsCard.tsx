@@ -103,7 +103,7 @@ const MeetingsCard = () => {
       <div className="flex gap-4 border-b dark:border-gray-700 mb-4">
         <button
           onClick={() => setActiveTab("recent")}
-          className={`pb-2 px-4 ${
+          className={`pb-2 px-4 text-sm font-medium transition-colors ${
             activeTab === "recent"
               ? "border-b-2 border-blue-500 text-blue-500 dark:border-white dark:text-white"
               : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
@@ -113,7 +113,7 @@ const MeetingsCard = () => {
         </button>
         <button
           onClick={() => setActiveTab("upcoming")}
-          className={`pb-2 px-4 ${
+          className={`pb-2 px-4 text-sm font-medium transition-colors ${
             activeTab === "upcoming"
               ? "border-b-2 border-blue-500 text-blue-500 dark:border-white dark:text-white"
               : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
@@ -123,87 +123,53 @@ const MeetingsCard = () => {
         </button>
       </div>
 
-      {/* Scrollable Meetings Container */}
+      {/* Scrollable Meetings Table */}
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          </div>
-        ) : activeTab === "recent" ? (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="sticky top-0 bg-white dark:bg-gray-900 ">
-                <tr className="text-left text-gray-500 dark:text-gray-200">
-                  <th className="pb-3">Client Name</th>
-                  <th className="pb-3">Meeting Date & Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentMeetings.map((meeting) => (
-                  <tr
-                    key={meeting.id}
-                    className="border-b dark:border-gray-700"
-                  >
-                    <td className="py-3 dark:text-white">{meeting.client}</td>
-                    <td className="py-3">
-                      <div className="flex flex-col">
-                        <span className="dark:text-white">
-                          {new Date(meeting.date).toLocaleDateString()}
-                        </span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                          {meeting.time}
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="sticky top-0 bg-white dark:bg-gray-900 ">
-                <tr className="text-left text-gray-500 dark:text-gray-200">
-                  <th className="pb-3">Client Name</th>
-                  <th className="pb-3">Meeting Date & Time</th>
-                  <th className="pb-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {upcomingMeetings.map((meeting) => (
-                  <tr
-                    key={meeting.id}
-                    className="border-b dark:border-gray-700"
-                  >
-                    <td className="py-3 dark:text-white">{meeting.client}</td>
-                    <td className="py-3">
-                      <div className="flex flex-col">
-                        <span className="dark:text-white">
-                          {new Date(meeting.date).toLocaleDateString()}
-                        </span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                          {meeting.time}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="py-3">
+          <table className="w-full text-sm">
+            <thead className="sticky top-0 bg-white dark:bg-gray-900">
+              <tr className="text-left text-gray-500 dark:text-gray-300">
+                <th className="pb-2">Client Name</th>
+                <th className="pb-2">Date & Time</th>
+                {activeTab === "upcoming" && <th className="pb-2">Actions</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {(activeTab === "recent" ? recentMeetings : upcomingMeetings).map((meeting) => (
+                <tr key={meeting.id} className="border-b dark:border-gray-700">
+                  <td className="py-2 dark:text-white">{meeting.client}</td>
+                  <td className="py-2">
+                    <div className="flex flex-col">
+                      <span className="dark:text-white">
+                        {new Date(meeting.date).toLocaleDateString()}
+                      </span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {meeting.time}
+                      </span>
+                    </div>
+                  </td>
+                  {activeTab === "upcoming" && (
+                    <td className="py-2">
                       <button
                         onClick={() => handleCancel(meeting.id)}
-                        className="px-3 py-1 bg-red-600 text-white hover:bg-red-700 rounded-lg shadow-md transition-colors"
+                        className="px-3 py-1 bg-red-600 text-white hover:bg-red-700 rounded-md text-xs shadow transition-colors"
                       >
                         Cancel
                       </button>
                     </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
 
-      {/* Reschedule Popup */}
+      {/* Cancel Confirmation Popup */}
       {showCancelPopup && cancelMeetingId && (
         <CancelPopup
           meetingId={cancelMeetingId}

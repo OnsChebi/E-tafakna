@@ -8,7 +8,7 @@ import { getMeetingStats } from '../controllers/stat.controller';
 
 const MeetingRoutes = Router();
 
-MeetingRoutes.get('/busy', authenticate,authorize("expert", "admin"), MeetingController.busyDays);
+MeetingRoutes.get('/busy', authenticate, MeetingController.busyDays);
 MeetingRoutes.get('/today',authenticate,MeetingController.todaysMeetings);
 MeetingRoutes.get('/upcoming',authenticate,MeetingController.upcomingMeetings);
 MeetingRoutes.get('/past',authenticate,MeetingController.pastMeetings);

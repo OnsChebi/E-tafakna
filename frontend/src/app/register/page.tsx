@@ -83,7 +83,7 @@ export default function RegisterPage() {
       >
         {/* Header Section */}
         <div className="mb-8 text-center">
-          <FiUserPlus className="mx-auto h-12 w-12 text-purple-600 dark:text-purple-400 mb-4" />
+          <FiUserPlus className="mx-auto h-12 w-12 text-blue-600 dark:text-blue-400 mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Create New User
           </h1>
@@ -132,7 +132,7 @@ export default function RegisterPage() {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="User Name"
-                  className="pl-4 pr-10 py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500"
+                  className="pl-4 pr-10 py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500"
                 />
                 {formData.name && (
                   <FiCheckCircle className="absolute right-3 top-3.5 h-5 w-5 text-green-500" />
@@ -152,7 +152,7 @@ export default function RegisterPage() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="user@example.com"
-                  className="pl-4 pr-10 py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500"
+                  className="pl-4 pr-10 py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500"
                 />
                 {formData.email && (
                   <FiCheckCircle className="absolute right-3 top-3.5 h-5 w-5 text-green-500" />
@@ -171,12 +171,12 @@ export default function RegisterPage() {
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={handleChange}
-                  className="pl-4 pr-12 py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500"
+                  className="pl-4 pr-12 py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3.5 text-gray-400 hover:text-purple-500"
+                  className="absolute right-3 top-3.5 text-gray-400 hover:text-blue-500"
                 >
                   {showPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
@@ -185,11 +185,11 @@ export default function RegisterPage() {
                     {[...Array(4)].map((_, i) => (
                       <div
                         key={i}
-                        className={`h-2 w-full rounded-full ${i < passwordStrength ? "bg-purple-500" : "bg-gray-200 dark:bg-gray-700"}`}
+                        className={`h-2 w-full rounded-full ${i < passwordStrength ? "bg-blue-500" : "bg-gray-200 dark:bg-gray-700"}`}
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-purple-600 dark:text-purple-400">
+                  <span className="text-sm text-blue-600 dark:text-blue-400">
                     {strengthLabels[passwordStrength] || ""}
                   </span>
                 </div>
@@ -205,7 +205,7 @@ export default function RegisterPage() {
     <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <FiInfo className="text-gray-400 hover:text-purple-500 cursor-help" />
+          <FiInfo className="text-gray-400 hover:text-blue-500 cursor-help" />
         </TooltipTrigger>
         <TooltipContent className="max-w-[240px] p-3 text-sm bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-900">
           <p>Unique authentication token provided by your system administrator</p>
@@ -219,7 +219,7 @@ export default function RegisterPage() {
       value={formData.accessToken}
       onChange={handleChange}
       placeholder="Enter security token"
-      className="pl-4 pr-10 py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500"
+      className="pl-4 pr-10 py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500"
     />
     {formData.accessToken && (
       <FiCheckCircle className="absolute right-3 top-3.5 h-5 w-5 text-green-500" />
@@ -233,7 +233,7 @@ export default function RegisterPage() {
                 User Role <span className="text-red-500">*</span>
               </Label>
               <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })}>
-                <SelectTrigger className="py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-purple-500">
+                <SelectTrigger className="py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
                 <SelectContent className="rounded-lg border-gray-300 dark:border-gray-600">
@@ -262,7 +262,7 @@ export default function RegisterPage() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
               type="submit"
-              className="w-full py-3 text-base font-medium bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all"
+              className="w-full py-3 text-base font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all"
               disabled={loading}
             >
               {loading ? (
