@@ -20,12 +20,11 @@ export const startMeetingSyncCron = async () => {
     expertRepo
   );
 
-  cron.schedule("0 */1 * * *", async () => {
+  cron.schedule("30 * * * *", async () => {
     console.log("🔁 [CRON] Syncing Calendly meetings...");
 
     const allExperts = await expertRepo.findAll();
 
-    // Only sync experts with Calendly credentials
     const expertsWithCalendly = allExperts.filter(
       (expert) => expert.accessToken 
     );

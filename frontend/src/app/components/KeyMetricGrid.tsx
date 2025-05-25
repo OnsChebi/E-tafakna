@@ -1,8 +1,7 @@
 "use client";
 
-import { RefreshCw, Users, CalendarCheck, FolderOpen, Clock } from "lucide-react";
+import { Users, CalendarCheck, FolderOpen, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 type Props = {
   stats: {
@@ -12,7 +11,7 @@ type Props = {
     upcoming: number;
   };
   isLoading: boolean;
-  onRefresh: () => void;
+  
 };
 
 const statsConfig = [
@@ -42,19 +41,16 @@ const statsConfig = [
   },
 ];
 
-export default function KeyMetricsGrid({ stats, isLoading, onRefresh }: Props) {
+export default function KeyMetricsGrid({ stats, isLoading}: Props) {
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Key Metrics</h2>
-        <Button variant="outline" size="sm" onClick={onRefresh}>
-          <RefreshCw className="h-4 w-4 mr-1" /> Refresh
-        </Button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statsConfig.map(({ label, icon: Icon, key, color }) => (
-          <Card key={key} className="shadow-sm">
+          <Card key={key} className="border-gray-300 hover:border-blue-800">
             <CardContent className="flex items-center p-4 space-x-4">
               <div className={`p-2 rounded-full bg-opacity-10 ${color}`}>
                 <Icon className={`w-6 h-6 ${color}`} />
@@ -63,7 +59,7 @@ export default function KeyMetricsGrid({ stats, isLoading, onRefresh }: Props) {
                 <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
                 <p className="text-xl font-bold text-gray-900 dark:text-white">
                   {isLoading ? (
-                    <span className="block w-10 h-6 bg-gray-200 dark:bg-gray-700 animate-pulse rounded" />
+                    <span className="block w-10 h-6bg-gray-100 dark:bg-gray-700 animate-pulse rounded" />
                   ) : (
                     stats[key as keyof typeof stats]
                   )}

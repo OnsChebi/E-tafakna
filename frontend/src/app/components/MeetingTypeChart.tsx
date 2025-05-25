@@ -1,52 +1,58 @@
-"use client";
+import React from "react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+} from "recharts";
 
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+type MeetingType = {
+  type: string;
+  count: number;
+};
 
-interface MeetingTypesChartProps {
-  data: Array<{
-    name: string;
-    value: number;
-    fill: string;
-  }>;
-}
+type Props = {
+  data: MeetingType[];
+};
 
-export const MeetingTypesChart = ({ data }: MeetingTypesChartProps) => {
-  const total = data.reduce((sum, entry) => sum + entry.value, 0);
+const COLORS = ["#0088FE","#FF6699"];
 
+export const MeetingTypesChart: React.FC<Props> = ({ data }) => {
   return (
-    <Card className="hover:shadow-lg transition-shadow">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold">Meeting Types</CardTitle>
-      </CardHeader>
-      <CardContent className="h-64">
-        {total > 0 ? (
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={80}
-                label={({ name, percent }) => 
-                  `${name}: ${(percent * 100).toFixed(0)}%`
-                }
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        ) : (
-          <div className="h-full flex items-center justify-center text-gray-500">
-            No meetings today
+    <div className="p-4  dark:bg-gray-800 rounded-lg  w-full h-80 flex flex-col">
+      
+      <div className="flex-1">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={data}
+              dataKey="count"
+              nameKey="type"
+              cx="50%"
+              cy="50%"
+              outerRadius={70}
+              label
+            >
+              {data.map((_, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Custom Legend */}
+      <div className="mt-4 flex flex-wrap gap-4">
+        {data.map((entry, index) => (
+          <div key={index} className="flex items-center space-x-2 text-sm">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: COLORS[index % COLORS.length] }}
+            ></div>
+            <span className="text-gray-700 dark:text-gray-300">{entry.type}</span>
           </div>
-        )}
-      </CardContent>
-    </Card>
+        ))}
+      </div>
+    </div>
   );
 };

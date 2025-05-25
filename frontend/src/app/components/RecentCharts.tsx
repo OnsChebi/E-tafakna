@@ -14,16 +14,15 @@ interface RecentActivityProps {
 }
 
 export const RecentActivity = ({ activities }: RecentActivityProps) => (
-  <Card>
-    <CardHeader>
-      <CardTitle className="text-lg font-semibold">Recent Activity</CardTitle>
-    </CardHeader>
+  <div className="p-6">
+      <h2 className="text-lg dark:text-gray-100 font-semibold mb-7">Recent Activity</h2>
+    
     <CardContent>
-      <div className="space-y-4">
+      <div className="space-y-4 dark:text-gray-100">
         {activities.map((activity, index) => (
           <ActivityItem key={index} {...activity} />
         ))}
       </div>
     </CardContent>
-  </Card>
+  </div>
 );
