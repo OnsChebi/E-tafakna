@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiAlertCircle, FiCheckCircle, FiUserPlus, FiKey, FiMail, FiLock, FiEye, FiEyeOff, FiInfo } from "react-icons/fi";
+import { FiAlertCircle, FiCheckCircle, FiUserPlus, FiEye, FiEyeOff, FiInfo } from "react-icons/fi";
 import {
   Tooltip,
   TooltipContent,

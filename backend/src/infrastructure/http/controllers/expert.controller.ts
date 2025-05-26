@@ -4,6 +4,8 @@ import { ExpertRepositoryImpl } from '../../database/repo/ExpertRepositoryImpl';
 import { LoginExpertUseCase } from '../../../core/use-cases/LoginExpert';
 import { getExpertByIdUseCase } from '../../../core/use-cases/GetExpertById';
 import { updateExpertProfileUseCase } from '../../../core/use-cases/UpdateExpertProfile';
+import { getAllExperts } from '../../../core/use-cases/GetAllExperts';
+import { DeleteExpert } from '../../../core/use-cases/DeleteExpert';
 
 const repo = new ExpertRepositoryImpl();
 
@@ -107,3 +109,28 @@ export async function updateProfileController(req: Request, res: Response): Prom
     res.status(500).json({ message: 'Server error' });
   }
 }
+
+
+
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const usecase = new getAllExperts(repo);
+    const users = await usecase.execute();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch users" });
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const userId = parseInt(req.params.id);
+    const usecase = new DeleteExpert(repo);
+    await usecase.execute(userId);
+    res.status(200).json({ message: "User deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to delete user" });
+  }
+};
+

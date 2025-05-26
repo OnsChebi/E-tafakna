@@ -11,14 +11,13 @@ const localizer = momentLocalizer(moment);
 
 const CalendarPage = () => {
   const [events, setEvents] = useState<{ start: Date; end: Date; title: string }[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<{ start: Date; end: Date } | null>(null);
 
   useEffect(() => {
     const fetchBusyDays = async () => {
       try {
         const response = await busyDays.getBusyDays();
-        const busyDates: string[] = response?.data?? [];
-
-        console.log('Raw busyDays from API:', busyDates);
+        const busyDates = response?.data ?? [];
 
         if (!Array.isArray(busyDates)) {
           console.warn('busyDays is not an array:', busyDates);
@@ -38,11 +37,10 @@ const CalendarPage = () => {
             return {
               start: parsedDate,
               end: parsedDate,
-              title: '', // No text, just the dot
+              title: '', 
             };
           });
 
-        console.log('Filtered and formatted busy dates:', filteredAndFormatted);
         setEvents(filteredAndFormatted);
       } catch (error) {
         console.error('Failed to fetch busy days:', error);
@@ -52,12 +50,10 @@ const CalendarPage = () => {
     fetchBusyDays();
   }, []);
 
-  // Custom dot style
   const eventPropGetter = () => {
     return {
       style: {
         backgroundColor: 'blue',
-        
         width: '8px',
         height: '8px',
         border: 'none',
@@ -66,16 +62,27 @@ const CalendarPage = () => {
   };
 
   return (
-    <div style={{ height: '80vh', padding: '2rem' }}>
-      <h2 className="text-xl font-bold mb-4">Busy Dates Calendar</h2>
+    <div style={{ height: '85vh', padding: '2rem' }} className='dark:bg-gray-800'>
+      <h2 className="text-xl font-bold mb-4 dark:text-gray-300">Busy Dates Calendar</h2>
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
         eventPropGetter={eventPropGetter}
-        style={{ height: '100%' }}
+        onSelectEvent={(event) => setSelectedEvent(event)}
+        style={{ height: '75%' }}
+        className='dark:text-gray-300'
       />
+
+      {selectedEvent && (
+        <div className="mt-4 p-4 bg-blue-100 rounded">
+          <p className="text-blue-800 dark:text-blue-500 font-medium">
+            Meeting Date: {selectedEvent.start.toLocaleDateString()} <br />
+            Time: {selectedEvent.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </p>
+        </div>
+      )}
     </div>
   );
 };
