@@ -28,7 +28,7 @@ export const WeeklyMeetingsChart: React.FC<WeeklyMeetingsChartProps> = ({
   isLoading,
 }) => {
   return (
-    <div className="p-4  dark:bg-gray-800">
+    <div className="p-4  dark:bg-transparent">
       
 
       {isLoading ? (

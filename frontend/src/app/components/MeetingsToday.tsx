@@ -49,7 +49,7 @@ const MeetingsToday = () => {
   const tabs = ['all', 'Online', 'In person'] as const;
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl  p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl  p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-white">

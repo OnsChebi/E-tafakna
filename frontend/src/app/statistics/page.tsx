@@ -98,7 +98,7 @@ export default function StatisticsDashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-muted/40 p-6 space-y-6 bg-gray-100 dark:bg-gray-800">
+    <div className="min-h-screen bg-muted/40 p-6 space-y-6 bg-gray-100 dark:bg-gray-900">
     {/* Header Section */}
     <div className="flex items-center justify-between">
       <h1 className="text-3xl font-bold text-foreground dark:text-gray-100">Dashboard Analytics</h1>

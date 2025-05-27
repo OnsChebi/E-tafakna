@@ -39,7 +39,7 @@ export default function MeetsDashboard() {
   return (
     <main className="p-4 min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Top Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Meetings Today */}
         <div className="sm:col-span-2 flex flex-col">
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-full">
@@ -55,7 +55,7 @@ export default function MeetsDashboard() {
         </div>
 
         {/* Calendar + Button */}
-        <div className="flex flex-col gap-4">
+        {/* <div className="flex flex-col gap-4">
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-semibold mb-2 text-gray-800 dark:text-white">Calendar</h2>
             <div className="flex justify-center">
@@ -74,22 +74,15 @@ export default function MeetsDashboard() {
   Create Meet
 </Button>
 
-        </div>
+        </div> */}
       </div>
 
       {/* Bottom Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
         {/* Meeting Cards */}
         <div className="lg:col-span-3 flex flex-col">
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-full">
             <MeetingsCard />
-          </div>
-        </div>
-
-        {/* Reminders / Notifications */}
-        <div className="flex flex-col">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-full">
-            <p className="text-gray-600 dark:text-gray-300">Reminders or Notifications</p>
           </div>
         </div>
       </div>

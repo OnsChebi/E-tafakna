@@ -19,7 +19,7 @@ const COLORS = ["#0088FE","#FF6699"];
 
 export const MeetingTypesChart: React.FC<Props> = ({ data }) => {
   return (
-    <div className="p-4  dark:bg-gray-800 rounded-lg  w-full h-80 flex flex-col">
+    <div className="p-4  dark:bg-transparent rounded-lg  w-full h-80 flex flex-col">
       
       <div className="flex-1">
         <ResponsiveContainer width="100%" height="100%">

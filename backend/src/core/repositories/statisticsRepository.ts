@@ -9,6 +9,7 @@ export interface IStatRepository {
   countMeetingsPerDayThisWeek(expertId: number): Promise<{ day: string, count: number }[]>;
   countMeetingTypes(expertId: number): Promise<{ type: 'online' | 'in-person', count: number }[]>;
   countActiveFoldersByUser(expertId: number):Promise<number>;
+  //getAllExpertsWithStats(): Promise<ExpertStat[]>;
 
 
 }

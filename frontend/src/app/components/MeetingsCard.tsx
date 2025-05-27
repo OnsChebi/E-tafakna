@@ -98,7 +98,7 @@ const MeetingsCard = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg p-6 h-[265px] flex flex-col">
+    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 h-[265px] flex flex-col">
       {/* Tabs */}
       <div className="flex gap-4 border-b dark:border-gray-700 mb-4">
         <button
@@ -131,7 +131,7 @@ const MeetingsCard = () => {
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="sticky top-0 bg-white dark:bg-gray-900">
+            <thead className="sticky top-0 bg-white dark:bg-gray-800">
               <tr className="text-left text-gray-500 dark:text-gray-300">
                 <th className="pb-2">Client Name</th>
                 <th className="pb-2">Date & Time</th>
