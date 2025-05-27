@@ -54,7 +54,7 @@ export const expertApi = {
       headers: { "Content-Type": "multipart/form-data" },
     }),
     getAll: ()=> Api.get("/expert/all"),
-    delete: (id:number)=>Api.delete(`/${id}`),
+    delete: (id:number)=>Api.delete(`expert/${id}`),
 };
 
 export const clientApi = {

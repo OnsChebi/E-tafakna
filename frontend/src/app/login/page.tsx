@@ -38,7 +38,7 @@ useEffect(()=>{
         if (role === 'expert') {
           router.push('/meetings');
         } else if (role === 'admin') {
-          router.push('/register');
+          router.push('/users');
         } else {
           setErrors({ general: 'Unknown role' });
         }

@@ -1,3 +1,4 @@
+// register.tsx
 "use client";
 
 import { useState } from "react";
@@ -8,15 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiAlertCircle, FiCheckCircle, FiUserPlus, FiEye, FiEyeOff, FiInfo } from "react-icons/fi";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { FiAlertCircle, FiCheckCircle, FiUserPlus, FiEye, FiEyeOff, FiInfo, FiX } from "react-icons/fi";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-export default function RegisterPage() {
+export default function RegisterPopup({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
@@ -50,13 +46,13 @@ export default function RegisterPage() {
       const response = await expertApi.register(formData);
       if (response.data.success) {
         setSuccess("User created successfully!");
-        setTimeout(() => router.push("/users"), 2000);
+        setTimeout(() => {
+          onClose();
+          router.refresh();
+        }, 1500);
       }
     } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-        "Registration failed. Please check your access token."
-      );
+      setError(err.response?.data?.message || "Registration failed.");
     } finally {
       setLoading(false);
     }
@@ -65,17 +61,14 @@ export default function RegisterPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
-    if (name === "password") {
-      setPasswordStrength(calculatePasswordStrength(value));
-    }
+    if (name === "password") setPasswordStrength(calculatePasswordStrength(value));
   };
 
   const strengthLabels = ["Weak", "Fair", "Good", "Strong"];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
-      <motion.div
+<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+        <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-xl bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8"
@@ -200,7 +193,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
   <div className="flex items-center gap-2">
     <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-      Access Token <span className="text-red-500">*</span>
+      Access Token 
     </Label>
     <TooltipProvider delayDuration={100}>
       <Tooltip>
@@ -208,7 +201,7 @@ export default function RegisterPage() {
           <FiInfo className="text-gray-400 hover:text-blue-500 cursor-help" />
         </TooltipTrigger>
         <TooltipContent className="max-w-[240px] p-3 text-sm bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-900">
-          <p>Unique authentication token provided by your system administrator</p>
+          <p>Calendly Token</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -236,21 +229,17 @@ export default function RegisterPage() {
                 <SelectTrigger className="py-3 text-base rounded-lg border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500">
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
-                <SelectContent className="rounded-lg border-gray-300 dark:border-gray-600">
+                <SelectContent className="rounded-lg bg-white border-gray-300 dark:border-gray-600">
                   <SelectItem value="expert" className="py-3">
                     <div className="space-y-1">
                       <div className="font-medium">Expert</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
-                        Can access assigned projects and submit reports
-                      </div>
+                      
                     </div>
                   </SelectItem>
                   <SelectItem value="admin" className="py-3">
                     <div className="space-y-1">
                       <div className="font-medium">Admin</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
-                        Full system access with user management privileges
-                      </div>
+                      
                     </div>
                   </SelectItem>
                 </SelectContent>
