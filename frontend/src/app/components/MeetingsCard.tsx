@@ -23,10 +23,9 @@ const MeetingsCard = () => {
   const [recentMeetings, setRecentMeetings] = useState<Meeting[]>([]);
   const [upcomingMeetings, setUpcomingMeetings] = useState<Meeting[]>([]);
   const [activeTab, setActiveTab] = useState<"recent" | "upcoming">("recent");
-  //const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showCancelPopup, setShowCancelPopup] = useState(false);
-  const [canceleventUri, setCanceleventUri] = useState<string | null>(null);
+  const [cancelMeetingId, setCancelMeetingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMeetings = async () => {
@@ -76,26 +75,27 @@ const MeetingsCard = () => {
     fetchMeetings();
   }, []);
 
-  const handleCancel = (eventUri: string) => {
-    setCanceleventUri(eventUri);
+  const handleCancel = (meetingId: string) => {
+    setCancelMeetingId(meetingId);
     setShowCancelPopup(true);
   };
 
   const confirmCancel = async (reason: string) => {
-    if (!canceleventUri) return;
+    if (!cancelMeetingId) return;
     try {
-      await cancelMeeting.cancel(canceleventUri, reason);
-      // Filter out the canceled meeting from UI
+      await cancelMeeting.cancel(cancelMeetingId, reason);
       setUpcomingMeetings((prev) =>
-        prev.filter((meeting) => meeting.id !== canceleventUri)
+        prev.filter((meeting) => meeting.id !== cancelMeetingId)
       );
     } catch (error) {
       console.error("Failed to cancel meeting:", error);
     } finally {
       setShowCancelPopup(false);
-      setCanceleventUri(null);
+      setCancelMeetingId(null);
     }
   };
+
+  const currentMeetings = activeTab === "recent" ? recentMeetings : upcomingMeetings;
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-6 h-[265px] flex flex-col">
@@ -129,6 +129,10 @@ const MeetingsCard = () => {
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
           </div>
+        ) : currentMeetings.length === 0 ? (
+          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+            {activeTab === "recent" ? "No recent meetings" : "No upcoming meetings"}
+          </div>
         ) : (
           <table className="w-full text-sm">
             <thead className="sticky top-0 bg-white dark:bg-gray-800">
@@ -139,7 +143,7 @@ const MeetingsCard = () => {
               </tr>
             </thead>
             <tbody>
-              {(activeTab === "recent" ? recentMeetings : upcomingMeetings).map((meeting) => (
+              {currentMeetings.map((meeting) => (
                 <tr key={meeting.id} className="border-b dark:border-gray-700">
                   <td className="py-2 dark:text-white">{meeting.client}</td>
                   <td className="py-2">
@@ -170,9 +174,9 @@ const MeetingsCard = () => {
       </div>
 
       {/* Cancel Confirmation Popup */}
-      {showCancelPopup && canceleventUri && (
+      {showCancelPopup && cancelMeetingId && (
         <CancelPopup
-          meetingId={canceleventUri}
+          meetingId={cancelMeetingId}
           onClose={() => setShowCancelPopup(false)}
           onConfirm={confirmCancel}
         />

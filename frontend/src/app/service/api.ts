@@ -38,6 +38,10 @@ Api.interceptors.response.use(
 );
 
 // ==== API Services ====
+export const cancelMeeting = {
+  cancel: (eventUri: string, reason: string) =>
+    Api.post("/calendly/cancel", { eventUri, reason }),
+};
 export const expertApi = {
   register: (data: {
     name: string;
@@ -77,10 +81,6 @@ export const busyDays = {
   getBusyDays: () => Api.get<busyDatesResponse>("/calendly/busy"),
 };
 
-export const cancelMeeting = {
-  cancel: (eventUri: string, reason: string) =>
-    Api.post("/calendly/cancel", { eventUri, reason }),
-};
 
 export const stat ={
   getStat:()=>Api.get<CalendlyStats>("calendly/stats")

@@ -7,7 +7,7 @@ type CancelPopupProps = {
   onConfirm: (reason: string) => void;
 };
 
-const CancelPopup = ({ meetingId, onClose, onConfirm }: CancelPopupProps) => {
+const CancelPopup = ({onClose, onConfirm }: CancelPopupProps) => {
   const [reason, setReason] = useState("");
 
   return (
