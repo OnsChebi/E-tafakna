@@ -33,8 +33,8 @@ useEffect(()=>{
         setIsLoading(false);
         const { token, role } = response.data;
         localStorage.setItem('authToken',token);
-        console.log("response:",response)
-        console.log("expert", role);
+        //console.log("response:",response)
+        //console.log("expert", role);
         if (role === 'expert') {
           router.push('/meetings');
         } else if (role === 'admin') {

@@ -44,7 +44,7 @@ const ProfilePage = () => {
     if (profileImage) formData.append("profileImage", profileImage);
     try {
       for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
+        //console.log(`${key}:`, value);
       }
       await expertApi.updateProfile(formData);
       toast({ title: "Success", description: "Profile updated successfully." });

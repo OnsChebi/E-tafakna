@@ -64,15 +64,15 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
       new Map(clients.map(c => [c.email, c])).values()
     );
 
-    return uniqueClients as any; // cast if you need Expert[], or define a DTO/interface
+    return uniqueClients as any; 
   }
 
   async findTodaysMeetings(expertId: number): Promise<Meeting[]> {
     const today = new Date();
     const start = new Date(today.setHours(0, 0, 0, 0));
-    console.log("Now:", today.toISOString());
+    //console.log("Now:", today.toISOString());
     const end = new Date(today.setHours(23, 59, 59, 999));
-    console.log("Expert ID:", expertId);
+    //console.log("Expert ID:", expertId);
 
 
     return this.repo.find({
@@ -98,7 +98,7 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
 
   async findUpcomingMeetings(expertId: number): Promise<Meeting[]> {
     const now = new Date();
-    console.log("Expeeeeeeeeeeeeeeeeeert ID iiiiiiiiiiiis:", expertId);
+    //console.log("Expeeeeeeeeeeeeeeeeeert ID iiiiiiiiiiiis:", expertId);
     return this.repo.find({
       where: {
         expert: { id: expertId },

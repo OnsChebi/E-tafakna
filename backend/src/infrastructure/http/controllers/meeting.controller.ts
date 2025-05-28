@@ -17,11 +17,15 @@ interface AuthenticatedRequest extends Request {
 export class MeetingController {
   static async cancelMeeting(req: Request, res: Response) {
     try {
-      const { meetingId , reason } = req.body;
-      const useCase = new CancelMeetingsUseCase(meetingRepo , calendlyRepo);
-      await useCase.execute(meetingId , reason);
+      const { eventUri, reason} = req.body;
+      if (!eventUri || !reason) {
+         res.status(400).json({ error: "Event URI and reason are required" });
+        return
+      }
+      const useCase = new CancelMeetingsUseCase(meetingRepo ,calendlyRepo);
+      await useCase.execute((req as any).user.id, eventUri ,reason);
+  
       res.status(200).json({ message: "Meeting canceled successfully" });
-      return;
     } catch (error) {
       console.error("Cancel meeting error:", error);
       res.status(500).json({ message: "Internal server error" });

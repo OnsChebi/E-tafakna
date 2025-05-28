@@ -26,7 +26,7 @@ const MeetingsCard = () => {
   //const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showCancelPopup, setShowCancelPopup] = useState(false);
-  const [cancelMeetingId, setCancelMeetingId] = useState<string | null>(null);
+  const [canceleventUri, setCanceleventUri] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMeetings = async () => {
@@ -36,9 +36,9 @@ const MeetingsCard = () => {
           upcomingMeeting.getUpcomingMeetings(),
           recentMeeting.getRecentMeetings(),
         ]);
-         console.log("Upcoming meetings daaataaaa:", responseUpcoming.data);
+         //console.log("Upcoming meetings daaataaaa:", responseUpcoming.data);
         // console.log("Upcoming meetings eveeeeeeent:", responseUpcoming.data.events);
-        console.log("Recent meetings daaaataaaa:", responseRecent.data);
+        //console.log("Recent meetings daaaataaaa:", responseRecent.data);
         //console.log("Recent meetings eveeeeeent:", responseRecent.data);
         
 
@@ -76,24 +76,24 @@ const MeetingsCard = () => {
     fetchMeetings();
   }, []);
 
-  const handleCancel = (meetingId: string) => {
-    setCancelMeetingId(meetingId);
+  const handleCancel = (eventUri: string) => {
+    setCanceleventUri(eventUri);
     setShowCancelPopup(true);
   };
 
   const confirmCancel = async (reason: string) => {
-    if (!cancelMeetingId) return;
+    if (!canceleventUri) return;
     try {
-      await cancelMeeting.cancel(cancelMeetingId, reason);
+      await cancelMeeting.cancel(canceleventUri, reason);
       // Filter out the canceled meeting from UI
       setUpcomingMeetings((prev) =>
-        prev.filter((meeting) => meeting.id !== cancelMeetingId)
+        prev.filter((meeting) => meeting.id !== canceleventUri)
       );
     } catch (error) {
       console.error("Failed to cancel meeting:", error);
     } finally {
       setShowCancelPopup(false);
-      setCancelMeetingId(null);
+      setCanceleventUri(null);
     }
   };
 
@@ -170,9 +170,9 @@ const MeetingsCard = () => {
       </div>
 
       {/* Cancel Confirmation Popup */}
-      {showCancelPopup && cancelMeetingId && (
+      {showCancelPopup && canceleventUri && (
         <CancelPopup
-          meetingId={cancelMeetingId}
+          meetingId={canceleventUri}
           onClose={() => setShowCancelPopup(false)}
           onConfirm={confirmCancel}
         />

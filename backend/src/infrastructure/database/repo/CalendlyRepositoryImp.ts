@@ -10,6 +10,7 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
   
   async getAccessToken(expertId: number): Promise<string> {
     const expert = await AppDataSource.getRepository(Expert).findOneBy({ id: expertId });
+    console.log("getAccessToken " , expert)
     if (!expert?.accessToken) throw new Error("Calendly not connected");
   
     try {
