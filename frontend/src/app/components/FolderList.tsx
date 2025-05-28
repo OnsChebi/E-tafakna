@@ -94,12 +94,7 @@ export default function FolderList({
 
   return (
     <div className="space-y-4 p-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-800 dark:text-gray-100">
-          <FolderIcon className="h-5 w-5" />
-          Folders
-        </h2>
-      </div>
+      
 
       <Input
         placeholder="Search folders..."

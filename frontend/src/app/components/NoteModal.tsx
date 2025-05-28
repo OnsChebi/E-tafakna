@@ -7,7 +7,6 @@ import "froala-editor/css/froala_editor.pkgd.min.css";
 import "froala-editor/js/plugins.pkgd.min.js";
 import DOMPurify from "dompurify";
 import { Button } from "@/components/ui/button";
-import { XIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -56,21 +55,13 @@ export const NoteModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
+      <DialogContent className="max-w-2xl bg-white dark:bg-gray-800 max-h-[80vh] flex flex-col">
         <DialogHeader className="border-b p-4">
           <div className="flex justify-between items-center">
             <DialogTitle className="text-lg font-semibold dark:text-gray-100">
               {internalEditing ? (content ? "Edit Note" : "New Note") : "View Note"}
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="rounded-full h-8 w-8 p-0"
-            >
-              <XIcon className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </Button>
+            
           </div>
         </DialogHeader>
 
@@ -117,7 +108,7 @@ export const NoteModal = ({
             />
           ) : (
             <div
-              className="prose dark:prose-invert dark:bg-gray-800/50 dark:text-gray-100 p-4 rounded min-h-[200px] overflow-auto"
+              className="prose  dark:bg-gray-800/50 dark:text-gray-100 p-4 rounded min-h-[200px] overflow-auto"
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(noteContent) }}
             />
           )}
@@ -129,11 +120,12 @@ export const NoteModal = ({
               <Button
                 variant="outline"
                 onClick={onClose}
-                className="hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="hover:bg-gray-100 dark:hover:bg-gray-800 bg-gray-600 dark:bg-gray-200"
               >
                 Cancel
               </Button>
               <Button
+              className="bg-blue-700 text-white hover:bg-blue-500"
                 onClick={handleSave}
                 disabled={!noteContent.trim()}
               >
@@ -141,7 +133,7 @@ export const NoteModal = ({
               </Button>
             </>
           ) : (
-            <Button onClick={() => setInternalEditing(true)}>
+            <Button className="bg-blue-700 text-white hover:bg-blue-500" onClick={() => setInternalEditing(true)}>
               Edit Note
             </Button>
           )}

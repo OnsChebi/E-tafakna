@@ -30,7 +30,7 @@ export default function NoteList({
   //console.log("Notes received:", notes, "for folder ID:", folderId);
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 h-full flex flex-col">
+    <div className="bg-white dark:bg-gray-900 rounded-lg  p-4 h-full flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
           Notes in Folder
