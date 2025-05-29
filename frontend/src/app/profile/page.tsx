@@ -137,7 +137,7 @@ const ProfilePage = () => {
                       ★ 4.9
                     </Badge>
                     <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
-                      🕒 30 min
+                      🕒 15 min
                     </Badge>
                   </div>
                 </motion.div>

@@ -97,6 +97,7 @@ export type CalendlyStats = {
   upcomingMeetings: number;
   activeFolder: number;
   weeklyMeetings: { day: string; count: number }[];
+  monthlyMeetings: { month: string; count: number }[];
   meetingTypes: { type: string; count: number }[];
 };
 

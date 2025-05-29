@@ -44,6 +44,7 @@ const MeetingsCard = () => {
         const processMeeting = (event: ApiMeeting, type: Meeting["type"]) => ({
           id: event.eventId,
           client: event.inviteeName,
+          
           date: event.startTime,
           time: new Date(event.startTime).toLocaleTimeString([], {
             hour: "2-digit",
@@ -138,6 +139,7 @@ const MeetingsCard = () => {
             <thead className="sticky top-0 bg-white dark:bg-gray-800">
               <tr className="text-left text-gray-500 dark:text-gray-300">
                 <th className="pb-2">Client Name</th>
+                <th className="pb-2">Email</th>
                 <th className="pb-2">Date & Time</th>
                 {activeTab === "upcoming" && <th className="pb-2">Actions</th>}
               </tr>
@@ -146,6 +148,8 @@ const MeetingsCard = () => {
               {currentMeetings.map((meeting) => (
                 <tr key={meeting.id} className="border-b dark:border-gray-700">
                   <td className="py-2 dark:text-white">{meeting.client}</td>
+                  <td className="py-2 dark:text-white">{meeting.email}</td>
+
                   <td className="py-2">
                     <div className="flex flex-col">
                       <span className="dark:text-white">

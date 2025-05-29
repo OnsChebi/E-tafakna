@@ -1,11 +1,10 @@
 'use client';
 
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import { parseISO } from 'date-fns';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useEffect, useState } from 'react';
-import { busyDays } from '../service/api';
+import { CalendlyEvent, upcomingMeeting } from '../service/api';
 
 const localizer = momentLocalizer(moment);
 
@@ -14,41 +13,38 @@ const CalendarPage = () => {
   const [selectedEvent, setSelectedEvent] = useState<{ start: Date; end: Date } | null>(null);
 
   useEffect(() => {
-    const fetchBusyDays = async () => {
+    const fetchUpcomingMeetings = async () => {
       try {
-        const response = await busyDays.getBusyDays();
-        const busyDates = response?.data ?? [];
-
-        if (!Array.isArray(busyDates)) {
-          console.warn('busyDays is not an array:', busyDates);
+        const response = await upcomingMeeting.getUpcomingMeetings();
+        const meetingData = response?.data ?? [];
+  
+        if (!Array.isArray(meetingData)) {
+          console.warn('upcomingMeetings is not an array:', meetingData);
           return;
         }
-
-        const filteredAndFormatted = busyDates
-          .filter(dateStr => {
-            try {
-              return !!parseISO(dateStr);
-            } catch {
-              return false;
-            }
-          })
-          .map(dateStr => {
-            const parsedDate = parseISO(dateStr);
-            return {
-              start: parsedDate,
-              end: parsedDate,
-              title: '', 
-            };
-          });
-
-        setEvents(filteredAndFormatted);
+  
+        const formattedEvents = meetingData.map((meeting: CalendlyEvent) => {
+          return {
+            title: meeting.inviteeName || 'Meeting',
+            start: new Date(meeting.startTime),
+            end: new Date(meeting.endTime),
+          };
+        });
+  
+        setEvents(formattedEvents);
       } catch (error) {
-        console.error('Failed to fetch busy days:', error);
+        console.error('Failed to fetch upcoming meetings:', error);
       }
     };
-
-    fetchBusyDays();
+  
+    fetchUpcomingMeetings();
   }, []);
+  
+  const handleEventSelect = (event: { start: Date; end: Date; title: string }) => {
+    setSelectedEvent(event);
+    setTimeout(() => setSelectedEvent(null), 4000);
+  };
+  
 
   const eventPropGetter = () => {
     return {
@@ -63,14 +59,14 @@ const CalendarPage = () => {
 
   return (
     <div style={{ height: '85vh', padding: '2rem' }} className='dark:bg-gray-800'>
-      <h2 className="text-xl font-bold mb-4 dark:text-gray-300">Busy Dates Calendar</h2>
+      <h2 className="text-xl font-bold mb-4 dark:text-gray-300">Calendar</h2>
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
         eventPropGetter={eventPropGetter}
-        onSelectEvent={(event) => setSelectedEvent(event)}
+        onSelectEvent={handleEventSelect}
         style={{ height: '75%' }}
         className='dark:text-gray-300'
       />

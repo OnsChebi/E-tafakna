@@ -11,6 +11,7 @@ export class StatRepositoryImpl implements IStatRepository {
   constructor() {
     this.repo = AppDataSource.getRepository(Meeting);
   }
+  
  
 
 
@@ -77,6 +78,32 @@ async countMeetingsPerDayThisWeek(expertId: number): Promise<{ day: string, coun
     count: parseInt(row.count),
   }));
 }
+
+
+async countMeetingsPerMonthThisyear(expertId: number): Promise<{ month: string, count: number }[]> {
+  const now = new Date();
+  const startOfYear = new Date(now.getFullYear(), 0, 1);
+  const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+
+  const result = await AppDataSource.getRepository(Meeting)
+    .createQueryBuilder("meeting")
+    .select("MONTHNAME(meeting.startTime)", "month")
+    .addSelect("COUNT(*)", "count")
+    .where("meeting.expertId = :expertId", { expertId })
+    .andWhere("meeting.startTime BETWEEN :startOfYear AND :endOfYear", {
+      startOfYear,
+      endOfYear,
+    })
+    .groupBy("month")
+    .orderBy("FIELD(month, 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')")
+    .getRawMany();
+
+  return result.map((row: any) => ({
+    month: row.month,
+    count: parseInt(row.count),
+  }));
+}
+
 
 async countActiveFoldersByUser(expertId: number): Promise<number> {
   const count = await AppDataSource.getRepository(Folder)

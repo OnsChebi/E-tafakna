@@ -46,7 +46,7 @@ const Sidebar = ({ isOpen, isMobile, onClose, role }: SidebarProps) => {
 
   if (role === "expert") {
     menuItems = [
-      { icon: <Video className={iconClasses} />, label: "Meetings", href: "/meetings" },
+      { icon: <Video className={iconClasses} />, label: "Dashborad", href: "/meetings" },
       { icon: <ChartColumnIncreasing className={iconClasses} />, label: "Statistics", href: "/statistics" },
       { icon: <UserRoundPen className={iconClasses} />, label: "Profile", href: "/profile" },
       { icon: <NotebookPen className={iconClasses} />, label: "Notepad", href: "/notepad" },

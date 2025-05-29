@@ -10,6 +10,7 @@ export class GetMeetingStatistics {
       todaysMeetings,
       upcomingMeetings,
       weeklyMeetings,
+      monthlyMeetings,
       meetingTypes,
       activeFolder
     ] = await Promise.all([
@@ -17,6 +18,7 @@ export class GetMeetingStatistics {
       this.statRepo.countTodaysMeetings(expertId),
       this.statRepo.countUpcomingMeetings(expertId),
       this.statRepo.countMeetingsPerDayThisWeek(expertId),
+      this.statRepo.countMeetingsPerMonthThisyear(expertId),
       this.statRepo.countMeetingTypes(expertId),
       this.statRepo.countActiveFoldersByUser(expertId)
     ]);
@@ -26,6 +28,7 @@ export class GetMeetingStatistics {
       todaysMeetings,
       upcomingMeetings,
       weeklyMeetings,
+      monthlyMeetings,
       meetingTypes,
       activeFolder
     };
