@@ -1,3 +1,5 @@
+
+//meetingRepo
 import { Repository, LessThan, MoreThan, Between } from "typeorm";
 import { IMeetingRepository } from "../../../core/repositories/MeetingRepository";
 import { Meeting } from "../../../core/entities/Meeting.entity";
@@ -24,11 +26,20 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
   }
   
 
+ 
   async cancelMeeting(eventId: string): Promise<void> {
-    const meeting = await this.repo.findOneOrFail({ where: { eventId } });
+    const meeting = await this.repo.findOne({ where: { eventId } });
+    console.log("Meeting fetched from DB:", meeting);
+
+    if (!meeting) {
+      console.warn(`No meeting found with eventId: ${eventId}`);
+      return;
+    }
+  
     meeting.status = "canceled";
     await this.repo.save(meeting);
-  }
+  } 
+  
 
   async findBusyDays(expertId: number): Promise<Date[]> {
     const meetings = await this.repo.find({
@@ -98,7 +109,7 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
 
   async findUpcomingMeetings(expertId: number): Promise<Meeting[]> {
     const now = new Date();
-    //console.log("Expeeeeeeeeeeeeeeeeeert ID iiiiiiiiiiiis:", expertId);
+    //console.log("Expeeeeeeert ID iiiiiiiiiiiis:", expertId);
     return this.repo.find({
       where: {
         expert: { id: expertId },
@@ -110,11 +121,10 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
 
   async saveMeetingsForExpert(expertId: number, meetings: Meeting[]): Promise<void> {
     for (const meeting of meetings) {
-      const existing = await this.repo.findOneBy({ eventId: meeting.eventId });
-      if (!existing) {
-        meeting.expert = { id: expertId } as Expert;
-        await this.repo.save(meeting);
-      }
+      //const existing = await this.repo.findOneBy({ eventId: meeting.eventId });
+      meeting.expert = { id: expertId } as Expert;
+      await this.repo.save(meeting);
+
     }
   }
 }

@@ -15,7 +15,7 @@ const Api = axios.create({
 Api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("authToken");
-    if (token) {
+    if (token && token !== "undefined" && token !== "null") {
       config.headers.Authorization = `Bearer ${token}`;
     }
   }
@@ -85,6 +85,11 @@ export const busyDays = {
 export const stat ={
   getStat:()=>Api.get<CalendlyStats>("calendly/stats")
 }
+
+export const calendlySync = {
+  syncMeetings: () => Api.post("/calendly/sync"),
+};
+
 
 export type CalendlyStats = {
   totalClients: number;

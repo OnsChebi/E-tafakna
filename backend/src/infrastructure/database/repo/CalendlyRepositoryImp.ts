@@ -1,4 +1,5 @@
 
+//calendlyRepo
 import axios from 'axios';
 import { ICalendlyRepository } from '../../../core/repositories/CalendlyRepository';
 import { Expert } from '../../../core/entities/Expert.entity';
@@ -86,7 +87,7 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
   }
 
 
-  async cancelMeeting(token: string, eventUri: string,reason:string): Promise<void> {
+  async cancelMeeting(token: string, eventUri: string, reason: string): Promise<void> {
     try {
       const eventId = eventUri.split('/').pop();
       await axios.post(
@@ -97,10 +98,19 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
         }
       );
     } catch (err: any) {
-      console.error("Failed to cancel meeting", err.response?.data || err.message);
+      const calendlyError = err.response?.data;
+  
+      // If Calendly says it's already canceled, skip rethrowing
+      if (calendlyError?.message === "Event is already canceled") {
+        console.warn("Meeting was already canceled in Calendly. Proceeding to update local DB.");
+        return;
+      }
+  
+      console.error("Failed to cancel meeting", calendlyError || err.message);
       throw new Error("Cancellation failed");
     }
   }
+  
   
 
   async getClientList(token: string, userUri: string): Promise<{ name: string; email: string }[]> {

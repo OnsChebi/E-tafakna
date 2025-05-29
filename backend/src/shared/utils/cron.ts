@@ -1,4 +1,3 @@
-// src/cron/syncMeetings.ts
 
 import cron from "node-cron";
 import { AppDataSource } from "../../infrastructure/database/db";
@@ -20,7 +19,7 @@ export const startMeetingSyncCron = async () => {
     expertRepo
   );
 
-  cron.schedule("30 * * * *", async () => {
+  cron.schedule("* */1 * * *", async () => {
     console.log("🔁 [CRON] Syncing Calendly meetings...");
 
     const allExperts = await expertRepo.getAll();

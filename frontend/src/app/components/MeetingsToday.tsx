@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { Video, Users, ArrowRight } from 'lucide-react';
-import { Button } from '../../components/ui/button';
 import { MeetingToday } from '../service/api';
 
 // Define the allowed tab types
@@ -49,7 +48,7 @@ const MeetingsToday = () => {
   const tabs = ['all', 'Online', 'In person'] as const;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl  p-6">
+    <div className=" dark:bg-gray-800 rounded-xl  p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
