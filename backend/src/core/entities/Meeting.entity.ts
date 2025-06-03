@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Expert } from "./Expert.entity";
+import { Document } from "./Document.entity";
 
 @Entity("Meetings")
 export class Meeting {
@@ -41,4 +42,8 @@ export class Meeting {
 
   @CreateDateColumn()
   created_at!: Date;
+
+  @OneToMany(() => Document, (document) => document.meeting)
+documents!: Document[];
+
 }
