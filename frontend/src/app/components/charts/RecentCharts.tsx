@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { ActivityItem } from "./ActivityItem";
+import { ActivityItem } from "../ActivityItem";
 
 interface ActivityItem {
   icon: React.ReactNode;

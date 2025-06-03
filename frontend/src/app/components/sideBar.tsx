@@ -13,6 +13,7 @@ import {
   Video,
   LayoutDashboard,
   Users,
+  DollarSign
 } from "lucide-react";
 
 interface MenuItem {
@@ -51,6 +52,7 @@ const Sidebar = ({ isOpen, isMobile, onClose, role }: SidebarProps) => {
       { icon: <UserRoundPen className={iconClasses} />, label: "Profile", href: "/profile" },
       { icon: <NotebookPen className={iconClasses} />, label: "Notepad", href: "/notepad" },
       { icon: <CalendarDays className={iconClasses} />, label: "Calendar", href: "/calendar" },
+      { icon: <DollarSign className={iconClasses} />, label: "Billing", href: "/billing" },
     ];
   } else if (role === "admin") {
     menuItems = [

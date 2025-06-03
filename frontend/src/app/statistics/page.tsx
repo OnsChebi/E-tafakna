@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { Calendar, Folder, Notebook } from "lucide-react";
 import { stat, CalendlyStats } from "../service/api";
-import { MeetingTypesChart } from "../components/MeetingTypeChart";
-import { RecentActivity } from "../components/RecentCharts";
+import { MeetingTypesChart } from "../components/charts/MeetingTypeChart";
+import { RecentActivity } from "../components/charts/RecentCharts";
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import KeyMetricsGrid from "../components/KeyMetricGrid";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MeetingsChart } from "../components/MeetingsChart";
+import { MeetingsChart } from "../components/charts/MeetingsChart";
 import {
   Tabs,
   TabsContent,
