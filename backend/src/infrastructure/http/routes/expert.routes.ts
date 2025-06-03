@@ -8,7 +8,7 @@ import {
   deleteUser,
 } from '../controllers/expert.controller';
 import { authenticate } from '../middlewares/auth';
-import { upload } from '../middlewares/multer';
+import {  uploadProfileImage } from '../middlewares/multer';
 
 const expertRouter = Router();
 
@@ -18,6 +18,6 @@ expertRouter.get("/all", getAllUsers);
 expertRouter.delete("/:id", deleteUser);
 expertRouter.post('/login', loginController);
 expertRouter.get('/me', authenticate, getProfileController);
-expertRouter.put('/profile', authenticate, upload.single('profileImage'), updateProfileController);
+expertRouter.put('/profile', authenticate,  uploadProfileImage.single('profileImage'), updateProfileController);
 
 export default expertRouter;
