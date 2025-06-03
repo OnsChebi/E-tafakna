@@ -1,10 +1,20 @@
+import { Router } from "express";
+import {
+  getDocumentById,
+  deleteDocumentById,
+  getDocumentsByFolderId,
+  getDocumentsByMeetingId,
+  DocumentUploadController,
+  
+} from "../controllers/document.controller";
+import { uploadDocument } from "../middlewares/multer";
 
-import { Router } from 'express';
-import { DocumentUploadController } from '../controllers/document.controller';
-import { uploadDocument } from '../middlewares/multer';
+const router = Router();
 
-const docRoutes = Router();
+router.post("/upload", uploadDocument.single("file"), DocumentUploadController);
+router.get("/:id", getDocumentById);
+router.delete("/:id", deleteDocumentById);
+router.get("/folder/:folderId", getDocumentsByFolderId);
+router.get("/meeting/:meetingId", getDocumentsByMeetingId);
 
-docRoutes.post('/upload', uploadDocument.single('file'), DocumentUploadController);
-
-export default docRoutes
+export default router;
