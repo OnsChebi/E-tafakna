@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Folder } from './Folder.entity';
 import { Meeting } from './Meeting.entity';
+import { Task } from './Task.entity';
 
 export type UserRole = 'expert' | 'admin';
 
@@ -35,5 +36,8 @@ export class Expert {
 
   @OneToMany(() => Meeting, (meeting) => meeting.expert)
   meetings!: Meeting[];
+
+  @OneToMany(() => Task, (task) => task.expert)
+  tasks!: Task[];
 
 }
