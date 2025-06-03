@@ -126,6 +126,24 @@ export const noteApi = {
   delete: (id: number) => Api.delete(`/note/${id}`),
 };
 
+//doc api
+// ==== Document API ====
+
+
+export const documentApi = {
+  getAll: () => Api.get<DocumentType[]>("/document"),
+  getById: (id: number) => Api.get<DocumentType>(`/document/${id}`),
+  getByMeeting: (meetingId: number) =>
+    Api.get<DocumentType[]>(`/document/meeting/${meetingId}`),
+  getByFolder: (folderId: number) =>
+    Api.get<DocumentType[]>(`/document/folder/${folderId}`),
+  create: (formData: FormData) =>
+    Api.post("/document", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    }),
+  delete: (id: number) => Api.delete(`/document/${id}`),
+};
+
 // Auth Utilities
 export const isAuthenticated = () => {
   if (typeof window === "undefined") return false;
@@ -179,6 +197,33 @@ export type Meeting = {
 
 export type MeetingsApiResponse = {
   events: Meeting[];
+};
+
+
+export type DocumentType = {
+  id: number;
+  title: string;
+  url: string;
+  type: string;
+  uploadedAt: string;
+  meeting?: {
+    id: number;
+    eventId: string;
+    startTime: string;
+    endTime: string;
+    inviteeName: string;
+    inviteeEmail: string;
+    inviteeImage?: string | null;
+    type: "Online" | "In person";
+    status: string;
+    meetingUrl?: string | null;
+    reason?: string | null;
+    created_at: string;
+  };
+  folder?: {
+    id: number;
+    name: string;
+  };
 };
 
 // Export instances if needed elsewhere

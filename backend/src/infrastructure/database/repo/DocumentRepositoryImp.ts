@@ -18,9 +18,7 @@ export class DocumentRepository implements IDocumentRepository {
     return await this.repository.findOne({ where: { id } });
   }
 
-  async findAll(): Promise<Document[]> {
-    return await this.repository.find();
-  }
+  
 
   async findByMeeting(meetingId: number): Promise<Document[]> {
     return await this.repository.find({
