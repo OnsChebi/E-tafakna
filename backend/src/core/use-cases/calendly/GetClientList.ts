@@ -1,5 +1,5 @@
 // core/use-cases/GetClientList.ts
-import { IMeetingRepository } from "../repositories/MeetingRepository";
+import { IMeetingRepository } from "../../repositories/MeetingRepository";
 
 export class GetClientListUseCase {
   constructor(private meetingRepo: IMeetingRepository) {}

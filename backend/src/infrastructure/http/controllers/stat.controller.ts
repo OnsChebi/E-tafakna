@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { GetMeetingStatistics } from "../../../core/use-cases/meeting/GetMeetingStatistics";
+import { GetMeetingStatistics } from "../../../core/use-cases/calendly/GetMeetingStatistics";
 import { StatRepositoryImpl } from "../../database/repo/StatRepositoryImp";
 
 

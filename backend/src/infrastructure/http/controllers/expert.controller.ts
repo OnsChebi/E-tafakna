@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { RegisterExpertUseCase } from '../../../core/use-cases/RegisterExpert';
+import { RegisterExpertUseCase } from '../../../core/use-cases/authentication/RegisterExpert';
 import { ExpertRepositoryImpl } from '../../database/repo/ExpertRepositoryImpl';
-import { LoginExpertUseCase } from '../../../core/use-cases/LoginExpert';
+import { LoginExpertUseCase } from '../../../core/use-cases/authentication/LoginExpert';
 import { getExpertByIdUseCase } from '../../../core/use-cases/expert/GetExpertById';
 import { updateExpertProfileUseCase } from '../../../core/use-cases/expert/UpdateExpertProfile';
 import { getAllExperts } from '../../../core/use-cases/expert/GetAllExperts';

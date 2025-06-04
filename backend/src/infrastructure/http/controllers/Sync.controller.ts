@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SyncCalendlyMeetingsUseCase } from "../../../core/use-cases/SyncCalendlyMeetings";
+import { SyncCalendlyMeetingsUseCase } from "../../../core/use-cases/calendly/SyncCalendlyMeetings";
 import { CalendlyRepositoryImpl } from "../../database/repo/CalendlyRepositoryImp";
 import { MeetingRepositoryImpl } from "../../database/repo/MeetingRepositoryImp";
 import jwt from "jsonwebtoken";

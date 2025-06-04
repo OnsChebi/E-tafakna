@@ -1,6 +1,6 @@
 import { compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { IExpertRepository } from '../repositories/expert.repository';
+import { IExpertRepository } from '../../repositories/expert.repository';
 
 interface LoginExpertDTO {
   email: string;

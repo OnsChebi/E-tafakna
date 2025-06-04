@@ -1,5 +1,5 @@
 // core/use-cases/GetBusyDays.ts
-import { IMeetingRepository } from "../repositories/MeetingRepository";
+import { IMeetingRepository } from "../../repositories/MeetingRepository";
 
 export class GetBusyDaysUseCase {
   constructor(private meetingRepo: IMeetingRepository) {}

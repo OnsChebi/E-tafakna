@@ -4,7 +4,7 @@ import { AppDataSource } from "../../infrastructure/database/db";
 import { CalendlyRepositoryImpl } from "../../infrastructure/database/repo/CalendlyRepositoryImp";
 import { ExpertRepositoryImpl } from "../../infrastructure/database/repo/ExpertRepositoryImpl";
 import { MeetingRepositoryImpl } from "../../infrastructure/database/repo/MeetingRepositoryImp";
-import { SyncCalendlyMeetingsUseCase } from "../../core/use-cases/SyncCalendlyMeetings";
+import { SyncCalendlyMeetingsUseCase } from "../../core/use-cases/calendly/SyncCalendlyMeetings";
 
 export const startMeetingSyncCron = async () => {
   await AppDataSource.initialize();

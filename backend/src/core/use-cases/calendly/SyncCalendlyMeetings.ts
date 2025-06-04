@@ -1,8 +1,8 @@
-import { ICalendlyRepository } from "../repositories/CalendlyRepository";
-import { IMeetingRepository } from "../repositories/MeetingRepository";
-import { Meeting } from "../entities/Meeting.entity";
-import { Expert } from "../entities/Expert.entity";
-import { IExpertRepository } from "../repositories/expert.repository";
+import { ICalendlyRepository } from "../../repositories/CalendlyRepository";
+import { IMeetingRepository } from "../../repositories/MeetingRepository";
+import { Meeting } from "../../entities/Meeting.entity";
+import { Expert } from "../../entities/Expert.entity";
+import { IExpertRepository } from "../../repositories/expert.repository";
 
 export class SyncCalendlyMeetingsUseCase {
   constructor(

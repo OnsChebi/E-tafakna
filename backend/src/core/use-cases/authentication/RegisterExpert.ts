@@ -1,6 +1,6 @@
-import { hashPassword, secureToken } from "../../shared/utils/auth";
-import { Expert } from "../entities/Expert.entity";
-import { IExpertRepository } from "../repositories/expert.repository";
+import { hashPassword, secureToken } from "../../../shared/utils/auth";
+import { Expert } from "../../entities/Expert.entity";
+import { IExpertRepository } from "../../repositories/expert.repository";
 
 export class RegisterExpertUseCase {
   constructor(private repo: IExpertRepository) {}
