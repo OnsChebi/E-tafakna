@@ -1,4 +1,4 @@
-import { IExpertRepository } from "../repositories/expert.repository"
+import { IExpertRepository } from "../../repositories/expert.repository"
 
 export class DeleteExpert {
     constructor(private expertRepo:IExpertRepository) {}

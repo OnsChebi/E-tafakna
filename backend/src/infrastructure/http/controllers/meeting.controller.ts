@@ -1,9 +1,9 @@
 //controller
 import { Request, Response } from "express";
 import { MeetingRepositoryImpl } from "../../database/repo/MeetingRepositoryImp";
-import { CancelMeetingsUseCase } from "../../../core/use-cases/CancelMeetings";
+import { CancelMeetingsUseCase } from "../../../core/use-cases/meeting/CancelMeetings";
 import { CalendlyRepositoryImpl } from "../../database/repo/CalendlyRepositoryImp";
-import { GetUpcomingMeetingsUseCase } from "../../../core/use-cases/GetUpcomingMeetings";
+import { GetUpcomingMeetingsUseCase } from "../../../core/use-cases/meeting/GetUpcomingMeetings";
 
 const meetingRepo = new MeetingRepositoryImpl();
 const calendlyRepo = new CalendlyRepositoryImpl();

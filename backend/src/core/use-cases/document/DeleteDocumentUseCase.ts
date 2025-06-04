@@ -1,4 +1,4 @@
-import { IDocumentRepository } from "../repositories/DocumentRepository";
+import { IDocumentRepository } from "../../repositories/DocumentRepository";
 
 export class DeleteDocumentUseCase {
   constructor(private documentRepo: IDocumentRepository) {}

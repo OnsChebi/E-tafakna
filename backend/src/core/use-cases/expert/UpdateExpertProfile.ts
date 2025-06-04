@@ -1,5 +1,5 @@
-import { Expert } from "../entities/Expert.entity";
-import { IExpertRepository } from "../repositories/expert.repository";
+import { Expert } from "../../entities/Expert.entity";
+import { IExpertRepository } from "../../repositories/expert.repository";
 
 export const updateExpertProfileUseCase = async (
   expertId: number,

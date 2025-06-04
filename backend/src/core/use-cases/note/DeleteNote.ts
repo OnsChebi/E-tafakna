@@ -1,4 +1,4 @@
-import { INoteRepository } from "../repositories/noteRepository";
+import { INoteRepository } from "../../repositories/noteRepository";
 
 export class DeleteNoteUseCase {
   constructor(private noteRepo: INoteRepository) {}

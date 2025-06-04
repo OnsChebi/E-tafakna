@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { CreateFolderUseCase } from "../../../core/use-cases/CreateFolder";
+import { CreateFolderUseCase } from "../../../core/use-cases/folder/CreateFolder";
 import { FolderRepositoryImp } from "../../database/repo/FolderRepositoryImp";
-import { GetFoldersUseCase } from "../../../core/use-cases/GetFolders";
-import { UpdateFolderUseCase } from "../../../core/use-cases/UpdateFolder";
-import { DeleteFolderUseCase } from "../../../core/use-cases/DeleteFolder";
-import { GetFolderByIdUseCase } from "../../../core/use-cases/GetFolderById";
+import { GetFoldersUseCase } from "../../../core/use-cases/folder/GetFolders";
+import { UpdateFolderUseCase } from "../../../core/use-cases/folder/UpdateFolder";
+import { DeleteFolderUseCase } from "../../../core/use-cases/folder/DeleteFolder";
+import { GetFolderByIdUseCase } from "../../../core/use-cases/folder/GetFolderById";
 
 interface AuthenticatedRequest extends Request {
   user?: { id: number };

@@ -1,4 +1,4 @@
-import { IFolderRepository } from "../repositories/folder.repository";
+import { IFolderRepository } from "../../repositories/folder.repository";
 
 export class GetFoldersUseCase {
   constructor(private folderRepo: IFolderRepository) {}

@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { DocumentRepository } from "../../database/repo/DocumentRepositoryImp";
-import { GetDocumentByIdUseCase } from "../../../core/use-cases/GetDocumentByIdUseCase";
-import { DeleteDocumentUseCase } from "../../../core/use-cases/DeleteDocumentUseCase";
-import { GetDocumentsByFolderUseCase } from "../../../core/use-cases/GetDocumentsByFolderUseCase";
-import { UploadDocumentUseCase } from "../../../core/use-cases/UploadDocument";
-import { GetDocumentsByMeetingUseCase } from "../../../core/use-cases/GetDocumentsByMeetingUseCase";
+import { GetDocumentByIdUseCase } from "../../../core/use-cases/document/GetDocumentByIdUseCase";
+import { DeleteDocumentUseCase } from "../../../core/use-cases/document/DeleteDocumentUseCase";
+import { GetDocumentsByFolderUseCase } from "../../../core/use-cases/document/GetDocumentsByFolderUseCase";
+import { UploadDocumentUseCase } from "../../../core/use-cases/document/UploadDocument";
+import { GetDocumentsByMeetingUseCase } from "../../../core/use-cases/document/GetDocumentsByMeetingUseCase";
 
 import { AppDataSource } from "../../database/db";
 import { Meeting } from "../../../core/entities/Meeting.entity";

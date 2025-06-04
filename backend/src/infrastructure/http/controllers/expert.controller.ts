@@ -2,10 +2,10 @@ import { Request, Response } from 'express';
 import { RegisterExpertUseCase } from '../../../core/use-cases/RegisterExpert';
 import { ExpertRepositoryImpl } from '../../database/repo/ExpertRepositoryImpl';
 import { LoginExpertUseCase } from '../../../core/use-cases/LoginExpert';
-import { getExpertByIdUseCase } from '../../../core/use-cases/GetExpertById';
-import { updateExpertProfileUseCase } from '../../../core/use-cases/UpdateExpertProfile';
-import { getAllExperts } from '../../../core/use-cases/GetAllExperts';
-import { DeleteExpert } from '../../../core/use-cases/DeleteExpert';
+import { getExpertByIdUseCase } from '../../../core/use-cases/expert/GetExpertById';
+import { updateExpertProfileUseCase } from '../../../core/use-cases/expert/UpdateExpertProfile';
+import { getAllExperts } from '../../../core/use-cases/expert/GetAllExperts';
+import { DeleteExpert } from '../../../core/use-cases/expert/DeleteExpert';
 
 const repo = new ExpertRepositoryImpl();
 

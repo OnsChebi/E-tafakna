@@ -1,7 +1,7 @@
-import { Document } from '../entities/Document.entity';
-import { Folder } from '../entities/Folder.entity';
-import { Meeting } from '../entities/Meeting.entity';
-import { IDocumentRepository } from '../repositories/DocumentRepository';
+import { Document } from '../../entities/Document.entity';
+import { Folder } from '../../entities/Folder.entity';
+import { Meeting } from '../../entities/Meeting.entity';
+import { IDocumentRepository } from '../../repositories/DocumentRepository';
 
 
 export class UploadDocumentUseCase {

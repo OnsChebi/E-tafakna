@@ -1,5 +1,5 @@
-import { Folder } from "../entities/Folder.entity";
-import { IFolderRepository } from "../repositories/folder.repository";
+import { Folder } from "../../entities/Folder.entity";
+import { IFolderRepository } from "../../repositories/folder.repository";
 
 export class GetFolderByIdUseCase {
   constructor(private folderRepo: IFolderRepository) {}

@@ -1,4 +1,4 @@
-import { IDocumentRepository } from "../repositories/DocumentRepository";
+import { IDocumentRepository } from "../../repositories/DocumentRepository";
 
 export class GetDocumentsByFolderUseCase {
   constructor(private documentRepo: IDocumentRepository) {}

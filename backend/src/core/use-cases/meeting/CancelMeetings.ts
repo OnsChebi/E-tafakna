@@ -1,7 +1,7 @@
 
 //use case
-import { ICalendlyRepository } from "../repositories/CalendlyRepository";
-import { IMeetingRepository } from "../repositories/MeetingRepository";
+import { ICalendlyRepository } from "../../repositories/CalendlyRepository";
+import { IMeetingRepository } from "../../repositories/MeetingRepository";
 
 export class CancelMeetingsUseCase {
   constructor(

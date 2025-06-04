@@ -1,4 +1,4 @@
-import { IMeetingRepository } from '../repositories/MeetingRepository';
+import { IMeetingRepository } from '../../repositories/MeetingRepository';
 
 export class GetTodaysMeetingsUseCase {
   constructor(private meetingRepo: IMeetingRepository) {}

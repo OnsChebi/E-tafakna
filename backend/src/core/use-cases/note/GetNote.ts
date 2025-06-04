@@ -1,5 +1,5 @@
-import { Note } from "../entities/Notes.entity";
-import { INoteRepository } from "../repositories/noteRepository";
+import { Note } from "../../entities/Notes.entity";
+import { INoteRepository } from "../../repositories/noteRepository";
 
 export class GetNoteUseCase {
   constructor(private noteRepo: INoteRepository) {}

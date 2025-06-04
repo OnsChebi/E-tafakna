@@ -1,5 +1,5 @@
 // core/use-cases/GetMeetingStatistics.ts
-import { IStatRepository } from "../repositories/statisticsRepository";
+import { IStatRepository } from "../../repositories/statisticsRepository";
 
 export class GetMeetingStatistics {
   constructor(private readonly statRepo: IStatRepository) {}
