@@ -4,7 +4,12 @@ import { IFolderRepository } from "../../../core/repositories/folder.repository"
 import { Folder } from "../../../core/entities/Folder.entity";
 
 export class FolderRepositoryImp implements IFolderRepository {
+
   private folderRepo = AppDataSource.getRepository(Folder);
+  
+  async save(folder: Folder): Promise<Folder> {
+    return await this.folderRepo.save(folder);
+  }
 
   // Create a new folder
   async createFolder(name: string, expertId: number): Promise<Folder> {
@@ -65,4 +70,19 @@ export class FolderRepositoryImp implements IFolderRepository {
       relations: ["notes"],
     });
   }
+
+  async findByIdWithTags(folderId: number): Promise<Folder | null> {
+    return await this.folderRepo.findOne({
+      where: { id: folderId },
+      relations: ['tag'],
+    });
+  }
+  
+  async findTagById(tagId: number): Promise<Folder[] | null> {
+    return await this.folderRepo.find({
+      where: { tag: { id: tagId } },
+      relations: ['tag'],
+    });
+  }
+  
 }

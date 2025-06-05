@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { Expert } from "./Expert.entity";
 import { Note } from "./Notes.entity";
 import { Document } from "./Document.entity";
@@ -21,8 +21,7 @@ export class Folder {
     @OneToMany(() => Document, (document) => document.folder)
     documents!: Document[];
 
-    @ManyToMany(() => Tag, (tag) => tag.folders, { cascade: true })
-    @JoinTable()
-    tags!: Tag[];
+    @ManyToOne(() => Tag, (tag) => tag.folders, { nullable: true })
+  tag!: Tag | null;
 
 }

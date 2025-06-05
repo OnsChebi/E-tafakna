@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Folder } from './Folder.entity';
 
 @Entity('tags')
@@ -10,7 +10,8 @@ export class Tag {
   name!: string;
 
   @Column({ length: 20 })
-  color!: string; 
-  @ManyToMany(() => Folder, (folder) => folder.tags)
+  color!: string;
+
+  @OneToMany(() => Folder, (folder) => folder.tag)
   folders!: Folder[];
 }
