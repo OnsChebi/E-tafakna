@@ -16,5 +16,6 @@ MeetingRoutes.get('/clients', authenticate,MeetingController.clientList);
 MeetingRoutes.post('/cancel', authenticate, MeetingController.cancelMeeting);
 MeetingRoutes.post("/sync",authenticate, syncCalendlyMeetings);
 MeetingRoutes.get("/stats", authenticate, getMeetingStats);
+MeetingRoutes.get("/admin/upcoming", authenticate, MeetingController.getAllUpcomingMeetings);
 
 export default MeetingRoutes;

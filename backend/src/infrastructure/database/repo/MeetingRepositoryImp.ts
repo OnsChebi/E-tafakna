@@ -1,6 +1,6 @@
 
 //meetingRepo
-import { Repository, LessThan, MoreThan, Between } from "typeorm";
+import { Repository, LessThan, MoreThan, Between, MoreThanOrEqual } from "typeorm";
 import { IMeetingRepository } from "../../../core/repositories/MeetingRepository";
 import { Meeting } from "../../../core/entities/Meeting.entity";
 import { Expert } from "../../../core/entities/Expert.entity";
@@ -115,6 +115,19 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
         expert: { id: expertId },
         startTime: MoreThan(now),
         status: "active",
+      },
+    });
+  }
+
+  async findAllUpcomingMeetings(): Promise<Meeting[]> {
+    const now = new Date();
+    return await this.repo.find({
+      where: {
+        startTime: MoreThanOrEqual(now),
+      },
+      relations: ["expert"],
+      order: {
+        startTime: "ASC",
       },
     });
   }

@@ -4,6 +4,7 @@ import { MeetingRepositoryImpl } from "../../database/repo/MeetingRepositoryImp"
 import { CancelMeetingsUseCase } from "../../../core/use-cases/calendly/CancelMeetings";
 import { CalendlyRepositoryImpl } from "../../database/repo/CalendlyRepositoryImp";
 import { GetUpcomingMeetingsUseCase } from "../../../core/use-cases/calendly/GetUpcomingMeetings";
+import { GetAllUpcomingMeetingsForAdminUseCase } from "../../../core/use-cases/GetAllUpcomingMeetingsForAdmin";
 
 const meetingRepo = new MeetingRepositoryImpl();
 const calendlyRepo = new CalendlyRepositoryImpl();
@@ -104,6 +105,18 @@ export class MeetingController {
       res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  static async  getAllUpcomingMeetings(req: Request, res: Response) {
+    const useCase = new GetAllUpcomingMeetingsForAdminUseCase(meetingRepo);
+  
+    try {
+      const meetings = await useCase.execute();
+      res.status(200).json(meetings);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Error fetching upcoming meetings" });
+    }
+  };
 
 
 }

@@ -11,5 +11,6 @@ export interface IMeetingRepository {
   findTodaysMeetings(expertId: number): Promise<Meeting[]>;
   findPastMeetings(expertId: number): Promise<Meeting[]>;
   findUpcomingMeetings(expertId: number): Promise<Meeting[]>;
+  findAllUpcomingMeetings(): Promise<Meeting[]>;
   save(meeting: Meeting): Promise<Meeting>;
 }
