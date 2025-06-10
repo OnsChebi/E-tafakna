@@ -8,7 +8,7 @@ import { Meeting, isAuthenticated, upcomingMeeting } from "../service/api";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { calendlySync } from "../service/api";
-import { RotateCw } from "lucide-react"; // ✅ Sync icon
+import { RotateCw } from "lucide-react"; 
 
 export default function MeetsDashboard() {
   const router = useRouter();

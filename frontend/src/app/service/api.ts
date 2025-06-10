@@ -90,6 +90,9 @@ export const calendlySync = {
   syncMeetings: () => Api.post("/calendly/sync"),
 };
 
+export const adminOverview={
+  getAdminOverview:()=> Api.get("calendly/admin/upcoming"),
+}
 
 export type CalendlyStats = {
   totalClients: number;

@@ -4,7 +4,7 @@ import { MeetingRepositoryImpl } from "../../database/repo/MeetingRepositoryImp"
 import { CancelMeetingsUseCase } from "../../../core/use-cases/calendly/CancelMeetings";
 import { CalendlyRepositoryImpl } from "../../database/repo/CalendlyRepositoryImp";
 import { GetUpcomingMeetingsUseCase } from "../../../core/use-cases/calendly/GetUpcomingMeetings";
-import { GetAllUpcomingMeetingsForAdminUseCase } from "../../../core/use-cases/GetAllUpcomingMeetingsForAdmin";
+import { GetAllUpcomingMeetingsForAdminUseCase } from "../../../core/use-cases/calendly/GetAllUpcomingMeetingsForAdmin";
 
 const meetingRepo = new MeetingRepositoryImpl();
 const calendlyRepo = new CalendlyRepositoryImpl();
