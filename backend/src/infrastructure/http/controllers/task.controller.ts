@@ -5,6 +5,7 @@ import { GetTaskByIdUseCase } from "../../../core/use-cases/task management/GetT
 import { DeleteTaskUseCase } from "../../../core/use-cases/task management/DeleteTask";
 import { TaskRepository } from "../../database/repo/TaskRepositoryImp";
 import { Task } from "../../../core/entities/Task.entity";
+import { UpdateTaskUseCase } from "../../../core/use-cases/task management/UpdateTask";
 
 interface AuthenticatedRequest extends Request {
   user?: { id: number };
@@ -15,7 +16,8 @@ export class TaskController {
     private createTaskUseCase = new CreateTaskUseCase(new TaskRepository()),
     private getTasksByExpertUseCase = new GetTasksByExpertUseCase(new TaskRepository()),
     private getTaskByIdUseCase = new GetTaskByIdUseCase(new TaskRepository()),
-    private deleteTaskUseCase = new DeleteTaskUseCase(new TaskRepository())
+    private deleteTaskUseCase = new DeleteTaskUseCase(new TaskRepository()),
+    private updateTaskUseCase= new UpdateTaskUseCase(new TaskRepository()),
   ) {}
 
   async createTask(req: Request, res: Response) {
@@ -83,4 +85,24 @@ export class TaskController {
       res.status(400).json({ message: err instanceof Error ? err.message : "Error deleting task" });
     }
   }
+  async updateTask(req: Request, res: Response) {
+    try {
+      const taskId = parseInt(req.params.id);
+      const { title, description, dueDate, status, expertId } = req.body;
+
+      const updatedTask = await this.updateTaskUseCase.execute(
+        taskId,
+        title,
+        description,
+        new Date(dueDate),
+        status,
+        
+      );
+
+       res.status(200).json(updatedTask);
+    } catch (err) {
+      res.status(400).json({ message: err instanceof Error ? err.message : "Error updating task" });
+    }
+  }
 }
+

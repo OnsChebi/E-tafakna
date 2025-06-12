@@ -157,12 +157,21 @@ export const taskApi = {
     expertId: number;
   }) => Api.post("/task", task),
 
-  getByExpert: (expertId: number) => Api.get(`/task/expert/${expertId}`),
+  getByExpert:() => Api.get(`/task`),
 
   getById: (id: number) => Api.get(`/task/${id}`),
 
   delete: (id: number) => Api.delete(`/task/${id}`),
+  update: (id: number, updates: {
+    title: string;
+    description: string;
+    dueDate: string;
+    status: "pending" | "in-progress" | "completed";
+  }) => Api.put(`/task/${id}`, updates),
+
 };
+  
+
 
 // Auth Utilities
 export const isAuthenticated = () => {

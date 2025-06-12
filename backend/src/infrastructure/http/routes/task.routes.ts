@@ -16,5 +16,7 @@ taskRoutes.get("/:id", authenticate, (req, res) => taskController.getTaskById(re
 
 // Delete task by ID
 taskRoutes.delete("/:id", authenticate, (req, res) => taskController.deleteTask(req, res));
+//update task
+taskRoutes.put("/:id", authenticate, (req, res) => taskController.updateTask(req, res));
 
 export default taskRoutes;

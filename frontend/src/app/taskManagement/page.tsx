@@ -46,7 +46,7 @@ export default function TaskManagementPage() {
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      const res = await taskApi.getByExpert(expertId);
+      const res = await taskApi.getByExpert();
       setTasks(res.data);
     } catch {
       toast({ title: "Error", description: "Couldn't fetch tasks." });

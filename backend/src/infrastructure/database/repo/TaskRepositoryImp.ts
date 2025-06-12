@@ -32,4 +32,23 @@ export class TaskRepository implements ITaskRepository {
   async delete(id: number): Promise<void> {
     await this.repository.delete(id);
   }
+
+  async updatetask(
+    taskId: number,
+    title: string,
+    description: string,
+    dueDate: Date,
+    status: "pending" | "in-progress" | "completed"
+  ): Promise<Task> {
+    const task = await this.findById(taskId);
+    if (!task) throw new Error("Task not found");
+  
+    task.title = title;
+    task.description = description;
+    task.dueDate = dueDate;
+    task.status = status;
+  
+    return this.save(task);
+  }
+  
 }
