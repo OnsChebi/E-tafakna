@@ -59,7 +59,7 @@ export class FolderController {
 
   async updateFolder(req: Request, res: Response) {
     const expertId = (req as AuthenticatedRequest).user?.id;
-    const folderId = parseInt(req.params.id, 10);
+    const folderId = parseInt(req.params.id);
     const { name } = req.body;
 
     if (!expertId || isNaN(folderId)) return res.status(400).json({ message: "Invalid input" });

@@ -13,7 +13,8 @@ import {
   Video,
   LayoutDashboard,
   Users,
-  DollarSign
+  DollarSign,
+  ListTodo
 } from "lucide-react";
 
 interface MenuItem {
@@ -50,7 +51,8 @@ const Sidebar = ({ isOpen, isMobile, onClose, role }: SidebarProps) => {
       { icon: <Video className={iconClasses} />, label: "Dashborad", href: "/meetings" },
       { icon: <ChartColumnIncreasing className={iconClasses} />, label: "Statistics", href: "/statistics" },
       { icon: <UserRoundPen className={iconClasses} />, label: "Profile", href: "/profile" },
-      { icon: <NotebookPen className={iconClasses} />, label: "Notepad", href: "/notepad" },
+      { icon: <NotebookPen className={iconClasses} />, label: "Note pad", href: "/notepad" },
+      { icon: <ListTodo className={iconClasses} />, label: "Tasks", href: "/taskManagement" },
       { icon: <CalendarDays className={iconClasses} />, label: "Calendar", href: "/calendar" },
       { icon: <DollarSign className={iconClasses} />, label: "Billing", href: "/billing" },
     ];

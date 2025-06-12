@@ -1,51 +1,86 @@
 import { Request, Response } from "express";
-import { TaskRepository } from "../../database/repo/TaskRepositoryImp";
-import { Task } from "../../../core/entities/Task.entity";
 import { CreateTaskUseCase } from "../../../core/use-cases/task management/CreateTask";
 import { GetTasksByExpertUseCase } from "../../../core/use-cases/task management/GetTasksByExpert";
 import { GetTaskByIdUseCase } from "../../../core/use-cases/task management/GetTaskById";
 import { DeleteTaskUseCase } from "../../../core/use-cases/task management/DeleteTask";
+import { TaskRepository } from "../../database/repo/TaskRepositoryImp";
+import { Task } from "../../../core/entities/Task.entity";
 
-const taskRepo = new TaskRepository();
+interface AuthenticatedRequest extends Request {
+  user?: { id: number };
+}
 
-export const createTask = async (req: Request, res: Response) => {
-  const { title, description, status, dueDate, expertId } = req.body;
+export class TaskController {
+  constructor(
+    private createTaskUseCase = new CreateTaskUseCase(new TaskRepository()),
+    private getTasksByExpertUseCase = new GetTasksByExpertUseCase(new TaskRepository()),
+    private getTaskByIdUseCase = new GetTaskByIdUseCase(new TaskRepository()),
+    private deleteTaskUseCase = new DeleteTaskUseCase(new TaskRepository())
+  ) {}
 
-  const task = new Task();
-  task.title = title;
-  task.description = description;
-  task.status = status || "pending";
-  task.dueDate = dueDate;
-  task.expert = { id: expertId } as any;
+  async createTask(req: Request, res: Response) {
+    const expertId = (req as AuthenticatedRequest).user?.id;
+    if (!expertId) { res.status(401).json({ message: "Unauthorized" });}
 
-  const useCase = new CreateTaskUseCase(taskRepo);
-  const result = await useCase.execute(task);
+    const { title, description, status, dueDate } = req.body;
 
-  res.status(201).json(result);
-};
+    if (!title || !description || !dueDate) {
+       res.status(400).json({ message: "Missing required fields" });
+    }
 
-export const getTasksByExpert = async (req: Request, res: Response) => {
-  const expertId = Number(req.params.expertId);
-  const useCase = new GetTasksByExpertUseCase(taskRepo);
-  const tasks = await useCase.execute(expertId);
+    try {
+      const task = new Task();
+      task.title = title;
+      task.description = description;
+      task.status = status || "pending";
+      task.dueDate = dueDate;
+      task.expert = { id: expertId } as any;
 
-  res.json(tasks);
-};
+      const createdTask = await this.createTaskUseCase.execute(task);
+      res.status(201).json(createdTask);
+    } catch (err) {
+      res.status(400).json({ message: err instanceof Error ? err.message : "Error creating task" });
+    }
+  }
 
-export const getTaskById = async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const useCase = new GetTaskByIdUseCase(taskRepo);
-  const task = await useCase.execute(id);
+  async getTasks(req: Request, res: Response) {
+    const expertId = (req as AuthenticatedRequest).user?.id;
+    if (!expertId) {
+      res.status(401).json({ message: "Unauthorized" });
+      return
+    }
+    try {
+      const tasks = await this.getTasksByExpertUseCase.execute(expertId);
+      res.json(tasks);
+    } catch (err) {
+      res.status(400).json({ message: err instanceof Error ? err.message : "Error fetching tasks" });
+    }
+  }
 
-  if (!task)  res.status(404).json({ message: "Task not found" });
-  res.json(task);
-};
+  async getTaskById(req: Request, res: Response) {
+    const taskId = Number(req.params.id);
+    if (isNaN(taskId)) { res.status(400).json({ message: "Invalid task ID" });}
 
-export const deleteTask = async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const useCase = new DeleteTaskUseCase(taskRepo);
-  const deleted = await useCase.execute(id);
+    try {
+      const task = await this.getTaskByIdUseCase.execute(taskId);
+      if (!task) { res.status(404).json({ message: "Task not found" });}
+      res.json(task);
+    } catch (err) {
+      res.status(400).json({ message: err instanceof Error ? err.message : "Error fetching task" });
+    }
+  }
 
-  if (!deleted)  res.status(404).json({ message: "Task not found" });
-  res.json({ message: "Task deleted successfully" });
-};
+  async deleteTask(req: Request, res: Response) {
+    const taskId = Number(req.params.id);
+    if (isNaN(taskId)) { res.status(400).json({ message: "Invalid task ID" });}
+
+    try {
+      const deleted = await this.deleteTaskUseCase.execute(taskId);
+      if (!deleted) { res.status(404).json({ message: "Task not found" });}
+
+      res.json({ message: "Task deleted successfully" });
+    } catch (err) {
+      res.status(400).json({ message: err instanceof Error ? err.message : "Error deleting task" });
+    }
+  }
+}

@@ -147,6 +147,23 @@ export const documentApi = {
   delete: (id: number) => Api.delete(`/document/${id}`),
 };
 
+//tasks api 
+export const taskApi = {
+  create: (task: {
+    title: string;
+    description: string;
+    status?: string;
+    dueDate: string;
+    expertId: number;
+  }) => Api.post("/task", task),
+
+  getByExpert: (expertId: number) => Api.get(`/task/expert/${expertId}`),
+
+  getById: (id: number) => Api.get(`/task/${id}`),
+
+  delete: (id: number) => Api.delete(`/task/${id}`),
+};
+
 // Auth Utilities
 export const isAuthenticated = () => {
   if (typeof window === "undefined") return false;
