@@ -23,6 +23,7 @@ import { taskApi } from "../service/api";
 import { toast } from "@/hooks/use-toast";
 import { Select } from "@/components/ui/select";
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, SquarePen, Trash2 } from "lucide-react";
 
 export type Task = {
   id: number;
@@ -112,15 +113,15 @@ export default function TaskManagementPage() {
   }, []);
 
   return (
-    <main className="p-6 space-y-6">
+    <main className="p-4 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Task Management</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white ">Task Management</h1>
         <div className="flex gap-2">
           <Select value={filterStatus} onValueChange={setFilterStatus}>
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="w-[150px] ">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
               <SelectItem value="all">All</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="in-progress">In Progress</SelectItem>
@@ -129,9 +130,9 @@ export default function TaskManagementPage() {
           </Select>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:opacity-90">{editingTaskId ? "Edit Task" : "Create Task"}</Button>
+              <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:opacity-90"> <Plus /></Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg">
+            <DialogContent className="max-w-lg bg-white">
               <DialogHeader>
                 <DialogTitle>{editingTaskId ? "Update Task" : "New Task"}</DialogTitle>
               </DialogHeader>
@@ -166,14 +167,14 @@ export default function TaskManagementPage() {
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="in-progress">In Progress</SelectItem>
                       <SelectItem value="completed">Completed</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <Button onClick={handleSubmit} className="w-full">
+                <Button onClick={handleSubmit} className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:opacity-90">
                   {editingTaskId ? "Update" : "Submit"}
                 </Button>
               </div>
@@ -182,17 +183,17 @@ export default function TaskManagementPage() {
         </div>
       </div>
 
-      <ScrollArea className="h-[70vh] space-y-4">
+      <ScrollArea className="h-[70vh] ">
         {loading ? (
           <div className="text-center text-gray-500">Loading…</div>
         ) : filteredTasks.length ? (
           filteredTasks.map((task) => (
             <Card
               key={task.id}
-              className={`border relative p-2 border-muted-foreground shadow-sm hover:shadow-md transition ${task.status === "completed" ? "opacity-50" : ""}`}
+              className={`border relative p-1 mb-4 bg-white border-muted-foreground  hover:shadow-md transition ${task.status === "completed" ? "opacity-50" : ""}`}
             >
               <CardHeader>
-                <CardTitle className={`${task.status === "completed" ? "line-through" : ""}`}>{task.title}</CardTitle>
+                <CardTitle className={`text-xl ${task.status === "completed" ? "line-through" : ""}`}>{task.title}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <p className={`text-sm ${task.status === "completed" ? "line-through text-muted-foreground" : "text-gray-700 dark:text-gray-300"}`}>
@@ -210,15 +211,18 @@ export default function TaskManagementPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => handleEdit(task)}
+                      className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:opacity-90"
                     >
-                      Edit
+                      <SquarePen />
                     </Button>
                     <Button
                       variant="destructive"
                       size="sm"
                       onClick={() => handleDelete(task.id)}
+                      className="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-md hover:opacity-90"
                     >
-                      Delete
+                      <Trash2 />
+                      
                     </Button>
                   </div>
                 </div>
