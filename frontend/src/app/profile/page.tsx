@@ -79,14 +79,14 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-50 to-purple-50 p-4">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r bg-gray-100  dark:bg-gray-900 p-4">
       <motion.div
         className="w-full max-w-4xl"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <Card className="shadow-2xl rounded-3xl overflow-hidden bg-white">
+        <Card className="rounded-3xl overflow-hidden bg-white dark:bg-gray-800">
           <CardContent className="p-8">
             <motion.div
               className="flex flex-col md:flex-row items-center gap-8 mb-8"
@@ -150,7 +150,7 @@ const ProfilePage = () => {
                 >
                   <Button
                     onClick={() => setIsEditing(!isEditing)}
-                    className="rounded-full px-6 py-3 shadow-lg transition-transform hover:scale-105"
+                    className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:opacity-90"
                     variant={isEditing ? "secondary" : "default"}
                   >
                     <Edit className="w-4 h-4 mr-2" />

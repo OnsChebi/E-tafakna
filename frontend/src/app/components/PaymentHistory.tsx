@@ -31,7 +31,7 @@ export const PaymentHistory: React.FC = () => {
     new Intl.DateTimeFormat('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(dateStr));
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+    <div className="bg-white  dark:bg-gray-800 p-6 rounded-xl  border border-gray-200">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">Historique des Paiements</h3>
         <button className="text-blue-500 text-sm hover:text-blue-600">Voir tout</button>

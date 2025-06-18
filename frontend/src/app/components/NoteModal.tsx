@@ -54,7 +54,7 @@ export const NoteModal = ({
   }, [isOpen, content, isEditing]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose} >
       <DialogContent className="max-w-2xl bg-white dark:bg-gray-800 max-h-[80vh] flex flex-col">
         <DialogHeader className="border-b p-4">
           <div className="flex justify-between items-center">

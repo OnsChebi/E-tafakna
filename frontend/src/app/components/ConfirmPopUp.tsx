@@ -25,7 +25,7 @@ export default function ConfirmDialog({
 }: ConfirmDialogProps) {
   return (
     <Dialog open onOpenChange={(open) => !open && onCancel()}>
-      <DialogContent className="max-w-md p-6 sm:p-8 bg-white dark:bg-gray-900">
+      <DialogContent className="max-w-md p-6 sm:p-8 bg-white  dark:bg-gray-800 ">
         <DialogHeader className="flex flex-row items-start justify-between">
           <div className="flex items-center gap-2 ">
             <AlertTriangle className="text-yellow-500 w-6 h-6" />

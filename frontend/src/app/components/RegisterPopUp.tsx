@@ -126,7 +126,7 @@ export default function RegisterPopup({ onClose }: { onClose: () => void }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 20 }}
-        className="w-full max-w-xl bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 relative"
+        className="w-full max-w-xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 relative"
       >
         <button
           onClick={onClose}
@@ -262,7 +262,7 @@ export default function RegisterPopup({ onClose }: { onClose: () => void }) {
                 <SelectTrigger>
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
-                <SelectContent className="bg-white">
+                <SelectContent className="bg-white dark:bg-gray-800">
                   <SelectItem value="expert">Expert</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
                 </SelectContent>

@@ -77,7 +77,7 @@ const Sidebar = ({ isOpen, isMobile, onClose, role }: SidebarProps) => {
   return (
     <aside
       className={cn(
-        "fixed inset-y-0 left-0 z-40 bg-white dark:bg-gray-900 border-r shadow-md transition-all duration-300 ease-in-out",
+        "fixed inset-y-0 left-0 z-40 bg-white  dark:bg-gray-800  border-r shadow-md transition-all duration-300 ease-in-out",
         isMobile
           ? isOpen
             ? "translate-x-0 w-[250px]"

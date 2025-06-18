@@ -37,7 +37,7 @@ const getStatusBadge = (status: Meeting['status']): JSX.Element => {
 
 export const MeetingsTable: FC = () => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+    <div className="bg-white  dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200">
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900">
@@ -68,7 +68,7 @@ export const MeetingsTable: FC = () => {
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white  dark:bg-gray-800 divide-y divide-gray-200">
             {mockMeetings.map((meeting) => (
               <tr key={meeting.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">

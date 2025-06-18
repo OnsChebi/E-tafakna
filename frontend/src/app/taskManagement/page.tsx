@@ -121,7 +121,7 @@ export default function TaskManagementPage() {
             <SelectTrigger className="w-[150px] ">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
-            <SelectContent className="bg-white">
+            <SelectContent className="bg-white  dark:bg-gray-800">
               <SelectItem value="all">All</SelectItem>
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="in-progress">In Progress</SelectItem>
@@ -132,7 +132,7 @@ export default function TaskManagementPage() {
             <DialogTrigger asChild>
               <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:opacity-90"> <Plus /></Button>
             </DialogTrigger>
-            <DialogContent className="max-w-lg bg-white">
+            <DialogContent className="max-w-lg bg-white dark:bg-gray-800">
               <DialogHeader>
                 <DialogTitle>{editingTaskId ? "Update Task" : "New Task"}</DialogTitle>
               </DialogHeader>
@@ -167,7 +167,7 @@ export default function TaskManagementPage() {
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white">
+                    <SelectContent className="bg-white  dark:bg-gray-800">
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="in-progress">In Progress</SelectItem>
                       <SelectItem value="completed">Completed</SelectItem>
@@ -190,10 +190,10 @@ export default function TaskManagementPage() {
           filteredTasks.map((task) => (
             <Card
               key={task.id}
-              className={`border relative p-1 mb-4 bg-white border-muted-foreground  hover:shadow-md transition ${task.status === "completed" ? "opacity-50" : ""}`}
+              className={`border relative p-1 mb-4 bg-white  dark:bg-gray-800 hover:shadow-md  border-gray-300 hover:border-blue-800 transition ${task.status === "completed" ? "opacity-50" : ""}`}
             >
               <CardHeader>
-                <CardTitle className={`text-xl ${task.status === "completed" ? "line-through" : ""}`}>{task.title}</CardTitle>
+                <CardTitle className={`text-xl dark:text-white ${task.status === "completed" ? "line-through" : ""}`}>{task.title}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <p className={`text-sm ${task.status === "completed" ? "line-through text-muted-foreground" : "text-gray-700 dark:text-gray-300"}`}>

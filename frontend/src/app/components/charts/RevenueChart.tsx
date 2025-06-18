@@ -14,7 +14,7 @@ export const RevenueChart = () => {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+    <div className="bg-white  dark:bg-gray-800 p-6 rounded-xl  border border-gray-200">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">Revenus des 30 derniers jours</h3>
         <div className="flex items-center gap-2">

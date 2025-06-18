@@ -40,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const fullImageUrl = previewImage || "/user.svg";
 
   return (
-    <header className="sticky top-0 bg-white dark:bg-gray-900 shadow-md px-4 py-2 flex justify-between items-center z-20 h-14">
+    <header className="sticky top-0 bg-white dark:bg-gray-800 shadow-md px-4 py-2 flex justify-between items-center z-20 h-14">
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"

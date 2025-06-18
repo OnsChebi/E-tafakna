@@ -74,7 +74,7 @@ export default function AdminDashboardPage() {
           {meetings.map((meeting) => (
             <Card
               key={meeting.id}
-              className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 space-y-4"
+              className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white  dark:bg-gray-800  p-4 space-y-4"
             >
               <div className="flex justify-between items-center">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">

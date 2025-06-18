@@ -59,7 +59,6 @@ const CalendarPage = () => {
 
   return (
     <div style={{ height: '85vh', padding: '2rem' }} className='dark:bg-gray-800'>
-      <h2 className="text-xl font-bold mb-4 dark:text-gray-300">Calendar</h2>
       <Calendar
         localizer={localizer}
         events={events}
@@ -68,11 +67,11 @@ const CalendarPage = () => {
         eventPropGetter={eventPropGetter}
         onSelectEvent={handleEventSelect}
         style={{ height: '75%' }}
-        className='dark:text-gray-300'
+        className='dark:text-white'
       />
 
       {selectedEvent && (
-        <div className="mt-4 p-4 bg-blue-100 rounded">
+        <div className="mt-4 p-4 bg-blue-100  dark:bg-red-800 rounded">
           <p className="text-blue-800 dark:text-blue-500 font-medium">
             Meeting Date: {selectedEvent.start.toLocaleDateString()} <br />
             Time: {selectedEvent.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

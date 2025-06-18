@@ -168,7 +168,7 @@ export default function StatisticsDashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-muted/40 p-6 space-y-6 bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-muted/40 p-6 space-y-6 bg-white dark:bg-gray-800">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-foreground dark:text-gray-100">
@@ -223,9 +223,9 @@ export default function StatisticsDashboard() {
             <Skeleton className="h-full w-full rounded-lg" />
           ) : (
             <Tabs defaultValue="weekly" className="w-full h-full">
-              <TabsList className="mb-4">
-                <TabsTrigger value="weekly">Weekly</TabsTrigger>
-                <TabsTrigger value="monthly">Monthly</TabsTrigger>
+              <TabsList className="mb-4 dark:text-white ">
+                <TabsTrigger className="hover:bg-slate-500" value="weekly">Weekly</TabsTrigger>
+                <TabsTrigger className="hover:bg-slate-500" value="monthly">Monthly</TabsTrigger>
               </TabsList>
 
               <TabsContent value="weekly" className="h-full">
