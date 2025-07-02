@@ -130,22 +130,7 @@ export const noteApi = {
 };
 
 //doc api
-// ==== Document API ====
 
-
-export const documentApi = {
-  getAll: () => Api.get<DocumentType[]>("/document"),
-  getById: (id: number) => Api.get<DocumentType>(`/document/${id}`),
-  getByMeeting: (meetingId: number) =>
-    Api.get<DocumentType[]>(`/document/meeting/${meetingId}`),
-  getByFolder: (folderId: number) =>
-    Api.get<DocumentType[]>(`/document/folder/${folderId}`),
-  create: (formData: FormData) =>
-    Api.post("/document", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    }),
-  delete: (id: number) => Api.delete(`/document/${id}`),
-};
 
 //tasks api 
 export const taskApi = {

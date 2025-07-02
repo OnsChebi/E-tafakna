@@ -20,7 +20,7 @@ type NoteListProps = {
 };
 
 export default function NoteList({
-  folderId,
+  
   notes,
   onEditNote,
   onAddNote,
