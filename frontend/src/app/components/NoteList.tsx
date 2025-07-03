@@ -2,6 +2,11 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { EditIcon, TrashIcon, PlusIcon } from "lucide-react";
+import FroalaEditorComponent from "react-froala-wysiwyg";
+import "froala-editor/css/froala_style.min.css";
+import "froala-editor/css/froala_editor.pkgd.min.css";
+import "froala-editor/js/plugins.pkgd.min.js";
+import DOMPurify from "dompurify";
 
 export type Note = {
   id: number;
@@ -54,9 +59,13 @@ export default function NoteList({
             >
               <div className="flex justify-between items-start">
                 <div className="flex-1 cursor-pointer" onClick={() => onViewNote(note.id)}>
-                  <p className="text-gray-700 dark:text-gray-100 whitespace-pre-wrap line-clamp-3">
+                  {/* <p className="text-gray-700 dark:text-gray-100 whitespace-pre-wrap line-clamp-3">
                     {note.text}
-                  </p>
+                  </p> */}
+                  <div
+              className="prose  dark:bg-gray-800/50 dark:text-gray-100 p-4 rounded min-h-[200px] overflow-auto"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.text) }}
+            />
                   <span className="text-xs text-gray-500 dark:text-gray-400">
                     {new Date(note.created_at).toLocaleString()}
                   </span>
