@@ -12,8 +12,7 @@ import {
   VideoIcon,
 } from "lucide-react";
 import { format } from "date-fns";
-import { Button } from "@/components/ui/button";
-import { adminOverview, calendlySync } from "../service/api";
+import { adminOverview } from "../service/api";
 
 type Meeting = {
   id: number;

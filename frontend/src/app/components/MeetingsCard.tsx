@@ -35,16 +35,9 @@ const MeetingsCard = () => {
           upcomingMeeting.getUpcomingMeetings(),
           recentMeeting.getRecentMeetings(),
         ]);
-         //console.log("Upcoming meetings daaataaaa:", responseUpcoming.data);
-        // console.log("Upcoming meetings eveeeeeeent:", responseUpcoming.data.events);
-        //console.log("Recent meetings daaaataaaa:", responseRecent.data);
-        //console.log("Recent meetings eveeeeeent:", responseRecent.data);
-        
-
         const processMeeting = (event: ApiMeeting, type: Meeting["type"]) => ({
           id: event.eventId,
           client: event.inviteeName,
-          
           date: event.startTime,
           time: new Date(event.startTime).toLocaleTimeString([], {
             hour: "2-digit",

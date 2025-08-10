@@ -16,8 +16,8 @@ export const syncCalendlyMeetings = async (req: Request, res: Response) => {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
     if (!token) {
-     res.status(401).json({ message: "Unauthorized: No token" });
-     return;
+       res.status(401).json({ message: "Unauthorized: No token" });
+       return
     }
 
     const expertId = extractExpertIdFromToken(token);
@@ -27,11 +27,17 @@ export const syncCalendlyMeetings = async (req: Request, res: Response) => {
       new ExpertRepositoryImpl(),
     );
 
-    await useCase.execute(expertId);
+    const savedMeetings = await useCase.execute(expertId);
 
-    res.status(200).json({ message: "Meetings synced successfully" });
-  } catch (error) {
-    console.error("Failed to sync meetings", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(200).json({ message: "Meetings synced successfully", savedMeetings });
+  } catch (error: any) {
+    console.error("Failed to sync meetings:", error);
+
+    if (error.response) {
+      console.error("API Response data:", error.response.data);
+      console.error("API Response status:", error.response.status);
+    }
+
+    res.status(500).json({ error: error.message || "Internal server error" });
   }
-}
+};

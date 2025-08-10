@@ -1,11 +1,11 @@
+import axios from "axios";
+import { ICalendlyRepository } from "../../../core/repositories/CalendlyRepository";
+import { Expert } from "../../../core/entities/Expert.entity";
+import { AppDataSource } from "../db";
+import { Meeting } from "../../../core/entities/Meeting.entity";
+import { decryptToken } from "../../../shared/utils/auth";
 
-//calendlyRepo
-import axios from 'axios';
-import { ICalendlyRepository } from '../../../core/repositories/CalendlyRepository';
-import { Expert } from '../../../core/entities/Expert.entity';
-import { AppDataSource } from '../db';
-import { Meeting } from '../../../core/entities/Meeting.entity';
-import { decryptToken } from '../../../shared/utils/auth';
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export class CalendlyRepositoryImpl implements ICalendlyRepository {
   
@@ -52,19 +52,25 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
     return activeEvents;
   }
 
-  async getInvitee(token: string, eventUri: string): Promise<any> {
-    const eventId = eventUri.split('/').pop();
-    const res = await axios.get(`https://api.calendly.com/scheduled_events/${eventId}/invitees`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.data.collection[0] || null;
+  async getInvitee(token: string, eventUri: string): Promise<any | null> {
+    const eventId = eventUri.split("/").pop();
+    try {
+      const res = await axios.get(`https://api.calendly.com/scheduled_events/${eventId}/invitees`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data.collection[0] || null;
+    } catch (err: any) {
+      console.warn("Invitee fetch failed for event:", eventUri);
+      return null;
+    }
   }
-  //============= manage meetings ===========//
 
   async getMeetings(token: string, userUri: string, startTime?: string, endTime?: string): Promise<Meeting[]> {
     const events = await this.getScheduledEvents(token, userUri, startTime, endTime);
 
     const meetings: Meeting[] = await Promise.all(events.map(async (event: any) => {
+
+      await delay(200); 
       const invitee = await this.getInvitee(token, event.uri);
 
       const meeting = new Meeting();
@@ -77,7 +83,6 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
       meeting.type = event.location?.join_url ? 'Online' : 'In person';
       meeting.status = event.status === 'canceled' ? 'canceled' : 'active';
       meeting.meetingUrl = event.location?.join_url || null;
-      //meeting.expert = null as any; 
       meeting.created_at = new Date();
 
       return meeting;
@@ -86,10 +91,9 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
     return meetings;
   }
 
-
   async cancelMeeting(token: string, eventUri: string, reason: string): Promise<void> {
+    const eventId = eventUri.split("/").pop();
     try {
-      const eventId = eventUri.split('/').pop();
       await axios.post(
         `https://api.calendly.com/scheduled_events/${eventId}/cancellation`,
         { reason },
@@ -98,15 +102,8 @@ export class CalendlyRepositoryImpl implements ICalendlyRepository {
         }
       );
     } catch (err: any) {
-      const calendlyError = err.response?.data;
-  
-      // If Calendly says it's already canceled, skip rethrowing
-      if (calendlyError?.message === "Event is already canceled") {
-        console.warn("Meeting was already canceled in Calendly. Proceeding to update local DB.");
-        return;
-      }
-  
-      console.error("Failed to cancel meeting", calendlyError || err.message);
+      const msg = err.response?.data?.message;
+      if (msg === "Event is already canceled") return;
       throw new Error("Cancellation failed");
     }
   }

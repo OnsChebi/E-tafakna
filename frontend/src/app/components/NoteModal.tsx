@@ -41,7 +41,7 @@ export const NoteModal = ({
     if (noteContent.trim()) {
       const strippedContent = stripHtmlTags(noteContent);
       const sanitizedContent = DOMPurify.sanitize(strippedContent);
-      onSave(sanitizedContent);
+      onSave(noteContent);
       onClose();
     }
   };

@@ -15,7 +15,7 @@ export default function LoginPage() {
 useEffect(()=>{
   const token=localStorage.getItem('authToken');
   if(token){
-    router.push('/meetings');
+    router.push('/login');
     }
 },[router]);
 

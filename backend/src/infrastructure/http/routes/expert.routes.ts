@@ -13,7 +13,6 @@ import {  uploadProfileImage } from '../middlewares/multer';
 const expertRouter = Router();
 
 expertRouter.post('/register', registerExpertController);
-
 expertRouter.get("/all", getAllUsers);
 expertRouter.delete("/:id", deleteUser);
 expertRouter.post('/login', loginController);

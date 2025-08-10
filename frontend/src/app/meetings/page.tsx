@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ClientList from "../components/ClientList";
 import MeetingsCard from "../components/MeetingsCard";
 import MeetingsToday from "../components/MeetingsToday";
@@ -15,6 +15,7 @@ export default function MeetsDashboard() {
   const [upcomingMeetings, setUpcomingMeetings] = useState<Meeting[]>([]);
   const [authChecked, setAuthChecked] = useState(false);
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const [syncing, setSyncing] = useState(false); 
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -29,19 +30,22 @@ export default function MeetsDashboard() {
     }
   }, [router]);
 
-  const handleSync = async () => {
+  const handleSync = useCallback(async () => {
+    if (syncing) return; 
+    setSyncing(true);
     try {
       const response = await calendlySync.syncMeetings();
       setSyncMessage(response.data.message || "Synced successfully!");
     } catch (error) {
       console.error("Sync failed", error);
       setSyncMessage("Sync failed (check your connection)");
+    } finally {
+      setTimeout(() => {
+        setSyncMessage(null);
+      }, 3000);
+      setSyncing(false); 
     }
-
-    setTimeout(() => {
-      setSyncMessage(null);
-    }, 3000);
-  };
+  }, [syncing]);
 
   if (!authChecked) {
     return <div className="p-4 text-gray-500">Checking authentication...</div>;
@@ -52,7 +56,7 @@ export default function MeetsDashboard() {
   }
 
   return (
-    <main className="p-2 min-h-screen  dark:bg-gray-900">
+    <main className="p-2 min-h-screen dark:bg-gray-900">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">
@@ -61,9 +65,10 @@ export default function MeetsDashboard() {
         <Button
           variant="ghost"
           onClick={handleSync}
-          className="text-white bg-blue-600 hover:bg-gray-200 dark:hover:bg-gray-700  p-4"
+          disabled={syncing} // <-- disable while syncing
+          className="text-white bg-blue-600 hover:bg-gray-200 dark:hover:bg-gray-700 p-4"
         >
-          <RotateCw className="w-5 h-5" />
+          <RotateCw className={`w-5 h-5 ${syncing ? "animate-spin" : ""}`} />
         </Button>
       </div>
 
@@ -75,14 +80,11 @@ export default function MeetsDashboard() {
 
       {/* Top Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {/* Meetings Today */}
         <div className="sm:col-span-2 flex flex-col">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg  h-full">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg h-full">
             <MeetingsToday />
           </div>
         </div>
-
-        {/* Client List */}
         <div className="flex flex-col">
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg h-full">
             <ClientList />
@@ -93,7 +95,7 @@ export default function MeetsDashboard() {
       {/* Bottom Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
         <div className="lg:col-span-3 flex flex-col">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg  h-full">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg h-full">
             <MeetingsCard />
           </div>
         </div>
