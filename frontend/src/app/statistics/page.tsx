@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Calendar, Folder, Notebook } from "lucide-react";
-import { stat, CalendlyStats } from "../service/api";
+import { useEffect, useState } from "react";
+import { stat, taskApi, CalendlyStats } from "../service/api";
 import { MeetingTypesChart } from "../components/charts/MeetingTypeChart";
-import { RecentActivity } from "../components/charts/RecentCharts";
 import {
   Card,
   CardContent,
@@ -21,24 +19,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-
-const recentActivities = [
-  {
-    icon: <Notebook className="h-4 w-4" />,
-    title: "New note added to Client XYZ",
-    time: "2h ago",
-  },
-  {
-    icon: <Folder className="h-4 w-4" />,
-    title: "Case documents uploaded",
-    time: "4h ago",
-  },
-  {
-    icon: <Calendar className="h-4 w-4" />,
-    title: "Meeting rescheduled with ABC Corp",
-    time: "1d ago",
-  },
-];
+import { Badge } from "@/components/ui/badge";
 
 const shortDayMap: { [key: string]: string } = {
   Sunday: "Sun",
@@ -134,6 +115,10 @@ export default function StatisticsDashboard() {
     { type: string; count: number }[]
   >([]);
 
+  const [tasks, setTasks] = useState<
+    { id: number; title: string; dueDate: string; status: string }[]
+  >([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -155,8 +140,11 @@ export default function StatisticsDashboard() {
       setWeeklyData(convertToWeeklyChartData(data.weeklyMeetings || []));
       setMonthlyData(convertToMonthlyChartData(data.monthlyMeetings || []));
       setMeetingTypesData(data.meetingTypes || []);
+
+      const taskRes = await taskApi.getByExpert();
+      setTasks(taskRes.data);
     } catch (err) {
-      console.error("Error fetching stats:", err);
+      console.error("Error fetching stats or tasks:", err);
       setError("Failed to load dashboard data");
     } finally {
       setIsLoading(false);
@@ -166,6 +154,21 @@ export default function StatisticsDashboard() {
   useEffect(() => {
     fetchStats();
   }, []);
+
+  const getStatusBadgeColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-500 text-white";
+      case "in-progress":
+        return "bg-blue-600 text-white";
+      default:
+        return "bg-gray-400 text-white";
+    }
+  };
+
+  const filteredTasks = tasks.filter(
+    (task) => task.status === "pending" || task.status === "in-progress"
+  );
 
   return (
     <div className="min-h-screen bg-muted/40 p-6 space-y-6 bg-white dark:bg-gray-800">
@@ -181,6 +184,7 @@ export default function StatisticsDashboard() {
 
       {/* Charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Meeting Types */}
         <Card className="border-gray-300 hover:border-blue-800 lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-lg dark:text-gray-100">
@@ -199,8 +203,40 @@ export default function StatisticsDashboard() {
           </CardContent>
         </Card>
 
+        {/* Tasks To Do */}
         <Card className="border-gray-300 hover:border-blue-800">
-          <RecentActivity activities={recentActivities} />
+          <CardHeader>
+            <CardTitle className="text-lg dark:text-gray-100">📝 Tasks To Do</CardTitle>
+            <CardDescription className="dark:text-gray-100">
+              Only pending and in-progress tasks are shown
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-24 w-full rounded-md" />
+            ) : filteredTasks.length === 0 ? (
+              <p className="text-muted-foreground dark:text-gray-300">No pending or in-progress tasks.</p>
+            ) : (
+              <ul className="space-y-2">
+                {filteredTasks.map((task) => (
+                  <li
+                    key={task.id}
+                    className="p-3 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-700"
+                  >
+                    <div className="flex justify-between items-center">
+                      <p className="font-semibold text-gray-800 dark:text-white">{task.title}</p>
+                      <Badge className={getStatusBadgeColor(task.status)}>
+                        {task.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      Due: {new Date(task.dueDate).toLocaleDateString()}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
         </Card>
       </div>
 

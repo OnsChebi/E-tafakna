@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useMemo, useState, useEffect } from "react";
 import FolderList from "../components/FolderList";
 import NoteList, { Note } from "../components/NoteList";
@@ -30,9 +31,14 @@ export default function NotepadPage() {
   const dispatch = useDispatch<AppDispatch>();
   const search = useSelector((state: RootState) => state.folders.search);
   const { folders, selectedFolder, status: folderStatus, error: folderError } =
+  const dispatch = useDispatch<AppDispatch>();
+  const search = useSelector((state: RootState) => state.folders.search);
+  const { folders, selectedFolder, status: folderStatus, error: folderError } =
     useSelector((state: RootState) => state.folders);
   const { notes, status: noteStatus, error: noteError } =
+  const { notes, status: noteStatus, error: noteError } =
     useSelector((state: RootState) => state.notes);
+
 
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [showNoteModal, setShowNoteModal] = useState(false);
@@ -50,8 +56,18 @@ export default function NotepadPage() {
       });
     }
   }, [dispatch, selectedFolder]);
+    if (selectedFolder?.id !== undefined) {
+      dispatch(fetchNotes(selectedFolder.id)).catch((error) => {
+        console.error("Error fetching notes:", error);
+      });
+    }
+  }, [dispatch, selectedFolder]);
 
   const filteredFolders = useMemo(
+    () =>
+      folders.filter((folder) =>
+        folder.name.toLowerCase().includes(search.toLowerCase())
+      ),
     () =>
       folders.filter((folder) =>
         folder.name.toLowerCase().includes(search.toLowerCase())
@@ -62,6 +78,7 @@ export default function NotepadPage() {
   const handleCreateFolder = async (name: string) => {
     try {
       await dispatch(addFolder(name));
+      await dispatch(addFolder(name));
     } catch (error) {
       console.error("Folder creation failed:", error);
       alert("Failed to create folder");
@@ -69,7 +86,9 @@ export default function NotepadPage() {
   };
 
   const handleUpdateFolder = async (id: number, newName: string) => {
+  const handleUpdateFolder = async (id: number, newName: string) => {
     try {
+      await dispatch(editFolder({ id, name: newName }));
       await dispatch(editFolder({ id, name: newName }));
     } catch (error) {
       console.error("Folder update failed:", error);
@@ -81,6 +100,7 @@ export default function NotepadPage() {
     if (!confirm("Delete folder and all notes inside?")) return;
 
     try {
+      await dispatch(removeFolder(id));
       await dispatch(removeFolder(id));
       if (selectedFolder?.id === id) {
         dispatch(setSelectedFolder(null));
@@ -97,7 +117,9 @@ export default function NotepadPage() {
     try {
       if (selectedNote) {
         await dispatch(updateNoteContent({ ...selectedNote, text }));
+        await dispatch(updateNoteContent({ ...selectedNote, text }));
       } else {
+        await dispatch(createNote({ text, folderId: selectedFolder.id }));
         await dispatch(createNote({ text, folderId: selectedFolder.id }));
       }
       dispatch(fetchNotes(selectedFolder.id));
@@ -110,9 +132,13 @@ export default function NotepadPage() {
   };
 
   const handleDeleteNote = async (noteId: number) => {
+  const handleDeleteNote = async (noteId: number) => {
     if (!confirm("Delete this note permanently?")) return;
 
+
     try {
+      await dispatch(deleteNote(noteId));
+      if (selectedFolder?.id !== undefined) {
       await dispatch(deleteNote(noteId));
       if (selectedFolder?.id !== undefined) {
         dispatch(fetchNotes(selectedFolder.id));
@@ -124,14 +150,19 @@ export default function NotepadPage() {
   };
 
   if (folderStatus === "loading") return <div className="p-4">Loading folders...</div>;
+  if (folderStatus === "loading") return <div className="p-4">Loading folders...</div>;
   if (folderError) return <div className="p-4 text-red-500">Folder Error: {folderError}</div>;
 
   return (
     <div className="min-h-screen dark:bg-gray-900 py-2 px-2 md:px-6">
+    <div className="min-h-screen dark:bg-gray-900 py-2 px-2 md:px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Folder Panel */}
         <Card className="col-span-1 h-full overflow-hidden bg-white dark:bg-gray-800 border dark:border-gray-700">
+        {/* Folder Panel */}
+        <Card className="col-span-1 h-full overflow-hidden bg-white dark:bg-gray-800 border dark:border-gray-700">
           <CardContent className="p-4 space-y-4">
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">📁 Folders</h2>
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">📁 Folders</h2>
             <ScrollArea className="h-[calc(100vh-160px)] pr-1">
               <FolderList
@@ -212,11 +243,13 @@ export default function NotepadPage() {
             ) : (
               <div className="text-gray-600 dark:text-gray-300">
                 Select a folder to view content.
+                Select a folder to view content.
               </div>
             )}
           </CardContent>
         </Card>
       </div>
+
 
       <NoteModal
         isOpen={showNoteModal}
@@ -228,3 +261,4 @@ export default function NotepadPage() {
     </div>
   );
 }
+

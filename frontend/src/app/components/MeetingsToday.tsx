@@ -15,7 +15,7 @@ const MeetingsToday = () => {
     const fetchMeetings = async () => {
       try {
         const res = await MeetingToday.getTodaysMeetings();
-        //console.log('today Response:', res.data);
+        console.log('today Response:', res.data);
         setMeetings(res.data || []);
       } catch (error: any) {
         console.error('Failed to fetch meetings:', {

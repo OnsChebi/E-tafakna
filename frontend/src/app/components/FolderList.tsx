@@ -11,6 +11,7 @@ import {
   CheckIcon,
   XIcon,
 } from "lucide-react";
+import ConfirmDialog from "./ConfirmPopUp"; 
 
 export type Folder = {
   id: number;
@@ -43,6 +44,9 @@ export default function FolderList({
   const [isAddingNewFolder, setIsAddingNewFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
+  const [folderIdToDelete, setFolderIdToDelete] = useState<number | null>(null);
 
   const handleEditStart = (folder: Folder) => {
     setEditingFolderId(folder.id);
@@ -86,16 +90,26 @@ export default function FolderList({
     }
   };
 
-  const handleDeleteFolder = (id: number) => {
-    if (confirm("Are you sure you want to delete this folder?")) {
-      onDeleteFolder(id);
+  const requestDeleteFolder = (id: number) => {
+    setFolderIdToDelete(id);
+    setConfirmDialogVisible(true);
+  };
+
+  const confirmDelete = () => {
+    if (folderIdToDelete !== null) {
+      onDeleteFolder(folderIdToDelete);
+      setFolderIdToDelete(null);
+      setConfirmDialogVisible(false);
     }
+  };
+
+  const cancelDelete = () => {
+    setFolderIdToDelete(null);
+    setConfirmDialogVisible(false);
   };
 
   return (
     <div className="space-y-4 p-4">
-      
-
       <Input
         placeholder="Search folders..."
         value={search}
@@ -205,7 +219,7 @@ export default function FolderList({
                     variant="ghost"
                     size="sm"
                     className="h-8 w-8 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-600"
-                    onClick={() => handleDeleteFolder(folder.id)}
+                    onClick={() => requestDeleteFolder(folder.id)}
                   >
                     <TrashIcon className="h-5 w-5" />
                   </Button>
@@ -215,6 +229,14 @@ export default function FolderList({
           </li>
         ))}
       </ul>
+
+      {confirmDialogVisible && (
+        <ConfirmDialog
+          message="This will delete the folder and all its notes. Are you sure?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
     </div>
   );
 }
