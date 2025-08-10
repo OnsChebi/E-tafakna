@@ -23,6 +23,8 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import DocumentPanel from "../components/DocumentPanel";
+import { Button } from "@/components/ui/button";
 
 export default function NotepadPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,6 +37,7 @@ export default function NotepadPage() {
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [modalEditing, setModalEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState<"notes" | "documents">("notes");
 
   useEffect(() => {
     dispatch(fetchFolders());
@@ -75,6 +78,7 @@ export default function NotepadPage() {
   };
 
   const handleDeleteFolder = async (id: number) => {
+    if (!confirm("Delete folder and all notes inside?")) return;
 
     try {
       await dispatch(removeFolder(id));
@@ -144,45 +148,66 @@ export default function NotepadPage() {
           </CardContent>
         </Card>
 
-        {/* Notes Panel */}
+        {/* Notes/Documents Panel */}
         <Card className="col-span-1 md:col-span-2 flex flex-col border bg-white dark:bg-gray-800 dark:border-gray-700">
           <CardContent className="p-4 space-y-4">
-            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
-              {selectedFolder ? `📂 "${selectedFolder.name}"` : "No Folder Selected"}
-            </h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+                {selectedFolder ? `📂 "${selectedFolder.name}"` : "No Folder Selected"}
+              </h2>
+              <div className="flex gap-2">
+                <Button
+                  variant={activeTab === "notes" ? "default" : "outline"}
+                  onClick={() => setActiveTab("notes")}
+                >
+                  Notes
+                </Button>
+                <Button
+                  variant={activeTab === "documents" ? "default" : "outline"}
+                  onClick={() => setActiveTab("documents")}
+                  disabled={!selectedFolder}
+                >
+                  Documents
+                </Button>
+              </div>
+            </div>
 
             {selectedFolder ? (
-              noteStatus === "loading" ? (
-                <Skeleton className="w-full h-32 rounded-md" />
-              ) : noteError ? (
-                <div className="text-red-500">Error: {noteError}</div>
-              ) : (
-                <NoteList
-                  folderId={selectedFolder.id}
-                  notes={notes}
-                  onEditNote={(noteId) => {
-                    const note = notes.find((n) => n.id === noteId);
-                    if (note) {
-                      setSelectedNote(note);
+              activeTab === "notes" ? (
+                noteStatus === "loading" ? (
+                  <Skeleton className="w-full h-32 rounded-md" />
+                ) : noteError ? (
+                  <div className="text-red-500">Error: {noteError}</div>
+                ) : (
+                  <NoteList
+                    folderId={selectedFolder.id}
+                    notes={notes}
+                    onEditNote={(noteId) => {
+                      const note = notes.find((n) => n.id === noteId);
+                      if (note) {
+                        setSelectedNote(note);
+                        setModalEditing(true);
+                        setShowNoteModal(true);
+                      }
+                    }}
+                    onAddNote={() => {
+                      setSelectedNote(null);
                       setModalEditing(true);
                       setShowNoteModal(true);
-                    }
-                  }}
-                  onAddNote={() => {
-                    setSelectedNote(null);
-                    setModalEditing(true);
-                    setShowNoteModal(true);
-                  }}
-                  onViewNote={(noteId) => {
-                    const note = notes.find((n) => n.id === noteId);
-                    if (note) {
-                      setSelectedNote(note);
-                      setModalEditing(false);
-                      setShowNoteModal(true);
-                    }
-                  }}
-                  onDeleteNote={handleDeleteNote}
-                />
+                    }}
+                    onViewNote={(noteId) => {
+                      const note = notes.find((n) => n.id === noteId);
+                      if (note) {
+                        setSelectedNote(note);
+                        setModalEditing(false);
+                        setShowNoteModal(true);
+                      }
+                    }}
+                    onDeleteNote={handleDeleteNote}
+                  />
+                )
+              ) : (
+                <DocumentPanel folderId={selectedFolder.id} />
               )
             ) : (
               <div className="text-gray-600 dark:text-gray-300">
