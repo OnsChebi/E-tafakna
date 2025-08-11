@@ -61,7 +61,7 @@ export const DocumentUploadController=async (req: Request, res: Response)=> {
       return;
     }
 
-    const url = `/uploads/documents/${file.originalname}`;
+    const url = `/uploads/documents/${file.filename}`;
 
     const meetingRepo = AppDataSource.getRepository(Meeting);
     const folderRepo = AppDataSource.getRepository(Folder);

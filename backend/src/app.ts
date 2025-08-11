@@ -34,6 +34,14 @@ app.use('/uploads/profile-images', express.static(uploadsDir, {
     res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
   },
 }));
+const documentsDir = path.join(__dirname, 'uploads', 'documents');
+app.use('/uploads/documents', express.static(documentsDir, {
+  setHeaders: (res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  },
+}));
+
 
 // Routes
 app.use('/api', indexRouter);

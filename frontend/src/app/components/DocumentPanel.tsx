@@ -7,6 +7,8 @@ import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { DownloadIcon, TrashIcon } from "lucide-react";
 import { documentApi, DocumentType } from "../service/api";
 
+const BASE_URL = "http://localhost:5000";
+
 export default function DocumentsPanel({ folderId }: { folderId: number }) {
   const [documents, setDocuments] = useState<DocumentType[]>([]);
   const [loading, setLoading] = useState(false);
@@ -41,7 +43,11 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
 
   const handleDownload = async (url: string, filename: string) => {
     try {
-      const res = await fetch(url);
+      const fullUrl = `${BASE_URL}${url}`;
+      const res = await fetch(fullUrl);
+
+      if (!res.ok) throw new Error("Network response was not ok");
+
       const blob = await res.blob();
       const blobUrl = window.URL.createObjectURL(blob);
 
@@ -96,7 +102,9 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
           ) : error ? (
             <div className="text-red-500">{error}</div>
           ) : documents.length === 0 ? (
-            <div className="text-gray-500 dark:text-gray-400">No documents uploaded.</div>
+            <div className="text-gray-500 dark:text-gray-400">
+              No documents uploaded.
+            </div>
           ) : (
             <ul className="space-y-2">
               {documents.map((doc) => (
@@ -106,7 +114,7 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
                 >
                   <div className="truncate">
                     <a
-                      href={doc.url}
+                      href={`${BASE_URL}${doc.url}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 dark:text-blue-400 hover:underline"
