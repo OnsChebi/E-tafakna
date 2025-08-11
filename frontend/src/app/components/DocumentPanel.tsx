@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { DownloadIcon, TrashIcon } from "lucide-react";
 import { documentApi, DocumentType } from "../service/api";
+import ConfirmDialog from "./ConfirmPopUp"; 
 
 const BASE_URL = "http://localhost:5000";
 
@@ -13,6 +14,9 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
   const [documents, setDocuments] = useState<DocumentType[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -32,7 +36,6 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
   }, [folderId]);
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Delete this document?")) return;
     try {
       await documentApi.delete(id);
       setDocuments((docs) => docs.filter((doc) => doc.id !== id));
@@ -73,6 +76,10 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
       formData.append("file", file);
       formData.append("folderId", folderId.toString());
 
+      formData.append("title", file.name);
+      const simplifiedType = file.type.split("/")[1] || "unknown";
+      formData.append("type", simplifiedType);
+
       const res = await documentApi.create(formData);
       setDocuments((docs) => [...docs, res.data]);
     } catch (err) {
@@ -81,72 +88,100 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
     }
   };
 
+  const confirmDelete = (id: number) => {
+    setDeleteId(id);
+    setDialogOpen(true);
+  };
+
+  const onConfirmDelete = () => {
+    if (deleteId !== null) {
+      handleDelete(deleteId);
+    }
+    setDialogOpen(false);
+    setDeleteId(null);
+  };
+
+  const onCancelDelete = () => {
+    setDialogOpen(false);
+    setDeleteId(null);
+  };
+
   return (
-    <Card className="mt-4 border bg-white dark:bg-gray-800 dark:border-gray-700">
-      <CardContent className="p-4">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
-          📎 Documents
-        </h3>
+    <>
+      <Card className="mt-4 border bg-white dark:bg-gray-800 dark:border-gray-700">
+        <CardContent className="p-4">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+            📎 Documents
+          </h3>
 
-        <div className="mb-4">
-          <input
-            type="file"
-            onChange={handleUpload}
-            className="text-sm text-gray-700 dark:text-gray-200"
-          />
-        </div>
+          <div className="mb-4">
+            <input
+              type="file"
+              onChange={handleUpload}
+              className="text-sm text-gray-700 dark:text-gray-200"
+            />
+          </div>
 
-        <ScrollArea className="h-[300px] pr-2">
-          {loading ? (
-            <div className="text-gray-600 dark:text-gray-300">Loading...</div>
-          ) : error ? (
-            <div className="text-red-500">{error}</div>
-          ) : documents.length === 0 ? (
-            <div className="text-gray-500 dark:text-gray-400">
-              No documents uploaded.
-            </div>
-          ) : (
-            <ul className="space-y-2">
-              {documents.map((doc) => (
-                <li
-                  key={doc.id}
-                  className="flex items-center justify-between p-2 bg-gray-100 dark:bg-gray-700 rounded hover:shadow transition"
-                >
-                  <div className="truncate">
-                    <a
-                      href={`${BASE_URL}${doc.url}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 dark:text-blue-400 hover:underline"
-                    >
-                      {doc.title}
-                    </a>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                      {new Date(doc.uploadedAt).toLocaleString()} - {doc.type}
+          <ScrollArea className="h-[300px] pr-2">
+            {loading ? (
+              <div className="text-gray-600 dark:text-gray-300">Loading...</div>
+            ) : error ? (
+              <div className="text-red-500">{error}</div>
+            ) : documents.length === 0 ? (
+              <div className="text-gray-500 dark:text-gray-400">
+                No documents uploaded.
+              </div>
+            ) : (
+              <ul className="space-y-2">
+                {documents.map((doc) => (
+                  <li
+                    key={doc.id}
+                    className="flex items-center justify-between p-2 bg-gray-100 dark:bg-gray-700 rounded hover:shadow transition"
+                  >
+                    <div className="truncate">
+                      <a
+                        href={`${BASE_URL}${doc.url}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                      >
+                        {doc.title}
+                      </a>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        {new Date(doc.uploadedAt).toLocaleString()} - {doc.type}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => handleDownload(doc.url, doc.title)}
-                    >
-                      <DownloadIcon className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => handleDelete(doc.id)}
-                    >
-                      <TrashIcon className="w-4 h-4 text-red-500" />
-                    </Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </ScrollArea>
-      </CardContent>
-    </Card>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => handleDownload(doc.url, doc.title)}
+                      >
+                        <DownloadIcon className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => confirmDelete(doc.id)}
+                      >
+                        <TrashIcon className="w-4 h-4 text-red-500" />
+                      </Button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </ScrollArea>
+        </CardContent>
+      </Card>
+
+      {dialogOpen && (
+        <ConfirmDialog
+          message="Delete this document?"
+          onConfirm={onConfirmDelete}
+          onCancel={onCancelDelete}
+        />
+      )}
+    </>
   );
 }

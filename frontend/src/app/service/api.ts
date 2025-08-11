@@ -10,6 +10,12 @@ const Api = axios.create({
     "Content-Type": "application/json",
   },
 });
+const Api2 = axios.create({
+  baseURL: API_BASE,
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+});
 
 // Add interceptors only to private API instance
 Api.interceptors.request.use((config) => {
@@ -141,7 +147,7 @@ export const documentApi = {
   getByFolder: (folderId: number) =>
     Api.get<DocumentType[]>(`/doc/folder/${folderId}`),
     create: (formData: FormData) =>
-    Api.post("/doc/upload", formData),
+    Api2.post("/doc/upload", formData),
   
   delete: (id: number) => Api.delete(`/doc/${id}`),
 };
