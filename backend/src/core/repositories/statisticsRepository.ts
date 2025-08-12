@@ -10,7 +10,6 @@ export interface IStatRepository {
   countMeetingsPerMonthThisyear(expertId: number): Promise<{ month: string, count: number }[]>;
   countMeetingTypes(expertId: number): Promise<{ type: 'online' | 'in-person', count: number }[]>;
   countActiveFoldersByUser(expertId: number):Promise<number>;
-  //getAllExpertsWithStats(): Promise<ExpertStat[]>;
 
 
 }

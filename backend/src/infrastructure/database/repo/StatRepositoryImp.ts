@@ -1,4 +1,4 @@
-import { Repository, LessThan, MoreThan, Between } from "typeorm";
+import { Repository, MoreThan, Between } from "typeorm";
 import { Meeting } from "../../../core/entities/Meeting.entity";
 import { AppDataSource } from "../db";
 import { Folder } from "../../../core/entities/Folder.entity";

@@ -1,4 +1,3 @@
-// core/use-cases/GetClientList.ts
 import { IMeetingRepository } from "../../repositories/MeetingRepository";
 
 export class GetClientListUseCase {

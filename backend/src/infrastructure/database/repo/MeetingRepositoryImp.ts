@@ -1,5 +1,4 @@
 
-//meetingRepo
 import { Repository, LessThan, MoreThan, Between, MoreThanOrEqual } from "typeorm";
 import { IMeetingRepository } from "../../../core/repositories/MeetingRepository";
 import { Meeting } from "../../../core/entities/Meeting.entity";

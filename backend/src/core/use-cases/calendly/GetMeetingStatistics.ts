@@ -1,4 +1,3 @@
-// core/use-cases/GetMeetingStatistics.ts
 import { IStatRepository } from "../../repositories/statisticsRepository";
 
 export class GetMeetingStatistics {

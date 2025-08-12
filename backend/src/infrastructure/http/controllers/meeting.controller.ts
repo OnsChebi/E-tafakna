@@ -1,4 +1,3 @@
-//controller
 import { Request, Response } from "express";
 import { MeetingRepositoryImpl } from "../../database/repo/MeetingRepositoryImp";
 import { CancelMeetingsUseCase } from "../../../core/use-cases/calendly/CancelMeetings";

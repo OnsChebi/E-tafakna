@@ -14,7 +14,6 @@ declare module "express-serve-static-core" {
   }
 }
 
-// ✅ Don't use RequestHandler here
 export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
   const token = authHeader?.split(" ")[1];
@@ -33,7 +32,6 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
   }
 };
 
-// ✅ Role-based authorization middleware
 export const authorize = (...allowedRoles: string[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const user = req.user;

@@ -33,7 +33,7 @@ export class Folder {
 
   @ManyToMany(() => Tag, (tag) => tag.folders, { cascade: true })
   @JoinTable({
-    name: "folders_tags_tags", // join table name
+    name: "folders_tags_tags", 
     joinColumn: { name: "folderId", referencedColumnName: "id" },
     inverseJoinColumn: { name: "tagId", referencedColumnName: "id" },
   })

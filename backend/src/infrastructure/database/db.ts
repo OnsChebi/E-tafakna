@@ -17,9 +17,3 @@ export const AppDataSource=new DataSource({
   migrations: ["src/infrastructure/database/migrations/*.ts"],
   entities: ['src/core/entities/*.ts'],
 });
-// console.log("Database Configuration:", {
-//     host: process.env.DB_HOST,
-//     port: process.env.DB_PORT,
-//     username: process.env.DB_USERNAME,
-//     database: process.env.DB_NAME,
-//   });

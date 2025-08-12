@@ -1,100 +1,107 @@
 import { Request, Response } from "express";
 import { TagRepository } from "../../database/repo/TagRepositoryImp";
 import { FolderRepositoryImp } from "../../database/repo/FolderRepositoryImp";
+
 import { RemoveTagFromFolderUseCase } from "../../../core/use-cases/tag/RemoveTagFromFolder";
-import { GetFoldersByTagUseCase } from "../../../core/use-cases/tag/GetFolderByTag";
 import { AssignOrCreateTagForFolderUseCase } from "../../../core/use-cases/tag/AssignOrCreateTagForFolder";
 import { AssignExistingTagToFolderUseCase } from "../../../core/use-cases/tag/AssignTagToFolder";
 import { DeleteTagUseCase } from "../../../core/use-cases/tag/DeleteTag";
 import { GetTagByIdUseCase } from "../../../core/use-cases/tag/GetTagById";
 
-// 1. Create or attach a tag and assign to folder
-export async function createOrAssignTagController(req: Request, res: Response) {
-  const { folderId, name, color } = req.body;
+const tagRepo = new TagRepository();
+const folderRepo = new FolderRepositoryImp();
 
+export async function createOrAssignTagController(req: Request, res: Response): Promise<void> {
   try {
-    const useCase = new AssignOrCreateTagForFolderUseCase(
-      new FolderRepositoryImp(),
-      new TagRepository()
-    );
-    const tag = await useCase.execute(folderId, { name, color });
-    res.status(200).json({ message: "Tag created/assigned to folder", tag });
-  } catch (err) {
-    console.error("Create/Assign tag error:", err);
-    res.status(500).json({ message: "Error creating or assigning tag" });
+    const { folderId, name, color } = req.body;
+    if (!folderId || !name || !color) {
+      res.status(400).json({ message: "folderId, name, and color are required" });
+      return;
+    }
+
+    const useCase = new AssignOrCreateTagForFolderUseCase(folderRepo, tagRepo);
+    const tag = await useCase.execute(Number(folderId), { name, color });
+    res.status(201).json({ message: "Tag created and assigned", tag });
+  } catch (error) {
+    console.error("createOrAssignTagController error:", error);
+    res.status(500).json({ message: "Failed to create and assign tag", error });
   }
 }
 
-// 2. Assign existing tag
-export async function assignExistingTagController(req: Request, res: Response) {
-  const { folderId, tagId } = req.body;
-
+export async function assignExistingTagController(req: Request, res: Response): Promise<void> {
   try {
-    const useCase = new AssignExistingTagToFolderUseCase(
-      new FolderRepositoryImp(),
-      new TagRepository()
-    );
-    await useCase.execute(folderId, tagId);
-    res.status(200).json({ message: "Tag assigned to folder successfully" });
-  } catch (err) {
-    console.error("Assign tag error:", err);
-    res.status(500).json({ message: "Error assigning tag" });
+    const { folderId, tagId } = req.body;
+    if (!folderId || !tagId) {
+      res.status(400).json({ message: "folderId and tagId are required" });
+      return;
+    }
+
+    const useCase = new AssignExistingTagToFolderUseCase(folderRepo, tagRepo);
+    await useCase.execute(Number(folderId), Number(tagId));
+    res.status(200).json({ message: "Tag assigned to folder" });
+  } catch (error) {
+    console.error("assignExistingTagController error:", error);
+    res.status(500).json({ message: "Failed to assign tag", error });
   }
 }
 
-// 3. Remove tag from folder
-export async function removeTagFromFolderController(req: Request, res: Response) {
-  const folderId = parseInt(req.params.folderId);
-
+export async function removeTagFromFolderController(req: Request, res: Response): Promise<void> {
   try {
-    const useCase = new RemoveTagFromFolderUseCase(new FolderRepositoryImp());
-    await useCase.execute(folderId);
+    const { folderId, tagId } = req.body;
+    if (!folderId || !tagId) {
+      res.status(400).json({ message: "folderId and tagId are required" });
+      return;
+    }
+
+    const useCase = new RemoveTagFromFolderUseCase(folderRepo);
+    await useCase.execute(Number(folderId), Number(tagId));
     res.status(200).json({ message: "Tag removed from folder" });
-  } catch (err) {
-    console.error("Remove tag error:", err);
-    res.status(500).json({ message: "Error removing tag from folder" });
+  } catch (error) {
+    console.error("removeTagFromFolderController error:", error);
+    res.status(500).json({ message: "Failed to remove tag", error });
   }
 }
 
-// 4. Get folders by tag
-export async function getFoldersByTagController(req: Request, res: Response) {
-  const tagId = parseInt(req.params.tagId);
-
+export async function deleteTagController(req: Request, res: Response): Promise<void> {
   try {
-    const useCase = new GetFoldersByTagUseCase(new FolderRepositoryImp());
-    const folders = await useCase.execute(tagId);
-    res.status(200).json(folders);
-  } catch (err) {
-    console.error("Get folders by tag error:", err);
-    res.status(500).json({ message: "Error fetching folders for tag" });
+    const { tagId } = req.params;
+    if (!tagId) {
+      res.status(400).json({ message: "tagId is required" });
+      return;
+    }
+
+    const useCase = new DeleteTagUseCase(tagRepo);
+    await useCase.execute(Number(tagId));
+    res.status(200).json({ message: "Tag deleted" });
+  } catch (error) {
+    console.error("deleteTagController error:", error);
+    res.status(500).json({ message: "Failed to delete tag", error });
   }
 }
 
-
-// 5. delete tag
-
-export async function deleteTagController(req: Request, res: Response) {
-  const tagId = parseInt(req.params.tagId);
-
+export async function getTagByIdController(req: Request, res: Response): Promise<void> {
   try {
-    const useCase = new DeleteTagUseCase(new TagRepository());
-    await useCase.execute(tagId);
-    res.status(200).json({ message: "Tag deleted successfully" });
-  } catch (err) {
-    console.error("Delete tag error:", err);
-    res.status(404).json({ message: "Tag not found or deletion failed" });
-  }
-}
+    const { tagId } = req.params;
+    if (!tagId) {
+      res.status(400).json({ message: "tagId is required" });
+      return;
+    }
 
-export async function getTagByIdController(req: Request, res: Response) {
-  const tagId = parseInt(req.params.tagId);
-
-  try {
-    const useCase = new GetTagByIdUseCase(new TagRepository());
-    const tag = await useCase.execute(tagId);
+    const useCase = new GetTagByIdUseCase(tagRepo);
+    const tag = await useCase.execute(Number(tagId));
     res.status(200).json(tag);
-  } catch (err) {
-    console.error("Get tag by ID error:", err);
-    res.status(404).json({ message: "Tag not found" });
+  } catch (error) {
+    console.error("getTagByIdController error:", error);
+    res.status(500).json({ message: "Failed to get tag", error });
+  }
+}
+
+export async function getAllTagsController(req: Request, res: Response): Promise<void> {
+  try {
+    const tags = await tagRepo.findAll();
+    res.status(200).json(tags);
+  } catch (error) {
+    console.error("getAllTagsController error:", error);
+    res.status(500).json({ message: "Failed to fetch tags", error });
   }
 }

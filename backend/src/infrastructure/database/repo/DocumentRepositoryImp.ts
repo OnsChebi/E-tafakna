@@ -1,5 +1,5 @@
 import { IDocumentRepository } from "../../../core/repositories/DocumentRepository";
-import { Document } from "../../../core//entities/Document.entity";
+import { Document } from "../../../core/entities/Document.entity";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../db";
 

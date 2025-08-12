@@ -4,9 +4,9 @@ import { IFolderRepository } from "../../../core/repositories/folder.repository"
 import { Folder } from "../../../core/entities/Folder.entity";
 
 export class FolderRepositoryImp implements IFolderRepository {
-
-  private folderRepo = AppDataSource.getRepository(Folder);
   
+  private folderRepo = AppDataSource.getRepository(Folder);
+
   async save(folder: Folder): Promise<Folder> {
     return await this.folderRepo.save(folder);
   }
@@ -51,7 +51,7 @@ export class FolderRepositoryImp implements IFolderRepository {
   async getFolders(expertId: number): Promise<Folder[]> {
     return this.folderRepo.find({
       where: { expert: { id: expertId } },
-      relations: ["notes"],
+      relations: ["notes", "tags"], 
     });
   }
 
@@ -59,7 +59,7 @@ export class FolderRepositoryImp implements IFolderRepository {
   async getFolderByName(name: string, expertId: number): Promise<Folder | null> {
     return this.folderRepo.findOne({
       where: { name, expert: { id: expertId } },
-      relations: ["notes"],
+      relations: ["notes", "tags"],  
     });
   }
 
@@ -67,22 +67,27 @@ export class FolderRepositoryImp implements IFolderRepository {
   async getFolderById(folderId: number, expertId: number): Promise<Folder | null> {
     return this.folderRepo.findOne({
       where: { id: folderId, expert: { id: expertId } },
-      relations: ["notes"],
+      relations: ["notes", "tags"], 
     });
   }
 
+  // Find folder by id with tags loaded
   async findByIdWithTags(folderId: number): Promise<Folder | null> {
     return await this.folderRepo.findOne({
       where: { id: folderId },
-      relations: ['tag'],
+      relations: ["tags"],  
     });
   }
-  
-  async findTagById(tagId: number): Promise<Folder[] | null> {
+
+  // Find folders by tag id
+  async findByTagId(tagId: number): Promise<Folder[] | null> {
     return await this.folderRepo.find({
-      where: { tag: { id: tagId } },
-      relations: ['tag'],
+      where: {
+        tags: {
+          id: tagId,
+        },
+      },
+      relations: ["tags"],  
     });
   }
-  
 }

@@ -49,7 +49,6 @@ export class CreateDocumentAndUpdateRelations1748961492202 implements MigrationI
       true
     );
 
-    // add foreign key to meetings
     await queryRunner.createForeignKey(
       "documents",
       new TableForeignKey({

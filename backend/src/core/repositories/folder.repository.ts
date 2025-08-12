@@ -7,6 +7,5 @@ export interface IFolderRepository {
   getFolders(expertId: number): Promise<Folder[]>;
   getFolderById(folderId: number , expertId: number):Promise<Folder | null>;
   findByIdWithTags(folderId: number): Promise<Folder | null>;
-  findTagById(tagId: number): Promise<Folder[] | null>;  
   save(folder: Folder): Promise<Folder>;
 }

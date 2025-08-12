@@ -1,5 +1,3 @@
-// src/core/repositories/MeetingRepository.ts
-
 import { Expert } from "../entities/Expert.entity";
 import { Meeting } from "../entities/Meeting.entity";
 

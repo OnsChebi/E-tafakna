@@ -19,7 +19,6 @@ export const PaymentHistory: React.FC = () => {
     { id: 3, date: '2024-01-01', amount: 3200, method: 'Virement', status: 'pending', reference: 'VIR-003' }
   ];
 
-  // Format number with fr-FR locale and append " DT"
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat('fr-FR', {
       style: 'decimal',

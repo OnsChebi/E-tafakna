@@ -3,7 +3,6 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex, Ta
 export class CreatefoldersTable1746357250876 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        // Create the folders table
         await queryRunner.createTable(
             new Table({
                 name: "folders",
@@ -33,7 +32,6 @@ export class CreatefoldersTable1746357250876 implements MigrationInterface {
             true
         );
 
-        // Add the unique index on (name, expertId)
         await queryRunner.createIndex(
             "folders",
             new TableIndex({
@@ -43,7 +41,6 @@ export class CreatefoldersTable1746357250876 implements MigrationInterface {
             })
         );
 
-        // Add foreign key constraint
         await queryRunner.createForeignKey(
             "folders",
             new TableForeignKey({
