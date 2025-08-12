@@ -1,27 +1,41 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Unique,
+  JoinTable,
+} from "typeorm";
 import { Expert } from "./Expert.entity";
 import { Note } from "./Notes.entity";
 import { Document } from "./Document.entity";
 import { Tag } from "./Tag.entity";
 
-@Entity("Folders")
+@Entity("folders")
 @Unique("UQ_FOLDER_EXPERT_NAME", ["name", "expert"])
 export class Folder {
-    @PrimaryGeneratedColumn()
-    id!: number;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column("varchar", { length: 255 }) 
-    name!: string;
+  @Column("varchar", { length: 255 })
+  name!: string;
 
-    @ManyToOne(() => Expert, (expert) => expert.folders)
-    expert!: Expert;
+  @ManyToOne(() => Expert, (expert) => expert.folders)
+  expert!: Expert;
 
-    @OneToMany(() => Note, (note) => note.folder)
-    notes!: Note[];
-    @OneToMany(() => Document, (document) => document.folder)
-    documents!: Document[];
+  @OneToMany(() => Note, (note) => note.folder)
+  notes!: Note[];
 
-    @ManyToOne(() => Tag, (tag) => tag.folders, { nullable: true })
-  tag!: Tag | null;
+  @OneToMany(() => Document, (document) => document.folder)
+  documents!: Document[];
 
+  @ManyToMany(() => Tag, (tag) => tag.folders, { cascade: true })
+  @JoinTable({
+    name: "folders_tags_tags", // join table name
+    joinColumn: { name: "folderId", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "tagId", referencedColumnName: "id" },
+  })
+  tags!: Tag[];
 }
