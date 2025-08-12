@@ -1,4 +1,3 @@
-// core/use-cases/tag/DeleteTagUseCase.ts
 import { ITagRepository } from "../../repositories/TagRepository";
 
 export class DeleteTagUseCase {

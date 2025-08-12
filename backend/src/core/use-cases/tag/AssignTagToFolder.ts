@@ -14,7 +14,9 @@ export class AssignExistingTagToFolderUseCase {
     const tag = await this.tagRepo.findById(tagId);
     if (!tag) throw new Error("Tag not found");
 
-    folder.tag = tag;
-    await this.folderRepo.save(folder);
+    if (!folder.tags.some(t => t.id === tag.id)) {
+      folder.tags.push(tag);
+      await this.folderRepo.save(folder);
+    }
   }
 }

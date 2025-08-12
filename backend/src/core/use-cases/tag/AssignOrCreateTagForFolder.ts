@@ -21,8 +21,12 @@ export class AssignOrCreateTagForFolderUseCase {
       tag = await this.tagRepo.create(tag);
     }
 
-    folder.tag = tag;
-    await this.folderRepo.save(folder);
+    // Prevent duplicates
+    if (!folder.tags.some(t => t.id === tag.id)) {
+      folder.tags.push(tag);
+      await this.folderRepo.save(folder);
+    }
+
     return tag;
   }
 }
