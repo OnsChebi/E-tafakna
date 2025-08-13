@@ -7,6 +7,8 @@ import { AssignOrCreateTagForFolderUseCase } from "../../../core/use-cases/tag/A
 import { AssignExistingTagToFolderUseCase } from "../../../core/use-cases/tag/AssignTagToFolder";
 import { DeleteTagUseCase } from "../../../core/use-cases/tag/DeleteTag";
 import { GetTagByIdUseCase } from "../../../core/use-cases/tag/GetTagById";
+import { GetTagByFoldersIdUseCase } from "../../../core/use-cases/tag/getTagsByFolder";
+
 
 const tagRepo = new TagRepository();
 const folderRepo = new FolderRepositoryImp();
@@ -105,3 +107,28 @@ export async function getAllTagsController(req: Request, res: Response): Promise
     res.status(500).json({ message: "Failed to fetch tags", error });
   }
 }
+
+   export async function getTagByFolderId(req: Request, res: Response): Promise<void> {
+  const folderId = parseInt(req.params.folderId, 10);
+  if (isNaN(folderId)) {
+    res.status(400).json({ message: "Invalid folder id" });
+    return; 
+  }
+
+  try {
+    const useCase = new GetTagByFoldersIdUseCase(tagRepo);
+    const tags = await useCase.execute(folderId);
+
+    if (!tags || tags.length === 0) {
+      res.status(404).json({ message: "No tags found for this folder" });
+      return; 
+    }
+
+    res.status(200).json(tags); 
+  } catch (err) {
+    res.status(400).json({ message: err instanceof Error ? err.message : "Error" });
+  }
+}
+
+  
+

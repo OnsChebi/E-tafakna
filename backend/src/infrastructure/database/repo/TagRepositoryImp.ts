@@ -9,6 +9,16 @@ export class TagRepository implements ITagRepository {
   constructor() {
     this.repo = AppDataSource.getRepository(Tag);
   }
+  async findByFolderId(folderId: number): Promise<Tag[] | null> {
+      return await this.repo.find({
+        where: {
+          folders: {
+            id: folderId,
+          },
+        },
+        relations: ["folders"],  
+      });
+    }
 
   async create(tag: Tag): Promise<Tag> {
     // Ensure no duplicate names
@@ -19,7 +29,7 @@ export class TagRepository implements ITagRepository {
     return await this.repo.save(tag);
   }
 
-  async findAll(): Promise<Tag[]> {
+  async findAll(): Promise<Tag[] |null> {
     return await this.repo.find();
   }
 

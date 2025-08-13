@@ -24,4 +24,9 @@ router.get("/", authenticate, async (req, res) => {
     await folderController.deleteFolder(req, res);
   });
 
+  router.get("/tag/:tagId", authenticate, async (req, res) =>{
+    await folderController.getFoldersByTagId(req, res);}
+  );
+
+
 export default router;

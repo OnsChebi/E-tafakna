@@ -1,12 +1,11 @@
-import { ITagRepository } from "../../repositories/TagRepository";
-import { Tag } from "../../entities/Tag.entity";
+// core/use-cases/folder/GetFoldersByTagId.ts
+import { IFolderRepository } from "../../repositories/folder.repository";
+import { Folder } from "../../entities/Folder.entity";
 
-export class GetTagByIdUseCase {
-  constructor(private tagRepo: ITagRepository) {}
+export class GetFoldersByTagIdUseCase {
+  constructor(private folderRepo: IFolderRepository) {}
 
-  async execute(tagId: number): Promise<Tag> {
-    const tag = await this.tagRepo.findById(tagId);
-    if (!tag) throw new Error("Tag not found");
-    return tag;
+  async execute(tagId: number): Promise<Folder[] | null> {
+    return this.folderRepo.findByTagId(tagId);
   }
 }

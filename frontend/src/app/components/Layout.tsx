@@ -79,7 +79,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             darkMode={darkMode}
             setDarkMode={setDarkMode}
           />
-          <main className="p-4 dark:bg-gray-900">{children}</main>
+          <main className="p-2 dark:bg-gray-900">{children}</main>
         </div>
       </div>
     </div>

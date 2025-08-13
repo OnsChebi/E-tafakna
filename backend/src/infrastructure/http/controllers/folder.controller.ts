@@ -5,6 +5,7 @@ import { GetFoldersUseCase } from "../../../core/use-cases/folder/GetFolders";
 import { UpdateFolderUseCase } from "../../../core/use-cases/folder/UpdateFolder";
 import { DeleteFolderUseCase } from "../../../core/use-cases/folder/DeleteFolder";
 import { GetFolderByIdUseCase } from "../../../core/use-cases/folder/GetFolderById";
+import { GetFoldersByTagIdUseCase } from "../../../core/use-cases/tag/GetFolderByTag";
 
 interface AuthenticatedRequest extends Request {
   user?: { id: number };
@@ -16,7 +17,9 @@ export class FolderController {
         private getFoldersUseCase = new GetFoldersUseCase(new FolderRepositoryImp()),
         private getFolderByIdUseCase = new GetFolderByIdUseCase(new FolderRepositoryImp()),
         private updateFolderUseCase = new UpdateFolderUseCase(new FolderRepositoryImp()),
-        private deleteFolderUseCase = new DeleteFolderUseCase(new FolderRepositoryImp())
+        private deleteFolderUseCase = new DeleteFolderUseCase(new FolderRepositoryImp()),
+        private getFoldersByTagIdUseCase = new GetFoldersByTagIdUseCase(new FolderRepositoryImp()) // ← added
+
       ) {}
   async createFolder(req: Request, res: Response) {
     const expertId = (req as AuthenticatedRequest).user?.id;
@@ -81,6 +84,22 @@ export class FolderController {
     try {
       await this.deleteFolderUseCase.execute(folderId, expertId);
       res.status(204).send();
+    } catch (err) {
+      res.status(400).json({ message: err instanceof Error ? err.message : "Error" });
+    }
+  }
+  async getFoldersByTagId(req: Request, res: Response) {
+    const tagId = parseInt(req.params.tagId, 10);
+    if (isNaN(tagId)) {
+      return res.status(400).json({ message: "Invalid tag id" });
+    }
+
+    try {
+      const folders = await this.getFoldersByTagIdUseCase.execute(tagId);
+      if (!folders || folders.length === 0) {
+        return res.status(404).json({ message: "No folders found for this tag" });
+      }
+      res.json(folders);
     } catch (err) {
       res.status(400).json({ message: err instanceof Error ? err.message : "Error" });
     }
