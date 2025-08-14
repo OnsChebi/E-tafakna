@@ -8,7 +8,7 @@ import {
   import { Meeting } from "./Meeting.entity";
   import { Folder } from "./Folder.entity";
   
-  @Entity("Documents")
+  @Entity("documents")
   export class Document {
     @PrimaryGeneratedColumn()
     id!: number;

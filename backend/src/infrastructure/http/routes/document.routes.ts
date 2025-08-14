@@ -12,7 +12,7 @@ import { authenticate } from "../middlewares/auth";
 
 const router = Router();
 
-router.post("/upload", uploadDocument.single("file"),authenticate,DocumentUploadController);
+router.post("/upload", uploadDocument.single("file"),DocumentUploadController);
 router.get("/:id",authenticate, getDocumentById);
 router.delete("/:id",authenticate, deleteDocumentById);
 router.get("/folder/:folderId",authenticate, getDocumentsByFolderId);

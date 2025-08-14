@@ -1,58 +1,30 @@
+import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableUnique } from "typeorm";
 
-import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex, TableUnique } from "typeorm";
 export class CreatefoldersTable1746357250876 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(new Table({
+      name: "folders",
+      columns: [
+        { name: "id", type: "int", isPrimary: true, isGenerated: true, generationStrategy: "increment" },
+        { name: "name", type: "varchar", length: "255" },
+        { name: "expertId", type: "int" },
+      ],
+    }));
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.createTable(
-            new Table({
-                name: "folders",
-                columns: [
-                    {
-                        name: "id",
-                        type: "int",
-                        isPrimary: true,
-                        isGenerated: true,
-                        generationStrategy: "increment",
-                    },
-                    {
-                        name: "name",
-                        type: "varchar",
-                    },
-                    {
-                        name: "expertId",
-                        type: "int",
-                    },
-                    {
-                        name: "createdAt",
-                        type: "timestamp",
-                        default: "CURRENT_TIMESTAMP",
-                    },
-                ],
-            }),
-            true
-        );
+    await queryRunner.createUniqueConstraint("folders", new TableUnique({
+      name: "UQ_FOLDER_EXPERT_NAME",
+      columnNames: ["name", "expertId"],
+    }));
 
-        await queryRunner.createIndex(
-            "folders",
-            new TableIndex({
-                name: "IDX_folder_name_expert",
-                columnNames: ["name", "expertId"],
-                isUnique: true,
-            })
-        );
+    await queryRunner.createForeignKey("folders", new TableForeignKey({
+      columnNames: ["expertId"],
+      referencedTableName: "experts",
+      referencedColumnNames: ["id"],
+      onDelete: "CASCADE",
+    }));
+  }
 
-        await queryRunner.createForeignKey(
-            "folders",
-            new TableForeignKey({
-                columnNames: ["expertId"],
-                referencedColumnNames: ["id"],
-                referencedTableName: "experts",
-                onDelete: "CASCADE",
-            })
-        );
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("folders");
-    }
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable("folders");
+  }
 }

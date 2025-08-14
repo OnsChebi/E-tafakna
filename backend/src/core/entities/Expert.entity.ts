@@ -5,7 +5,7 @@ import { Task } from './Task.entity';
 
 export type UserRole = 'expert' | 'admin';
 
-@Entity('Experts')
+@Entity('experts')
 export class Expert {
   @PrimaryGeneratedColumn()
   id!: number;

@@ -8,7 +8,7 @@ import {
   } from "typeorm";
   import { Expert } from "./Expert.entity";
   
-  @Entity()
+  @Entity("task")
   export class Task {
     @PrimaryGeneratedColumn()
     id!: number;

@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGenerate
 import { Expert } from "./Expert.entity";
 import { Document } from "./Document.entity";
 
-@Entity("Meetings")
+@Entity("meetings")
 export class Meeting {
   @PrimaryGeneratedColumn()
   id!: number;

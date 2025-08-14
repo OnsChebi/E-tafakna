@@ -1,32 +1,19 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+// 6 - CreateTagsTable.ts
+import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class CreateTagTable1749049911012 implements MigrationInterface {
+export class CreateTagsTable1723640500000 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(new Table({
+      name: "tags",
+      columns: [
+        { name: "id", type: "int", isPrimary: true, isGenerated: true, generationStrategy: "increment" },
+        { name: "name", type: "varchar", length: "100" },
+        { name: "color", type: "varchar", length: "20" },
+      ],
+    }));
+  }
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
-  CREATE TABLE tags (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    color VARCHAR(20) NOT NULL
-  )
-`);
-await queryRunner.query(`
-  CREATE TABLE folders_tags_tags (
-    folderId INT NOT NULL,
-    tagId INT NOT NULL,
-    PRIMARY KEY (folderId, tagId),
-    FOREIGN KEY (folderId) REFERENCES folders(id) ON DELETE CASCADE,
-    FOREIGN KEY (tagId) REFERENCES tags(id) ON DELETE CASCADE
-  )
-`);
-  
-    }
-
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DROP TABLE folders_tags_tags`);
-        await queryRunner.query(`DROP TABLE tags`);
-
-        
-    }
-
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable("tags");
+  }
 }
