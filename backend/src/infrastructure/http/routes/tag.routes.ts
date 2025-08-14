@@ -8,14 +8,15 @@ import {
   getAllTagsController,
   getTagByFolderId,   
 } from "../controllers/tag.controller";
+import { authenticate } from "../middlewares/auth";
 
 const tagRoutes = Router();
-tagRoutes.post("/create", createOrAssignTagController);
-tagRoutes.post("/assign", assignExistingTagController);
-tagRoutes.post("/remove", removeTagFromFolderController);
-tagRoutes.delete("/:tagId", deleteTagController);
-tagRoutes.get("/:tagId", getTagByIdController);
-tagRoutes.get("/", getAllTagsController);
-tagRoutes.get("/folder/:folderId", getTagByFolderId);
+tagRoutes.post("/create", authenticate, createOrAssignTagController);
+tagRoutes.post("/assign",authenticate, assignExistingTagController);
+tagRoutes.post("/remove", authenticate,removeTagFromFolderController);
+tagRoutes.delete("/:tagId",authenticate, deleteTagController);
+tagRoutes.get("/:tagId",authenticate, getTagByIdController);
+tagRoutes.get("/",authenticate, getAllTagsController);
+tagRoutes.get("/folder/:folderId",authenticate, getTagByFolderId);
 
 export default tagRoutes;
