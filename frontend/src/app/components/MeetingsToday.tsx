@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Video, Users, ArrowRight } from 'lucide-react';
-import { MeetingToday } from '../service/api';
+import { calendlyApi } from '../service/calendly';
 
 // Define the allowed tab types
 type MeetingTab = 'all' | 'Online' | 'In person';
@@ -14,7 +14,7 @@ const MeetingsToday = () => {
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const res = await MeetingToday.getTodaysMeetings();
+        const res = await calendlyApi.getTodaysMeetings();
         console.log('today Response:', res.data);
         setMeetings(res.data || []);
       } catch (error: any) {
@@ -40,7 +40,7 @@ const MeetingsToday = () => {
       const startTime = new Date(meeting.startTime);
       const endTime = meeting.endTime
         ? new Date(meeting.endTime)
-        : new Date(startTime.getTime() + 30 * 60000); // Default to 30 mins
+        : new Date(startTime.getTime() + 30 * 60000); 
       return endTime > now;
     })
     .filter((meeting) => activeTab === 'all' || meeting.type === activeTab);

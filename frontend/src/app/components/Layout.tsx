@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./SideBar";
-import { expertApi } from "../service/api";
+import { expertApi } from "../service/expert";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();

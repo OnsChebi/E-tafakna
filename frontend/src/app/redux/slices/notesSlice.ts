@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { noteApi } from '../../service/api';
+import { noteApi } from '../../service/note';
 
 export interface Note {
   id: number;

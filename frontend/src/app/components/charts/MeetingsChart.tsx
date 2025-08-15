@@ -1,4 +1,3 @@
-// components/MeetingsChart.tsx
 "use client";
 
 import React from "react";
@@ -13,7 +12,7 @@ import {
 } from "recharts";
 
 type MeetingData = {
-  label: string; // Can be day or month
+  label: string; 
   meetings: number;
 };
 

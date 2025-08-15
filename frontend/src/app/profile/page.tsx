@@ -8,7 +8,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
-import { expertApi, stat } from "../service/api";
+import { calendlyApi } from "../service/calendly";
+import { expertApi} from "../service/expert";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Edit, ImagePlus } from "lucide-react";
@@ -46,7 +48,7 @@ const ProfilePage = () => {
 
     const fetchStats = async () => {
       try {
-        const { data } = await stat.getStat();
+        const { data } = await calendlyApi.getStats();
         setStats(data);
       } catch (error) {
         toast({ title: "Error", description: "Failed to load stats." });

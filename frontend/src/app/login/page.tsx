@@ -3,7 +3,7 @@ import { useState,FormEvent,useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Eye, EyeOff, User, ArrowRight } from 'lucide-react';
-import { Api } from '../service/api';
+import { authApi } from '../service/auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,54 +11,54 @@ export default function LoginPage() {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({});
-
-useEffect(()=>{
-  const token=localStorage.getItem('authToken');
-  if(token){
-    router.push('/login');
+  
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    const role = localStorage.getItem('role');
+    
+    if (token && role) {
+      if (role === 'admin') {
+        router.replace('/users');
+      } else if (role === 'expert') {
+        router.replace('/meetings');
+      }
     }
-},[router]);
+  }, [router]);
 
-  const handleSubmit = async(event:FormEvent<HTMLFormElement>)=>{
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
+    setErrors({});
 
-    try{
+    try {
+      const response = await authApi.login(credentials);
 
-    const response = await Api.post('/expert/login',{
-    email:credentials.email,
-    password:credentials.password
-    });
-    if (response.status==200){
-        setIsLoading(false);
-        const { token, role } = response.data;
-        localStorage.setItem('authToken',token);
-        //console.log("response:",response)
-        //console.log("expert", role);
-        if (role === 'expert') {
-          router.push('/meetings');
-        } else if (role === 'admin') {
-          router.push('/users');
-        } else {
-          setErrors({ general: 'Unknown role' });
-        }
+      // ✅ Fixed: Use accessToken instead of token
+      const role = response.role;
+      if (!role || !response.accessToken) throw new Error("Invalid login response");
+
+      localStorage.setItem('authToken', response.accessToken);
+      localStorage.setItem('refreshToken', response.refreshToken);
+      localStorage.setItem('role', role);
+
+      if (role === 'expert') {
+        router.replace('/meetings');
+      } else if (role === 'admin') {
+        router.replace('/users');
+      } else {
+        setErrors({ general: 'Unknown role' });
       }
     } catch (err: any) {
-      const msg = err.response?.data?.message || 'Login failed';
-  if (msg.includes('Email')) {
-    setErrors({ email: msg });
-  } else if (msg.includes('password') || msg.includes('Password')) {
-    setErrors({ password: msg });
-  } else {
-    setErrors({ general: msg });
-  }
-//bch y5tafi msg
-  setTimeout(() => setErrors({}), 4000);
-} finally {
+      const msg = err.message || 'Login failed';
+      if (msg.toLowerCase().includes('email')) setErrors({ email: msg });
+      else if (msg.toLowerCase().includes('password')) setErrors({ password: msg });
+      else setErrors({ general: msg });
+
+      setTimeout(() => setErrors({}), 4000);
+    } finally {
       setIsLoading(false);
     }
-  };
-
+  }
   return (
     <div className="min-h-screen flex">
       {/* 3D Model Section */}

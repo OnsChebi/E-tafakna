@@ -1,5 +1,4 @@
-import { compare } from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { comparePassword, generateAccessToken, generateRefreshToken } from '../../../shared/utils/auth';
 import { IExpertRepository } from '../../repositories/expert.repository';
 
 interface LoginExpertDTO {
@@ -14,13 +13,23 @@ export class LoginExpertUseCase {
     const expert = await this.expertRepository.findByEmail(email);
     if (!expert) throw new Error('Expert not found');
 
-    const isValid = await compare(password, expert.password);
+    const isValid = await comparePassword(password, expert.password);
     if (!isValid) throw new Error('Incorrect password');
 
-    const token = jwt.sign({ id: expert.id }, process.env.JWT_SECRET!, {
-      expiresIn: "4h"
-    });
+    const role = expert.role?.trim().toLowerCase();
 
-    return { id: expert.id, name: expert.name, email: expert.email,role:expert.role, token };
+    const accessToken = generateAccessToken(expert.id, role);
+    const refreshToken = generateRefreshToken(expert.id, role);
+
+    await this.expertRepository.updateRefreshToken(expert.id, refreshToken);
+
+    return {
+      id: expert.id,
+      name: expert.name,
+      email: expert.email,
+      role,
+      accessToken,
+      refreshToken
+    };
   }
 }

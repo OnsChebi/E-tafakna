@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Client, clientApi } from '../service/api';
+import { Client, calendlyApi } from '../service/calendly';
 
 const ClientList = () => {
   const [clients, setClients] = useState<Client[]>([]);
@@ -11,7 +11,7 @@ const ClientList = () => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await clientApi.getClientListe();
+        const response = await calendlyApi.getClientListe();
         setClients(response.data || []);
       } catch (err: any) {
         console.error('Failed to fetch clients:', err);

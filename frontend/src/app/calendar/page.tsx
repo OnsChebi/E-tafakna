@@ -4,7 +4,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useEffect, useState } from 'react';
-import { CalendlyEvent, upcomingMeeting } from '../service/api';
+import { CalendlyEvent, calendlyApi } from '../service/calendly';
 
 const localizer = momentLocalizer(moment);
 
@@ -15,7 +15,7 @@ const CalendarPage = () => {
   useEffect(() => {
     const fetchUpcomingMeetings = async () => {
       try {
-        const response = await upcomingMeeting.getUpcomingMeetings();
+        const response = await calendlyApi.getUpcomingMeetings();
         const meetingData = response?.data ?? [];
   
         if (!Array.isArray(meetingData)) {

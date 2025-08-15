@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { stat, taskApi, CalendlyStats } from "../service/api";
+import {calendlyApi,  CalendlyStats } from "../service/calendly";
 import { MeetingTypesChart } from "../components/charts/MeetingTypeChart";
 import {
   Card,
@@ -20,6 +20,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { taskApi } from "../service/task";
 
 const shortDayMap: { [key: string]: string } = {
   Sunday: "Sun",
@@ -127,7 +128,7 @@ export default function StatisticsDashboard() {
       setIsLoading(true);
       setError(null);
 
-      const res = await stat.getStat();
+      const res = await calendlyApi.getStats();
       const data: CalendlyStats = res.data;
 
       setStats({

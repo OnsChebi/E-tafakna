@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { DownloadIcon, TrashIcon } from "lucide-react";
-import { documentApi, DocumentType } from "../service/api";
+import { documentApi, DocumentType } from "../service/document";
 import ConfirmDialog from "./ConfirmPopUp"; 
 
 const BASE_URL = "http://localhost:5000";

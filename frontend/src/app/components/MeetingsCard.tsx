@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from "react";
 import {
-  upcomingMeeting,
   Meeting as ApiMeeting,
-  recentMeeting,
-  cancelMeeting,
-} from "../service/api";
+  calendlyApi
+} from "../service/calendly";
 import CancelPopup from "./CancelPopup";
 
 type Meeting = {
@@ -32,8 +30,8 @@ const MeetingsCard = () => {
       try {
         setIsLoading(true);
         const [responseUpcoming, responseRecent] = await Promise.all([
-          upcomingMeeting.getUpcomingMeetings(),
-          recentMeeting.getRecentMeetings(),
+          calendlyApi.getUpcomingMeetings(),
+          calendlyApi.getRecentMeetings(),
         ]);
         const processMeeting = (event: ApiMeeting, type: Meeting["type"]) => ({
           id: event.eventId,
@@ -77,7 +75,7 @@ const MeetingsCard = () => {
   const confirmCancel = async (reason: string) => {
     if (!cancelMeetingId) return;
     try {
-      await cancelMeeting.cancel(cancelMeetingId, reason);
+      await calendlyApi.cancel(cancelMeetingId, reason);
       setUpcomingMeetings((prev) =>
         prev.filter((meeting) => meeting.id !== cancelMeetingId)
       );

@@ -1,4 +1,3 @@
-// CancelPopup.tsx
 import { useState } from "react";
 
 type CancelPopupProps = {

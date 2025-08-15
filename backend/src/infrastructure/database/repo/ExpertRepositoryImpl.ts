@@ -33,5 +33,10 @@ export class ExpertRepositoryImpl implements IExpertRepository {
     return this.findById(id);
   }
 
+  async updateRefreshToken(id: number, refreshToken: string | null): Promise<void> {
+  await this.repo.update(id, { refreshToken });
+}
+
+
   
 }

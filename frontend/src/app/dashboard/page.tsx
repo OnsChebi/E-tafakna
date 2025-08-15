@@ -12,7 +12,7 @@ import {
   VideoIcon,
 } from "lucide-react";
 import { format } from "date-fns";
-import { adminOverview } from "../service/api";
+import { calendlyApi } from "../service/calendly";
 
 type Meeting = {
   id: number;
@@ -37,7 +37,7 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const res = await adminOverview.getAdminOverview();
+        const res = await calendlyApi.getAdminOverview();
         console.log("Meetings fetched:", res.data);
         setMeetings(res.data);
       } catch (err: any) {

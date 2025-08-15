@@ -7,4 +7,6 @@ export interface IExpertRepository {
   findByEmail(email: string): Promise<Expert | null>;
   findById(id:number):Promise<Expert|null>;
   update (id:number,data:Partial<Expert>):Promise<Expert|null>;
+  updateRefreshToken(userId: number, refreshToken: string | null): Promise<void>;
+
 }

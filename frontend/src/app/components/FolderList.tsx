@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import ConfirmDialog from "./ConfirmPopUp";
 import FolderTags from "./FolderTags";
-import { tagApi } from "../service/api";
+import { tagApi } from "../service/tag";
 import type { Tag } from "./FolderTags";
 
 export type Folder = {
@@ -63,7 +63,7 @@ useEffect(() => {
     for (const folder of folders) {
       if (!loadedFoldersRef.current.has(folder.id)) {
         try {
-          const res = await tagApi.getTagsbyFolder(folder.id);
+          const res = await tagApi.getTagsByFolder(folder.id);
           map[folder.id] = res.data;
         } catch {
           map[folder.id] = []; // fallback for 404
@@ -87,7 +87,7 @@ useEffect(() => {
   };
 
   const handleTagsUpdated = async (folderId: number) => {
-    const res = await tagApi.getTagsbyFolder(folderId);
+    const res = await tagApi.getTagsByFolder(folderId);
     setFolderTagsMap((prev) => ({
       ...prev,
       [folderId]: res.data,

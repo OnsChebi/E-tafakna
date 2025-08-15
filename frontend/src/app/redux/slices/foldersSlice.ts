@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { folderApi } from '../../service/api';
+import { folderApi } from '../../service/folder';
 
 interface Folder {
   id: number;

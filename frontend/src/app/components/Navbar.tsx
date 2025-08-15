@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Menu, Sun, Moon, X } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { expertApi } from "../service/api";
+import { expertApi } from "../service/expert";
 import { useToast } from "@/hooks/use-toast";
 
 interface NavbarProps {

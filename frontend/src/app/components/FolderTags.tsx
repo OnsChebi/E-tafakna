@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X as XIcon, Trash2 } from "lucide-react";
-import { tagApi } from "../service/api";
+import { tagApi } from "../service/tag";
 
 export type Tag = {
   id: number;
@@ -40,15 +40,15 @@ export default function FolderTags({
       const [allTagsRes, folderTagsRes] = await Promise.all([
         tagApi
           .getAllTags()
-          .then((res) => res.data)
-          .catch((err) => {
+          .then((res: { data: any; }) => res.data)
+          .catch((err: { response: { status: number; }; }) => {
             if (err.response?.status === 404) return [];
             throw err;
           }),
         tagApi
-          .getTagsbyFolder(folderId)
-          .then((res) => res.data)
-          .catch((err) => {
+          .getTagsByFolder(folderId)
+          .then((res: { data: any; }) => res.data)
+          .catch((err: { response: { status: number; }; }) => {
             if (err.response?.status === 404) return [];
             throw err;
           }),

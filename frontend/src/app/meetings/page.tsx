@@ -4,10 +4,10 @@ import { useEffect, useState, useCallback } from "react";
 import ClientList from "../components/ClientList";
 import MeetingsCard from "../components/MeetingsCard";
 import MeetingsToday from "../components/MeetingsToday";
-import { Meeting, isAuthenticated, upcomingMeeting } from "../service/api";
+import { Meeting,  calendlyApi} from "../service/calendly";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { calendlySync } from "../service/api";
+import { authApi} from "../service/auth";
 import { RotateCw } from "lucide-react"; 
 
 export default function MeetsDashboard() {
@@ -23,7 +23,7 @@ export default function MeetsDashboard() {
       router.push("/login");
     } else {
       setAuthChecked(true);
-      upcomingMeeting
+      calendlyApi
         .getUpcomingMeetings()
         .then((res) => setUpcomingMeetings(res.data))
         .catch((err) => console.error("Error fetching meetings:", err));
@@ -34,7 +34,7 @@ export default function MeetsDashboard() {
     if (syncing) return; 
     setSyncing(true);
     try {
-      const response = await calendlySync.syncMeetings();
+      const response = await calendlyApi.syncMeetings();
       setSyncMessage(response.data.message || "Synced successfully!");
     } catch (error) {
       console.error("Sync failed", error);
@@ -51,7 +51,7 @@ export default function MeetsDashboard() {
     return <div className="p-4 text-gray-500">Checking authentication...</div>;
   }
 
-  if (!isAuthenticated()) {
+  if (!authApi.isAuthenticated()) {
     return <div className="p-4 text-red-500">Unauthorized</div>;
   }
 

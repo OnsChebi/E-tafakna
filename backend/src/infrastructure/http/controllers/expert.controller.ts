@@ -30,14 +30,27 @@ export const loginController = async (req: Request, res: Response) => {
 
   try {
     const result = await useCase.execute({ email, password });
-    res.json(result);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        id: result.id,
+        name: result.name,
+        email: result.email,
+        role: result.role,
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+      },
+    });
   } catch (e: any) {
-    const errorMessage = e.message === 'Expert not found' || e.message === 'Incorrect password'
-      ? e.message
-      : 'Login failed';
-    res.status(400).json({ success: false, message: errorMessage });
+    let message = "Login failed";
+    if (e.message === "Expert not found") message = "Expert not found";
+    if (e.message === "Incorrect password") message = "Incorrect password";
+
+    res.status(400).json({ success: false, message });
   }
-}
+};
+
 
 export async function getProfileController(req: Request, res: Response): Promise<void> {
   try {

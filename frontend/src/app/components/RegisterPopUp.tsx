@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { expertApi } from "../service/api";
+import { authApi } from "../service/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -100,7 +100,7 @@ export default function RegisterPopup({ onClose }: { onClose: () => void }) {
 
     try {
       setLoading(true);
-      const response = await expertApi.register(formData);
+      const response = await authApi.register(formData);
       setSuccess("User created successfully!");
       setShowSuccess(true);
     } catch (err: any) {

@@ -31,6 +31,10 @@ export class Expert {
   @Column({ type: 'varchar', default: 'expert' })
   role!: UserRole;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  refreshToken!: string | null;
+
+
   @OneToMany(() => Folder, (folder) => folder.expert)
   folders!: Folder[];
 

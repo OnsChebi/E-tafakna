@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { expertApi } from "../service/api";
+import { expertApi } from "../service/expert";
 import RegisterPopup from "../components/RegisterPopUp";
 import { Button } from "@/components/ui/button";
 import {  FiTrash2, FiUserPlus, FiUsers } from "react-icons/fi";
