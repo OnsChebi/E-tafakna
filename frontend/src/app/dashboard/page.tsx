@@ -38,7 +38,7 @@ export default function AdminDashboardPage() {
     const fetchMeetings = async () => {
       try {
         const res = await calendlyApi.getAdminOverview();
-        console.log("Meetings fetched:", res.data);
+        //console.log("Meetings fetched:", res.data);
         setMeetings(res.data);
       } catch (err: any) {
         console.error("Error loading meetings:", err.response?.data || err.message);

@@ -24,6 +24,7 @@ import { toast } from "@/hooks/use-toast";
 import { Select } from "@/components/ui/select";
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, SquarePen, Trash2 } from "lucide-react";
+import ConfirmDialog from "../components/ConfirmPopUp";
 
 export type Task = {
   id: number;
@@ -46,6 +47,8 @@ export default function TaskManagementPage() {
   });
   const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [taskIdToDelete, setTaskIdToDelete] = useState<number | null>(null);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
   const expertId = 1;
 
@@ -93,6 +96,31 @@ export default function TaskManagementPage() {
     } catch {
       toast({ title: "Error", description: "Failed to delete task." });
     }
+  };
+
+  const handleDeleteClick = (id: number) => {
+    setTaskIdToDelete(id);
+    setIsConfirmDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (taskIdToDelete !== null) {
+      try {
+        await taskApi.delete(taskIdToDelete);
+        toast({ title: "Deleted", description: "Task removed." });
+        fetchTasks();
+      } catch {
+        toast({ title: "Error", description: "Failed to delete task." });
+      } finally {
+        setTaskIdToDelete(null);
+        setIsConfirmDialogOpen(false);
+      }
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setTaskIdToDelete(null);
+    setIsConfirmDialogOpen(false);
   };
 
   const handleEdit = (task: Task) => {
@@ -218,7 +246,7 @@ export default function TaskManagementPage() {
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => handleDelete(task.id)}
+                      onClick={() => handleDeleteClick(task.id)}
                       className="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-md hover:opacity-90"
                     >
                       <Trash2 />
@@ -229,12 +257,20 @@ export default function TaskManagementPage() {
               </CardContent>
             </Card>
           ))
+          
         ) : (
           <div className="text-center text-gray-500 dark:text-gray-400">
             No tasks match this filter.
           </div>
         )}
       </ScrollArea>
+      {isConfirmDialogOpen && (
+        <ConfirmDialog
+          message="This task will be permanently deleted. Are you sure?"
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
     </main>
   );
 }

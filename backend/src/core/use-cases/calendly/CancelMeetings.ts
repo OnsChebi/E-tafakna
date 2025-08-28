@@ -12,7 +12,7 @@ export class CancelMeetingsUseCase {
     await this.calendlyRepo.cancelMeeting(token, eventUri, reason);
 
     const eventId = eventUri;
-    console.log("Event ID to cancel:", eventId);
+    //console.log("Event ID to cancel:", eventId);
     if (!eventId) throw new Error("Invalid event URI");
 
     

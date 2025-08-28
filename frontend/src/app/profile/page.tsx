@@ -187,7 +187,8 @@ const ProfilePage = () => {
                   />
                 </div>
                 <div className="flex justify-end">
-                  <Button type="submit" >
+                  <Button type="submit"
+                  className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:opacity-90" >
                     Save Changes
                   </Button>
                 </div>

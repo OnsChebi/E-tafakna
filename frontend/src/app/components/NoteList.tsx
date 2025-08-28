@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { EditIcon, TrashIcon, PlusIcon } from "lucide-react";
 import "froala-editor/css/froala_style.min.css";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 import "froala-editor/js/plugins.pkgd.min.js";
 import DOMPurify from "dompurify";
+import ConfirmDialog from "./ConfirmPopUp";
 
 export type Note = {
   id: number;
@@ -24,18 +25,37 @@ type NoteListProps = {
 };
 
 export default function NoteList({
-  
   notes,
   onEditNote,
   onAddNote,
   onViewNote,
   onDeleteNote,
 }: NoteListProps) {
-  //console.log("Notes received:", notes, "for folder ID:", folderId);
+  const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
+  const [noteIdToDelete, setNoteIdToDelete] = useState<number | null>(null);
+
+  const requestDeleteNote = (id: number) => {
+    setNoteIdToDelete(id);
+    setConfirmDialogVisible(true);
+  };
+
+  const confirmDelete = () => {
+    if (noteIdToDelete !== null) {
+      onDeleteNote(noteIdToDelete);
+      setNoteIdToDelete(null);
+      setConfirmDialogVisible(false);
+    }
+  };
+
+  const cancelDelete = () => {
+    setNoteIdToDelete(null);
+    setConfirmDialogVisible(false);
+  };
 
   return (
-    <div className="bg-white  dark:bg-gray-800  rounded-lg  p-4 h-full flex flex-col">
-      <div className="flex justify-between items-center mb-4">
+    <div className="bg:transparent dark:bg-gray-800 rounded-lg p-4 h-full flex flex-col">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
           Notes in Folder
         </h2>
@@ -49,22 +69,25 @@ export default function NoteList({
         </Button>
       </div>
 
+      {/* Scrollable list */}
       {notes.length > 0 ? (
-        <ul className="space-y-4 flex-1 overflow-y-auto">
+        <ul className="space-y-4 flex-1 overflow-y-auto max-h-[50vh] pr-2">
           {notes.map((note) => (
             <li
               key={note.id}
               className="border-b pb-2 group hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2 transition-colors"
             >
               <div className="flex justify-between items-start">
-                <div className="flex-1 cursor-pointer" onClick={() => onViewNote(note.id)}>
-                  {/* <p className="text-gray-700 dark:text-gray-100 whitespace-pre-wrap line-clamp-3">
-                    {note.text}
-                  </p> */}
+                <div
+                  className="flex-1 cursor-pointer"
+                  onClick={() => onViewNote(note.id)}
+                >
                   <div
-              className="prose  dark:bg-gray-800/50 dark:text-gray-100 p-4 rounded min-h-[200px] overflow-auto"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(note.text) }}
-            />
+                    className="prose dark:bg-gray-800/50 dark:text-gray-100 p-4 rounded min-h-[120px] overflow-hidden"
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(note.text),
+                    }}
+                  />
                   <span className="text-xs text-gray-500 dark:text-gray-400">
                     {new Date(note.created_at).toLocaleString()}
                   </span>
@@ -85,10 +108,7 @@ export default function NoteList({
                     variant="ghost"
                     size="sm"
                     className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-                    onClick={(e) => {
-                      e.stopPropagation();//clicking delete ONLY deletes - doesn't open the note
-                      onDeleteNote(note.id);
-                    }}
+                    onClick={() => requestDeleteNote(note.id)}
                   >
                     <TrashIcon className="h-4 w-4" />
                   </Button>
@@ -99,8 +119,19 @@ export default function NoteList({
         </ul>
       ) : (
         <div className="flex-1 flex items-center justify-center">
-          <p className="text-gray-500 dark:text-gray-400">No notes in this folder yet.</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            No notes in this folder yet.
+          </p>
         </div>
+      )}
+
+      {/* Confirm Dialog */}
+      {confirmDialogVisible && (
+        <ConfirmDialog
+          message="This note will be deleted. Are you sure?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
       )}
     </div>
   );

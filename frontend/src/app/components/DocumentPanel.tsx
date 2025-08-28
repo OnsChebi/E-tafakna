@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { DownloadIcon, TrashIcon } from "lucide-react";
 import { documentApi, DocumentType } from "../service/document";
-import ConfirmDialog from "./ConfirmPopUp"; 
+import ConfirmDialog from "./ConfirmPopUp";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE;
 
 export default function DocumentsPanel({ folderId }: { folderId: number }) {
   const [documents, setDocuments] = useState<DocumentType[]>([]);
@@ -18,6 +17,14 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 2000);
+      return () => clearTimeout(timer); 
+    }
+  }, [error]);
+
   useEffect(() => {
     const fetchDocuments = async () => {
       setLoading(true);
@@ -25,8 +32,8 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
       try {
         const res = await documentApi.getByFolder(folderId);
         setDocuments(res.data);
-      } catch (err) {
-        setError("Failed to load documents.");
+      } catch {
+        setError("❌ Failed to load documents.");
       } finally {
         setLoading(false);
       }
@@ -39,8 +46,8 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
     try {
       await documentApi.delete(id);
       setDocuments((docs) => docs.filter((doc) => doc.id !== id));
-    } catch (err) {
-      alert("Failed to delete document.");
+    } catch {
+      setError("❌ Failed to delete document.");
     }
   };
 
@@ -48,7 +55,6 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
     try {
       const fullUrl = `${BASE_URL}${url}`;
       const res = await fetch(fullUrl);
-
       if (!res.ok) throw new Error("Network response was not ok");
 
       const blob = await res.blob();
@@ -61,9 +67,8 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(blobUrl);
-    } catch (err) {
-      alert("Failed to download file.");
-      console.error(err);
+    } catch {
+      setError("❌ Failed to download file.");
     }
   };
 
@@ -75,16 +80,14 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("folderId", folderId.toString());
-
       formData.append("title", file.name);
       const simplifiedType = file.type.split("/")[1] || "unknown";
       formData.append("type", simplifiedType);
 
       const res = await documentApi.create(formData);
       setDocuments((docs) => [...docs, res.data]);
-    } catch (err) {
-      alert("Failed to upload document.");
-      console.error(err);
+    } catch {
+      setError("❌ Failed to upload document.");
     }
   };
 
@@ -108,12 +111,14 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
 
   return (
     <>
-      <Card className="mt-4 border bg-white dark:bg-gray-800 dark:border-gray-700">
-        <CardContent className="p-4">
+      <div className="mt-4 h-full flex flex-col">
+        <CardContent className="p-4 flex flex-col h-full">
+          {/* Header */}
           <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
             📎 Documents
           </h3>
 
+          {/* Upload Input */}
           <div className="mb-4">
             <input
               type="file"
@@ -122,11 +127,17 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
             />
           </div>
 
-          <ScrollArea className="h-[300px] pr-2">
+          {/* Error Message */}
+          {error && (
+            <div className="mb-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded transition-opacity duration-500">
+              {error}
+            </div>
+          )}
+
+          {/* Scrollable Document List */}
+          <div className="flex-1 overflow-y-auto max-h-[50vh] pr-2">
             {loading ? (
               <div className="text-gray-600 dark:text-gray-300">Loading...</div>
-            ) : error ? (
-              <div className="text-red-500">{error}</div>
             ) : documents.length === 0 ? (
               <div className="text-gray-500 dark:text-gray-400">
                 No documents uploaded.
@@ -171,10 +182,11 @@ export default function DocumentsPanel({ folderId }: { folderId: number }) {
                 ))}
               </ul>
             )}
-          </ScrollArea>
+          </div>
         </CardContent>
-      </Card>
+      </div>
 
+      {/* Confirm Delete Dialog */}
       {dialogOpen && (
         <ConfirmDialog
           message="Delete this document?"

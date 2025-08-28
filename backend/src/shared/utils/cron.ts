@@ -16,7 +16,7 @@ export const startMeetingSyncCron = (
   );
 
   cron.schedule("* 3 * * *", async () => {
-    console.log("🔁 [CRON] Syncing Calendly meetings...");
+    //console.log("🔁 [CRON] Syncing Calendly meetings...");
 
     try {
       const allExperts = await expertRepo.getAll();
@@ -28,7 +28,7 @@ export const startMeetingSyncCron = (
       for (const expert of expertsWithCalendly) {
         try {
           await syncUseCase.execute(expert.id);
-          console.log(`✅ Synced expert ${expert.id}`);
+          //console.log(`✅ Synced expert ${expert.id}`);
         } catch (error: any) {
           console.error(`❌ Error syncing expert ${expert.id}:`, error.message);
         }

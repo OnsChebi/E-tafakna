@@ -16,7 +16,7 @@ export class UpdateTaskUseCase {
     const task = await this.taskRepo.findById(taskId);
     if (!task) throw new Error("Task not found");
 
-    console.log("expertId test",task.expert.id)
+    //console.log("expertId test",task.expert.id)
     if (!task.expert.id ) {
       throw new Error("Unauthorized");
     }

@@ -1,4 +1,4 @@
-import { Api, ApiMultipart } from "./axios";
+import { Api} from "./axios";
 
 export type DocumentType = {
   id: number;
@@ -15,6 +15,6 @@ export const documentApi = {
   getById: (id: number) => Api.get<DocumentType>(`/doc/${id}`),
   getByMeeting: (meetingId: number) => Api.get<DocumentType[]>(`/doc/meeting/${meetingId}`),
   getByFolder: (folderId: number) => Api.get<DocumentType[]>(`/doc/folder/${folderId}`),
-  create: (formData: FormData) => ApiMultipart.post("/doc/upload", formData),
+  create: (formData: FormData) => Api.post("/doc/upload", formData),
   delete: (id: number) => Api.delete(`/doc/${id}`),
 };

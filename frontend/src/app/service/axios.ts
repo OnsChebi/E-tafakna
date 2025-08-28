@@ -1,20 +1,13 @@
 import axios from "axios";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 
-const API_BASE = "http://localhost:5000/api";
+
 
 export const Api = axios.create({
   baseURL: API_BASE,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
-export const ApiMultipart = axios.create({
-  baseURL: API_BASE,
-  headers: {
-    "Content-Type": "multipart/form-data",
-  },
-});
+
 
 // Add auth interceptor
 Api.interceptors.request.use((config) => {

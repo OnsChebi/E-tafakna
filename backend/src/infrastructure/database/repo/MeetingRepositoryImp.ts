@@ -28,10 +28,10 @@ export class MeetingRepositoryImpl implements IMeetingRepository {
  
   async cancelMeeting(eventId: string): Promise<void> {
     const meeting = await this.repo.findOne({ where: { eventId } });
-    console.log("Meeting fetched from DB:", meeting);
+    //console.log("Meeting fetched from DB:", meeting);
 
     if (!meeting) {
-      console.warn(`No meeting found with eventId: ${eventId}`);
+      //console.warn(`No meeting found with eventId: ${eventId}`);
       return;
     }
   

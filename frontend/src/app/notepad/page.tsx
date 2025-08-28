@@ -78,7 +78,6 @@ export default function NotepadPage() {
   };
 
   const handleDeleteFolder = async (id: number) => {
-    if (!confirm("Delete folder and all notes inside?")) return;
 
     try {
       await dispatch(removeFolder(id));
@@ -110,7 +109,6 @@ export default function NotepadPage() {
   };
 
   const handleDeleteNote = async (noteId: number) => {
-    if (!confirm("Delete this note permanently?")) return;
 
     try {
       await dispatch(deleteNote(noteId));
